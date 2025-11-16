@@ -38,6 +38,8 @@ jobs:
           grep -qxF '*.gif binary' .gitattributes || echo '*.gif binary' >> .gitattributes
           grep -qxF '*.pdf binary' .gitattributes || echo '*.pdf binary' >> .gitattributes
           grep -qxF '*.zip binary' .gitattributes || echo '*.zip binary' >> .gitattributes
+          grep -qxF '*.jar binary' .gitattributes || echo '*.jar binary' >> .gitattributes
+          grep -qxF '*.exe binary' .gitattributes || echo '*.exe binary' >> .gitattributes
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -91,91 +93,132 @@ jobs:
           fi
           echo "📂 Files to scan: ${#scan_list[@]}"
 
-          # 定义处理单个文件的函数（支持并行）
+          # 定义处理单个文件的函数(支持并行)
           process_file() {
             local f="$1"
             local mime=$(file -bi "$f" 2>/dev/null || true)
+
+            # 跳过非文本文件和可执行文件
             if [ -z "$mime" ] || ! echo "$mime" | grep -q "text/" || file "$f" | grep -q "executable"; then
               return
             fi
 
-            # 综合检测编码：uchardet 主，fallback enca&chardet带置信度，列表尝试
-            local encoding=$(uchardet "$f" 2>/dev/null | tr -d ' ')
-            if [ -z "$encoding" ] || [ "$encoding" = "UNKNOWN" ] || [ "$encoding" = "unknown-8bit" ]; then
-              encoding=$(enca -L none "$f" 2>/dev/null | grep -oP '(?<=Encoding: ).*')
-              if [ -z "$encoding" ] || echo "$encoding" | grep -q "Unrecognized"; then
-                encoding=$(python3 -c "import textwrap; exec(textwrap.dedent('\n' + '''
-                  import chardet
-                  import sys
-                  f = sys.argv[1]
-                  with open(f, 'rb') as file:
-                      raw = file.read()
-                      result = chardet.detect(raw)
-                      if result['confidence'] > 0.7:
-                          print(result['encoding'])
-                      else:
-                          print('UNKNOWN')
-                  '''))" "$f" 2>/dev/null)
+            # 综合检测编码：uchardet 主，fallback enca&chardet带置信度
+            local encoding=$(uchardet "$f" 2>/dev/null | tr -d ' ' | tr '[:upper:]' '[:lower:]')
+            
+            # 清理和标准化编码名称
+            if [ -n "$encoding" ]; then
+              case "$encoding" in
+                "ascii"|"us-ascii") encoding="us-ascii" ;;
+                "utf-8"|"utf8") encoding="utf-8" ;;
+                "unknown"|"unknown-8bit") encoding="" ;;
+              esac
+            fi
+
+            # Fallback 到 enca
+            if [ -z "$encoding" ]; then
+              encoding=$(enca -L none "$f" 2>/dev/null | grep -oP '(?<=Encoding: ).*' | tr '[:upper:]' '[:lower:]')
+              if [ -n "$encoding" ] && echo "$encoding" | grep -qi "unrecognized"; then
+                encoding=""
               fi
             fi
 
-            # 如果仍未知，尝试常见 fallback 编码列表并验证转换
-            if [ -z "$encoding" ] || [ "$encoding" = "UNKNOWN" ] || [ "$encoding" = "unknown-8bit" ]; then
-              local possible_encodings=("WINDOWS-1252" "ISO-8859-1" "CP1252" "WINDOWS-1254" "UTF-16LE" "UTF-16BE")
+            # Fallback 到 chardet (Python)
+            if [ -z "$encoding" ]; then
+              encoding=$(python3 -c "
+import chardet
+import sys
+try:
+    with open(sys.argv[1], 'rb') as file:
+        raw = file.read()
+        result = chardet.detect(raw)
+        if result['confidence'] > 0.7 and result['encoding']:
+            print(result['encoding'].lower())
+except Exception:
+    pass
+" "$f" 2>/dev/null)
+            fi
+
+            # 如果仍未知，尝试常见编码列表
+            if [ -z "$encoding" ]; then
+              local possible_encodings=("utf-8" "iso-8859-1" "windows-1252" "cp1252" "windows-1254" "utf-16le" "utf-16be")
               for enc in "${possible_encodings[@]}"; do
                 if iconv -f "$enc" -t utf-8//IGNORE "$f" -o /dev/null 2>/dev/null; then
                   encoding="$enc"
                   break
                 fi
               done
-              if [ -z "$encoding" ] || [ "$encoding" = "UNKNOWN" ]; then
-                echo "⚠️ Skipping $f: Unable to determine encoding reliably." >&2
+            fi
+
+            # 最终检查：如果还是无法确定编码，安全跳过
+            if [ -z "$encoding" ] || [ "$encoding" = "unknown" ] || [ "$encoding" = "unknown-8bit" ]; then
+              echo "⚠️ Skipping $f: Unable to determine encoding reliably." >&2
+              return
+            fi
+
+            # 如果已经是 UTF-8 或 ASCII，只需规范化行尾
+            if [ "$encoding" = "utf-8" ] || [ "$encoding" = "us-ascii" ]; then
+              dos2unix -q "$f" 2>/dev/null
+              if ! git diff --quiet "$f"; then
+                echo "$f"
+              fi
+              return
+            fi
+
+            # 验证编码是否被 iconv 支持(安全检查)
+            if ! iconv -l 2>/dev/null | grep -qi "$encoding"; then
+              echo "⚠️ Skipping $f: Encoding '$encoding' not supported by iconv." >&2
+              return
+            fi
+
+            # 转换编码到 UTF-8
+            echo "🧩 Converting $f from $encoding → UTF-8" >&2
+            if ! iconv -f "$encoding" -t utf-8//IGNORE "$f" -o "$f.tmp" 2>/dev/null; then
+              echo "⚠️ Failed to convert $f from $encoding" >&2
+              rm -f "$f.tmp"
+              return
+            fi
+
+            mv "$f.tmp" "$f" || {
+              echo "⚠️ Failed to replace $f after conversion" >&2
+              return
+            }
+
+            # 规范化行尾(LF)
+            dos2unix -q "$f" 2>/dev/null
+
+            # 后置验证：检查转换后是否为有效的 UTF-8
+            local post_mime=$(file -bi "$f")
+            if ! echo "$post_mime" | grep -qE "utf-8|us-ascii"; then
+              echo "⚠️ Potential garbled content in $f after conversion (reverting changes)" >&2
+              git checkout -- "$f" 2>/dev/null || true
+              return
+            fi
+
+            # 额外乱码检查：如果文件中有过多替换字符(�)，视为失败
+            local replacement_count=$(grep -o '�' "$f" 2>/dev/null | wc -l)
+            local total_chars=$(wc -c < "$f")
+            if [ "$total_chars" -gt 100 ] && [ "$replacement_count" -gt 0 ]; then
+              local percentage=$((replacement_count * 100 / total_chars))
+              if [ "$percentage" -gt 5 ]; then
+                echo "⚠️ High replacement chars ($percentage%) in $f (reverting)" >&2
+                git checkout -- "$f" 2>/dev/null || true
                 return
               fi
             fi
 
-            # 标准化编码名称（chardet/uchardet 可能输出变体，如 ascii → us-ascii）
-            if [ "$encoding" = "ascii" ]; then encoding="us-ascii"; fi
-            if [ "$encoding" = "UTF-8" ]; then encoding="utf-8"; fi
-
-            if [ "$encoding" != "utf-8" ] && [ "$encoding" != "us-ascii" ]; then
-              echo "🧩 Converting $f from $encoding → UTF-8"
-              iconv -f "$encoding" -t utf-8//IGNORE "$f" -o "$f.tmp" && mv "$f.tmp" "$f" || {
-                echo "⚠️ Failed to convert $f" >&2
-                return
-              }
-            fi
-
-            # 规范化行尾（LF）
-            dos2unix -q "$f" 2>/dev/null
-
-            # 后置验证：检查是否乱码（扩展：检查替换字符比例）
-            local post_mime=$(file -bi "$f")
-            if ! echo "$post_mime" | grep -qE "utf-8|us-ascii"; then
-              echo "⚠️ Potential garbled content in $f after conversion (reverting changes)" >&2
-              git checkout -- "$f" || true
-              return
-            fi
-
-            # 额外乱码检查：如果文件中有过多 � (U+FFFD)，视为失败
-            local replacement_count=$(grep -o '�' "$f" | wc -l)
-            local total_chars=$(wc -c < "$f")
-            if [ "$total_chars" -gt 0 ] && [ $((replacement_count * 100 / total_chars)) -gt 5 ]; then  # >5% 替换字符
-              echo "⚠️ High replacement chars in $f (reverting)" >&2
-              git checkout -- "$f" || true
-              return
-            fi
-
             # 如果有变化，标记为 fixed
             if ! git diff --quiet "$f"; then
-              echo "$f"  # 输出以收集 fixed_files
+              echo "$f"
             fi
           }
+
           export -f process_file
 
-          # 并行处理文件（使用 parallel，限制 jobs 以避免 OOM，e.g., 4 并行）
+          # 并行处理文件(使用 parallel，限制 jobs 避免 OOM)
           echo "🚀 Processing files in parallel..."
-          fixed_files=($(parallel -j4 --halt never process_file ::: "${scan_list[@]}" | grep -v '^⚠️' | grep -v '^🧩' || true))
+          fixed_files=($(parallel -j4 --halt never process_file ::: "${scan_list[@]}" 2>&1 | grep -v '^⚠️' | grep -v '^🧩' || true))
+
           if [ ${#fixed_files[@]} -gt 0 ]; then
             echo "✅ Fixed files:"
             for file in "${fixed_files[@]}"; do

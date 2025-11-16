@@ -481,6 +481,7 @@ preprocess_ruleset() {
   local base_url="$1"
   local exclude_url="$2"
   local output_file="$3"
+  local output_type="$4"
 
   echo "Preprocessing subset: $output_file"
 
@@ -554,53 +555,53 @@ preprocess_configs=(
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-cn@!cn.json"
   "srs/json/subset/geosite-category-games-cn@cn2.json"
-
+  "cn"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-!cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-!cn@cn.json"
   "srs/json/subset/geosite-category-games-!cn@!cn.json"
-
+  "!cn"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-platforms-download.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-platforms-download@cn.json"
   "srs/json/subset/game-platforms-download@!cn.json"
-
+  "!cn"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames@cn.json"
   "srs/json/subset/geosite-epicgames@!cn.json"
-
+  "!cn"
 # ai
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-ai-cn.json"
   "https://raw.githubusercontent.com/paka666/rules/main/srs/json/subset/tmp/geosite-category-ai-cn@!cn.json"
   "srs/json/subset/geosite-category-ai-cn@cn.json"
-
+  "cn"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-doubao.json"
   "https://raw.githubusercontent.com/paka666/rules/main/srs/json/subset/tmp/geosite-doubao@!cn.json"
   "srs/json/subset/doubao@cn.json"
-
+  "cn"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-jetbrains.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-jetbrains@cn.json"
   "srs/json/subset/jetbrains@!cn.json"
-
+  "!cn"
 # network
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn@!cn.json"
   "srs/json/subset/geosite-category-social-media-cn@cn.json"
-
+  "cn"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-bank-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-bank-cn@!cn.json"
   "srs/json/subset/geosite-category-bank-cn@cn.json"
-
+  "cn"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-dev-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-dev-cn@!cn.json"
   "srs/json/subset/geosite-category-dev-cn@cn2.json"
-
+  "cn"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-entertainment-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-entertainment-cn@!cn.json"
   "srs/json/subset/geosite-category-entertainment-cn@cn2.json"
-
+  "cn"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-!cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-!cn@cn.json"
   "srs/json/subset/geosite-category-social-media-!cn@!cn.json"
-
+  "!cn"
 )
 
 echo "--- 步骤 1: 正在运行 'subset' 文件预处理 (下载) ---"

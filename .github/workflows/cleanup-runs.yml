@@ -18,6 +18,6 @@ jobs:
         with:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
-          retain_days: 7  # Retain runs from the last 30 days; adjust as needed
-          keep_minimum_runs: 6  # Keep at least 6 recent runs per workflow; adjust as needed
+          retain_days: 0  # Retain runs from the last 30 days; adjust as needed
+          keep_minimum_runs: 0  # Keep at least 6 recent runs per workflow; adjust as needed
           dry_run: false  # Set to true for testing without actual deletion
