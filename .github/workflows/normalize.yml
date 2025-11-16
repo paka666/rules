@@ -183,8 +183,7 @@ jobs:
 
           # 并行处理文件（使用 parallel，限制 jobs 以避免 OOM，e.g., 4 并行）
           echo "🚀 Processing files in parallel..."
-          fixed_files=($(parallel -j4 process_file ::: "${scan_list[@]}" | grep -v '^⚠️' | grep -v '^🧩'))
-
+          fixed_files=($(parallel -j4 --halt never process_file ::: "${scan_list[@]}" | grep -v '^⚠️' | grep -v '^🧩' || true))
           if [ ${#fixed_files[@]} -gt 0 ]; then
             echo "✅ Fixed files:"
             for file in "${fixed_files[@]}"; do
