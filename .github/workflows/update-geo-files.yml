@@ -6,8 +6,27 @@ on:
       - main
     paths:
       - '.github/workflows/update-geo-files.yml'
-      - 'geo/*.txt'
-      - 'geo/*.dat'
+      - 'geo/geoip.dat'
+      - 'geo/geosite.dat'
+      - 'geo/gfwlist_loyalsoldier.txt'
+      - 'geo/gfwlist_anonymous.txt'
+      - 'geo/gfwlist_loukky.txt'
+      - 'geo/gfwlist_original.txt'
+      - 'geo/chnroute_clang.txt'
+      - 'geo/chnroute_gaoyifan.txt'
+      - 'geo/chnroute_clang_cidr.txt'
+      - 'geo/chnroute_soffchen.txt'
+      - 'geo/chnroute_hackl0us.txt'
+      - 'geo/chnroute_blackmatrix7.txt'
+      - 'geo/chnroute6_clang_ipv6.txt'
+      - 'geo/chnroute6_gaoyifan.txt'
+      - 'geo/chnroute6_blackmatrix7.txt'
+      - 'geo/chnlist_accelerated_domains.txt'
+      - 'geo/chnlist_apple_china.txt'
+      - 'geo/chnlist_loyalsoldier_china.txt'
+      - 'geo/chnlist_loyalsoldier_apple.txt'
+      - 'geo/chnlist_loyalsoldier_google.txt'
+      - 'geo/chnlist_blackmatrix7_domain.txt'
   schedule:
     - cron: '0 19 * * *'
   workflow_dispatch:
@@ -81,20 +100,6 @@ jobs:
 
           echo "下载完成，文件列表："
           ls -la geo/
-
-      - name: Normalize specific files to UTF-8 + LF
-        run: |
-          target="geo/chnlist_google_china.txt"
-          if [ -f "$target" ]; then
-            echo "Normalizing $target"
-            # 转 UTF-8（忽略错误）
-            iconv -f utf-8 -t utf-8//IGNORE "$target" -o "$target.tmp" \
-              && mv "$target.tmp" "$target"
-            # 转 LF（dos2unix 自动判断 CRLF / CR）
-            dos2unix -q "$target" || true
-          else
-            echo "File not found: $target"
-          fi
 
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
