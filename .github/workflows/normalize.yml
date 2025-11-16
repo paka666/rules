@@ -123,20 +123,9 @@ jobs:
               fi
             fi
 
-            # Fallback 到 chardet (Python)
+            # Fallback 到 chardet (Python) - 使用单行形式避免 YAML 问题
             if [ -z "$encoding" ]; then
-              encoding=$(python3 -c "
-import chardet
-import sys
-try:
-    with open(sys.argv[1], 'rb') as file:
-        raw = file.read()
-        result = chardet.detect(raw)
-        if result['confidence'] > 0.7 and result['encoding']:
-            print(result['encoding'].lower())
-except Exception:
-    pass
-" "$f" 2>/dev/null)
+              encoding=$(python3 -c 'import chardet, sys; raw = open(sys.argv[1], "rb").read(); result = chardet.detect(raw); print(result["encoding"].lower() if result["confidence"] > 0.7 and result["encoding"] else "")' "$f" 2>/dev/null || echo "")
             fi
 
             # 如果仍未知，尝试常见编码列表
