@@ -4,3 +4,4 @@ py-radix
 requests
 google-re2
 chardet
+pybind11

@@ -1,4 +1,5 @@
 name: Normalize files (UTF-8 + LF)
+
 on:
   push:
     branches:
@@ -10,8 +11,7 @@ on:
 jobs:
   normalize:
     runs-on: ubuntu-latest
-    env:
-      PAT: ${{ secrets.ALL }}
+
     permissions:
       contents: write
 
@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.ALL }}
 
       - name: Set Git config
         run: |
@@ -46,10 +47,22 @@ jobs:
           grep -qxF '*.pdf binary' .gitattributes || echo '*.pdf binary' >> .gitattributes
           grep -qxF '*.zip binary' .gitattributes || echo '*.zip binary' >> .gitattributes
 
-      - name: Install encoding tools
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: '**/requirements.txt'
+
+      - name: Install system dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y dos2unix enca file
+          sudo apt-get install -y libre2-dev dos2unix enca file uchardet parallel
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r py/requirements.txt
 
       - name: Normalize text files to UTF-8 + LF
         shell: bash
@@ -59,7 +72,6 @@ jobs:
           fixed_files=()
           scan_list=()
           trigger="${{ github.event_name }}"
-
           if [ "$trigger" = "push" ]; then
             echo "📥 Push detected: Scanning only changed files in this push."
             git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > changed_files.txt 2>/dev/null || {
@@ -77,33 +89,91 @@ jobs:
             rm -f changed_files.txt
           else
             echo "🛠️ Manual/scheduled run: Scanning entire repository."
-            scan_list=($(find . -type f \
+            # 使用 find -print0 和 read -d $'\0' 来安全处理包含空格或特殊字符的文件名
+            while IFS= read -r -d $'\0' f; do
+              scan_list+=("$f")
+            done < <(find . -type f \
               -not -path "./.git/*" \
               -not -path "./node_modules/*" \
-              -not -path "./venv/*"))
+              -not -path "./venv/*" -print0)
           fi
           echo "📂 Files to scan: ${#scan_list[@]}"
-          for f in "${scan_list[@]}"; do
-            mime=$(file -bi "$f" 2>/dev/null || true)
+
+          # 定义处理单个文件的函数（支持并行）
+          process_file() {
+            local f="$1"
+            local mime=$(file -bi "$f" 2>/dev/null || true)
             if [ -z "$mime" ] || ! echo "$mime" | grep -q "text/" || file "$f" | grep -q "executable"; then
-              continue
+              return
             fi
-            encoding=$(echo "$mime" | sed -n 's/.*charset=\(.*\)$/\1/p')
-            if [ "$encoding" != "utf-8" ] && [ "$encoding" != "us-ascii" ] && [ "$encoding" != "unknown-8bit" ]; then
+            # 综合检测编码：uchardet 主，fallback enca，chardet 带置信度，列表尝试
+            local encoding=$(uchardet "$f" 2>/dev/null | tr -d ' ')
+            if [ -z "$encoding" ] || [ "$encoding" = "UNKNOWN" ] || [ "$encoding" = "unknown-8bit" ]; then
+              encoding=$(enca -L none "$f" 2>/dev/null | grep -oP '(?<=Encoding: ).*')
+              if [ -z "$encoding" ] || echo "$encoding" | grep -q "Unrecognized"; then
+                encoding=$(python3 -c "
+import chardet
+import sys
+with open('$f', 'rb') as file:
+    raw = file.read()
+    result = chardet.detect(raw)
+    if result['confidence'] > 0.7:
+        print(result['encoding'])
+    else:
+        print('UNKNOWN')
+" 2>/dev/null)
+              fi
+            fi
+            # 如果仍未知，尝试常见 fallback 编码列表并验证转换
+            if [ -z "$encoding" ] || [ "$encoding" = "UNKNOWN" ] || [ "$encoding" = "unknown-8bit" ]; then
+              local possible_encodings=("WINDOWS-1252" "ISO-8859-1" "CP1252" "WINDOWS-1254" "UTF-16LE" "UTF-16BE")
+              for enc in "${possible_encodings[@]}"; do
+                if iconv -f "$enc" -t utf-8//IGNORE "$f" -o /dev/null 2>/dev/null; then
+                  encoding="$enc"
+                  break
+                fi
+              done
+              if [ -z "$encoding" ] || [ "$encoding" = "UNKNOWN" ]; then
+                echo "⚠️ Skipping $f: Unable to determine encoding reliably." >&2
+                return
+              fi
+            fi
+            # 标准化编码名称（chardet/uchardet 可能输出变体，如 ascii → us-ascii）
+            if [ "$encoding" = "ascii" ]; then encoding="us-ascii"; fi
+            if [ "$encoding" = "UTF-8" ]; then encoding="utf-8"; fi
+            if [ "$encoding" != "utf-8" ] && [ "$encoding" != "us-ascii" ]; then
               echo "🧩 Converting $f from $encoding → UTF-8"
-              iconv -f "$encoding" -t utf-8//IGNORE "$f" -o "$f.tmp" && mv "$f.tmp" "$f" || echo "⚠️ Failed to convert $f" >&2
+              iconv -f "$encoding" -t utf-8//IGNORE "$f" -o "$f.tmp" && mv "$f.tmp" "$f" || {
+                echo "⚠️ Failed to convert $f" >&2
+                return
+              }
             fi
+            # 规范化行尾（LF）
             dos2unix -q "$f" 2>/dev/null
-            post_mime=$(file -bi "$f")
+            # 后置验证：检查是否乱码（扩展：检查替换字符比例）
+            local post_mime=$(file -bi "$f")
             if ! echo "$post_mime" | grep -qE "utf-8|us-ascii"; then
               echo "⚠️ Potential garbled content in $f after conversion (reverting changes)" >&2
               git checkout -- "$f" || true
+              return
             fi
+            # 额外乱码检查：如果文件中有过多 � (U+FFFD)，视为失败
+            local replacement_count=$(grep -o '�' "$f" | wc -l)
+            local total_chars=$(wc -c < "$f")
+            if [ "$total_chars" -gt 0 ] && [ $((replacement_count * 100 / total_chars)) -gt 5 ]; then  # >5% 替换字符
+              echo "⚠️ High replacement chars in $f (reverting)" >&2
+              git checkout -- "$f" || true
+              return
+            fi
+            # 如果有变化，标记为 fixed
             if ! git diff --quiet "$f"; then
-              fixed_files+=("$f")
+              echo "$f"  # 输出以收集 fixed_files
             fi
-          done
-
+          }
+          export -f process_file
+          # 并行处理文件（使用 parallel，限制 jobs 以避免 OOM，e.g., 4 并行）
+          echo "🚀 Processing files in parallel..."
+          fixed_files=($(parallel -j4 process_file ::: "${scan_list[@]}" | grep -v '^⚠️' | grep -v '^🧩'))
           if [ ${#fixed_files[@]} -gt 0 ]; then
             echo "✅ Fixed files:"
             for file in "${fixed_files[@]}"; do
@@ -118,8 +188,7 @@ jobs:
         run: |
           if ! git diff --cached --quiet; then
             git commit -m "chore: auto-normalize files to UTF-8 + LF"
-          git remote set-url origin https://x-access-token:${{ secrets.ALL }}@github.com/${{ github.repository }}
-          git push origin main
+            git push
             echo "✅ Normalization done and pushed."
           else
             echo "✅ No issues found; everything already normalized."

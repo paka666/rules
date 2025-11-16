@@ -17,9 +17,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        # This step is now simplified. For PRs, it correctly checks out a merge commit.
-        # This avoids the confusion caused by `ref: ${{ github.head_ref }}`.
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ALL }}
 
       - name: Setup Git config
         run: |
@@ -37,6 +37,3 @@ jobs:
         with:
           commit_message: "chore: update custom files"
           file_pattern: "folder/file.suffix"
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
