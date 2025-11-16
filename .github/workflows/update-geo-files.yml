@@ -79,9 +79,22 @@ jobs:
           curl -s -L -o geo/chnlist_loyalsoldier_google.txt "https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/google-cn.txt"
           curl -s -L -o geo/chnlist_blackmatrix7_domain.txt "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaMax/ChinaMax_Domain.txt"
 
-          # 显示下载结果
           echo "下载完成，文件列表："
           ls -la geo/
+
+      - name: Normalize specific files to UTF-8 + LF
+        run: |
+          target="geo/chnlist_google_china.txt"
+          if [ -f "$target" ]; then
+            echo "Normalizing $target"
+            # 转 UTF-8（忽略错误）
+            iconv -f utf-8 -t utf-8//IGNORE "$target" -o "$target.tmp" \
+              && mv "$target.tmp" "$target"
+            # 转 LF（dos2unix 自动判断 CRLF / CR）
+            dos2unix -q "$target" || true
+          else
+            echo "File not found: $target"
+          fi
 
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
