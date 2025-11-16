@@ -1,3 +1,4 @@
+```yaml
 name: Normalize files (UTF-8 + LF)
 
 on:
@@ -106,24 +107,27 @@ jobs:
             if [ -z "$mime" ] || ! echo "$mime" | grep -q "text/" || file "$f" | grep -q "executable"; then
               return
             fi
-            # 综合检测编码：uchardet 主，fallback enca，chardet 带置信度，列表尝试
+
+            # 综合检测编码：uchardet 主，fallback enca&chardet带置信度，列表尝试
             local encoding=$(uchardet "$f" 2>/dev/null | tr -d ' ')
             if [ -z "$encoding" ] || [ "$encoding" = "UNKNOWN" ] || [ "$encoding" = "unknown-8bit" ]; then
               encoding=$(enca -L none "$f" 2>/dev/null | grep -oP '(?<=Encoding: ).*')
               if [ -z "$encoding" ] || echo "$encoding" | grep -q "Unrecognized"; then
-                encoding=$(python3 -c "
-import chardet
-import sys
-with open('$f', 'rb') as file:
-    raw = file.read()
-    result = chardet.detect(raw)
-    if result['confidence'] > 0.7:
-        print(result['encoding'])
-    else:
-        print('UNKNOWN')
-" 2>/dev/null)
+                encoding=$(python3 -c "import textwrap; exec(textwrap.dedent('\n' + '''
+                  import chardet
+                  import sys
+                  f = sys.argv[1]
+                  with open(f, 'rb') as file:
+                      raw = file.read()
+                      result = chardet.detect(raw)
+                      if result['confidence'] > 0.7:
+                          print(result['encoding'])
+                      else:
+                          print('UNKNOWN')
+                  '''))" "$f" 2>/dev/null)
               fi
             fi
+
             # 如果仍未知，尝试常见 fallback 编码列表并验证转换
             if [ -z "$encoding" ] || [ "$encoding" = "UNKNOWN" ] || [ "$encoding" = "unknown-8bit" ]; then
               local possible_encodings=("WINDOWS-1252" "ISO-8859-1" "CP1252" "WINDOWS-1254" "UTF-16LE" "UTF-16BE")
@@ -138,9 +142,11 @@ with open('$f', 'rb') as file:
                 return
               fi
             fi
+
             # 标准化编码名称（chardet/uchardet 可能输出变体，如 ascii → us-ascii）
             if [ "$encoding" = "ascii" ]; then encoding="us-ascii"; fi
             if [ "$encoding" = "UTF-8" ]; then encoding="utf-8"; fi
+
             if [ "$encoding" != "utf-8" ] && [ "$encoding" != "us-ascii" ]; then
               echo "🧩 Converting $f from $encoding → UTF-8"
               iconv -f "$encoding" -t utf-8//IGNORE "$f" -o "$f.tmp" && mv "$f.tmp" "$f" || {
@@ -148,8 +154,10 @@ with open('$f', 'rb') as file:
                 return
               }
             fi
+
             # 规范化行尾（LF）
             dos2unix -q "$f" 2>/dev/null
+
             # 后置验证：检查是否乱码（扩展：检查替换字符比例）
             local post_mime=$(file -bi "$f")
             if ! echo "$post_mime" | grep -qE "utf-8|us-ascii"; then
@@ -157,6 +165,7 @@ with open('$f', 'rb') as file:
               git checkout -- "$f" || true
               return
             fi
+
             # 额外乱码检查：如果文件中有过多 � (U+FFFD)，视为失败
             local replacement_count=$(grep -o '�' "$f" | wc -l)
             local total_chars=$(wc -c < "$f")
@@ -165,15 +174,18 @@ with open('$f', 'rb') as file:
               git checkout -- "$f" || true
               return
             fi
+
             # 如果有变化，标记为 fixed
             if ! git diff --quiet "$f"; then
               echo "$f"  # 输出以收集 fixed_files
             fi
           }
           export -f process_file
+
           # 并行处理文件（使用 parallel，限制 jobs 以避免 OOM，e.g., 4 并行）
           echo "🚀 Processing files in parallel..."
           fixed_files=($(parallel -j4 process_file ::: "${scan_list[@]}" | grep -v '^⚠️' | grep -v '^🧩'))
+
           if [ ${#fixed_files[@]} -gt 0 ]; then
             echo "✅ Fixed files:"
             for file in "${fixed_files[@]}"; do
@@ -197,3 +209,4 @@ with open('$f', 'rb') as file:
       - name: Handle errors gracefully
         if: ${{ failure() }}
         run: echo "❌ Normalization encountered issues; check logs for details."
+```
