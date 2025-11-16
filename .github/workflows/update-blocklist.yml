@@ -4,6 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/update-blocklist.yml'
+      - 'py/preprocess.py'
+      - 'py/process_ip_blocklist.py'
+      - 'adh/tmp/*.txt'
+      - 'adh/tmp/*.json'
+      - 'adh/blocklist.txt'
+      - 'adh/domain-blocklist.txt'
+      - 'adh/backup/*.txt'
   schedule:
     - cron: "0 17 * * *"
   workflow_dispatch:

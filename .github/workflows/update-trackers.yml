@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/update-trackers.yml'
+      - 'py/update_trackers.py'
+      - 'trackers/*.txt'
+      - 'trackers/*.bak'
   schedule:
     - cron: "0 15 * * *"
   workflow_dispatch:

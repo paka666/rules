@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/update-geo-files.yml'
+      - 'geo/*.txt'
+      - 'geo/*.dat'
   schedule:
     - cron: '0 19 * * *'
   workflow_dispatch:

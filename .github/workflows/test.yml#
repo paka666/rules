@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/test.yml'
+      - 'srs/script/process_rules.py'
+      - 'srs/*/*.json'
   schedule:
     - cron: "0 16 * * *"
   workflow_dispatch:

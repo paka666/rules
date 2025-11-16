@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/update-srs-files.yml'
+      - 'srs/merge-srs.sh'
+      - 'srs/*/*.json'
+      - 'srs/*.srs'
   schedule:
     - cron: "0 16 * * *"
   workflow_dispatch:

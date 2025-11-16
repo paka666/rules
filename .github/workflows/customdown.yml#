@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/customdown.yml'
+      - 'folder/file.suffix'
   schedule:
     - cron: '0 20 * * *'
   workflow_dispatch:
