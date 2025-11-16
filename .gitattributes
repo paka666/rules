@@ -27,3 +27,5 @@
 *.exe binary
 *.so binary
 *.dll binary
+* text eol=lf
+*.pdf binary
