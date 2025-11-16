@@ -21,6 +21,14 @@ jobs:
         with:
           token: ${{ secrets.ALL }}
 
+      - name: Skip if auto commit
+        run: |
+          COMMIT_MSG="$(git log -1 --pretty=%B)"
+          if echo "$COMMIT_MSG" | grep -q "$$ auto $$"; then
+            echo "⏩ Skipping due to auto commit."
+            exit 0
+          fi
+
       - name: remove old files
         run: |
           rm -rf geo
@@ -74,5 +82,5 @@ jobs:
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: Update Geo Files"
+          commit_message: "[auto] chore: update geo files daily"
           file_pattern: "geo/*.txt geo/*.dat"

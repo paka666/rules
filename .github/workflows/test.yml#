@@ -21,6 +21,14 @@ jobs:
         with:
           token: ${{ secrets.ALL }}
 
+      - name: Skip if auto commit
+        run: |
+          COMMIT_MSG="$(git log -1 --pretty=%B)"
+          if echo "$COMMIT_MSG" | grep -q "$$ auto $$"; then
+            echo "⏩ Skipping due to auto commit."
+            exit 0
+          fi
+
       - name: Mkdir
         run: |
           mkdir -p temp srs srs/json srs/json/same
@@ -48,5 +56,5 @@ jobs:
       - name: Commit and push ip if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: Test"
+          commit_message: "[auto] chore: test"
           file_pattern: "srs/json/*/*.json"
