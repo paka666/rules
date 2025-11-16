@@ -2,7 +2,6 @@
 set -euo pipefail
 
 # --- 脚本配置 ---
-# 定义新的目录结构
 SOURCE_DIR="srs/json/source"
 SUBSET_DIR="srs/json/subset"
 COMMON_DIR="srs/json/common"
@@ -10,12 +9,61 @@ SRS_DIR="srs"
 TEMP_DIR="temp"
 PYTHON_SCRIPT_PATH="${TEMP_DIR}/process_rules.py"
 
+# --- 检测下载工具 ---
+DOWNLOAD_TOOL=""
+if command -v curl &>/dev/null; then
+  DOWNLOAD_TOOL="curl"
+  echo "✓ 检测到 curl，将使用 curl 进行下载"
+elif command -v wget &>/dev/null; then
+  # 检查 wget 是否支持 --fail
+  if wget --help 2>&1 | grep -q -- '--fail'; then
+    DOWNLOAD_TOOL="wget"
+    echo "✓ 检测到 wget (支持 --fail)，将使用 wget 进行下载"
+  else
+    DOWNLOAD_TOOL="wget-basic"
+    echo "⚠ 检测到 wget (不支持 --fail)，将使用基础模式"
+  fi
+else
+  echo "❌ 错误：未找到 curl 或 wget，请安装其中之一"
+  exit 1
+fi
+
+# --- 通用下载函数 ---
+download_file() {
+  local url="$1"
+  local output="$2"
+  local timeout="${3:-180}"
+  
+  case "$DOWNLOAD_TOOL" in
+    curl)
+      curl -fsSL --max-time "$timeout" --retry 1 "$url" -o "$output" 2>/dev/null
+      return $?
+      ;;
+    wget)
+      wget -q --timeout="$timeout" --tries=1 --fail "$url" -O "$output" 2>/dev/null
+      return $?
+      ;;
+    wget-basic)
+      # BusyBox wget 或旧版本 - 不支持 --fail
+      wget -q --timeout="$timeout" --tries=1 "$url" -O "$output" 2>/dev/null
+      local ret=$?
+      # 检查文件大小，如果太小可能是错误页面
+      if [ $ret -eq 0 ] && [ -f "$output" ]; then
+        local size=$(wc -c < "$output" 2>/dev/null || echo "0")
+        if [ "$size" -lt 20 ]; then
+          rm -f "$output"
+          return 1
+        fi
+      fi
+      return $ret
+      ;;
+  esac
+}
+
 # --- 步骤 0: 创建目录和 Python 脚本 ---
 echo "--- 步骤 0: 正在设置环境 ---"
 mkdir -p "$TEMP_DIR" "$SRS_DIR" "$SOURCE_DIR" "$SUBSET_DIR" "$COMMON_DIR"
 
-# Heretic Doc: 将 Python 脚本写入临时文件
-# 这确保了脚本的单一文件分发
 cat << 'EOF' > "$PYTHON_SCRIPT_PATH"
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -28,23 +76,12 @@ import argparse
 from pathlib import Path
 from typing import List, Set, Dict, Any, Tuple
 
-# -----------------------------------------------------------------------------
-# 路径配置 (从 Bash 脚本的定义派生)
-# -----------------------------------------------------------------------------
 BASE_DIR = Path.cwd()
 SOURCE_DIR = BASE_DIR / "srs/json/source"
 SUBSET_DIR = BASE_DIR / "srs/json/subset"
 COMMON_DIR = BASE_DIR / "srs/json/common"
 
-# -----------------------------------------------------------------------------
-# 核心功能：IP CIDR 合并
-# -----------------------------------------------------------------------------
 def merge_cidrs(cidrs_list: Set[str]) -> List[str]:
-    """
-    合并重叠和相邻的 IP CIDR。
-    使用 ipaddress.collapse_addresses 来高效处理 IPv4 和 IPv6。
-    将单个 IP 转换为 /32 (v4) 或 /128 (v6)。
-    """
     v4_nets = []
     v6_nets = []
 
@@ -52,8 +89,6 @@ def merge_cidrs(cidrs_list: Set[str]) -> List[str]:
         if not cidr_str:
             continue
         try:
-            # strict=False 允许 "1.1.1.1" 这种单个 IP
-            # ip_network 会自动将其转换为 "1.1.1.1/32"
             net = ipaddress.ip_network(cidr_str.strip(), strict=False)
             if net.version == 4:
                 v4_nets.append(net)
@@ -62,86 +97,50 @@ def merge_cidrs(cidrs_list: Set[str]) -> List[str]:
         except ValueError as e:
             print(f"    [警告] 忽略无效的 IP/CIDR: '{cidr_str}' ({e})", file=sys.stderr)
 
-    # 分别合并 v4 和 v6
     merged_v4 = list(ipaddress.collapse_addresses(v4_nets))
     merged_v6 = list(ipaddress.collapse_addresses(v6_nets))
 
-    # 排序以确保一致的输出
     merged_v4.sort(key=lambda n: (n.network_address, n.prefixlen))
     merged_v6.sort(key=lambda n: (n.network_address, n.prefixlen))
 
-    # 转换回字符串列表
     return [str(n) for n in merged_v4] + [str(n) for n in merged_v6]
 
-# -----------------------------------------------------------------------------
-# 核心功能：Domain/Suffix 规范化
-# -----------------------------------------------------------------------------
 def normalize_domains_and_suffixes(
     all_domains: Set[str],
     all_domain_suffixes: Set[str]
 ) -> Tuple[List[str], List[str]]:
-    """
-    执行 Domain/Suffix 的 www 移除和交叉规范化。
-    """
-
     def strip_www(domain_set: Set[str]) -> Set[str]:
-        """移除 www. 和 .www. 前缀"""
         normalized_set = set()
         for d in domain_set:
             d_stripped = d.strip()
             if not d_stripped:
                 continue
-
-            # 移除 ".www." 或 "www." 前缀
-            # 1. ".www.foo.com" -> "foo.com"
-            # 2. "www.foo.com" -> "foo.com"
-            # 3. ".foo.com" -> ".foo.com" (re.sub 不匹配)
-            # 4. "foo.com" -> "foo.com" (re.sub 不匹配)
             d_normalized = re.sub(r'^(?:\.www\.|www\.)', '', d_stripped)
-
             if d_normalized:
                 normalized_set.add(d_normalized)
         return normalized_set
 
-    # 1. 移除 'www'
-    # 第一次去重：在 www 规范化后
     domains_no_www = strip_www(all_domains)
     suffixes_no_www = strip_www(all_domain_suffixes)
 
     final_domains = set()
     final_domain_suffixes = set()
 
-    # 2. 交叉规范化
-
-    # 将 domain_suffix -> domain
     for s in suffixes_no_www:
         clean_s = s.lstrip('.')
         if clean_s:
             final_domains.add(clean_s)
-            final_domain_suffixes.add(f".{clean_s}") # 确保自身格式正确
+            final_domain_suffixes.add(f".{clean_s}")
 
-    # 将 domain -> domain_suffix
     for d in domains_no_www:
         clean_d = d.lstrip('.')
         if clean_d:
-            final_domains.add(clean_d) # 确保自身格式正确
+            final_domains.add(clean_d)
             final_domain_suffixes.add(f".{clean_d}")
 
-    # 3. 排序和去重（通过 set 已完成去重）
     return sorted(list(final_domains)), sorted(list(final_domain_suffixes))
 
-# -----------------------------------------------------------------------------
-# 核心功能：“操作 A” - JSON 规范化
-# -----------------------------------------------------------------------------
 def process_json_file(file_path: Path):
-    """
-    执行“操作 A”：
-    1. 合并所有 rules 对象。
-    2. 检查并报告未知键。
-    3. 规范化 domain 和 domain_suffix (包括 www 移除)。
-    4. 合并和规范化 ip_cidr。
-    5. 移除空项并重写文件。
-    """
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -156,7 +155,6 @@ def process_json_file(file_path: Path):
         print(f"    [警告] 格式无效，跳过 (无 'rules' 列表): {file_path.name}", file=sys.stderr)
         return
 
-    # 允许的 sing-box 规则键
     allowed_keys = {
         'domain',
         'domain_suffix',
@@ -165,7 +163,6 @@ def process_json_file(file_path: Path):
         'ip_cidr'
     }
 
-    # 1. 合并所有 rules 对象
     all_domains = set()
     all_domain_suffixes = set()
     all_domain_keywords = set()
@@ -176,12 +173,11 @@ def process_json_file(file_path: Path):
         if not isinstance(rule_obj, dict):
             continue
 
-        # 2. 检查未知键
         unknown_keys = set(rule_obj.keys()) - allowed_keys
         if unknown_keys:
             print(f"[致命错误] 在 {file_path.name} 中发现未知的规则键: {unknown_keys}", file=sys.stderr)
             print("脚本已中止。请检查 JSON 格式或更新脚本中的 'allowed_keys'。", file=sys.stderr)
-            sys.exit(1) # 按要求中止脚本
+            sys.exit(1)
 
         all_domains.update(rule_obj.get('domain', []))
         all_domain_suffixes.update(rule_obj.get('domain_suffix', []))
@@ -189,17 +185,11 @@ def process_json_file(file_path: Path):
         all_domain_regex.update(rule_obj.get('domain_regex', []))
         all_ip_cidrs.update(rule_obj.get('ip_cidr', []))
 
-    # 3. 规范化 domain 和 domain_suffix (包含 'www' 逻辑)
     sorted_domains, sorted_suffixes = normalize_domains_and_suffixes(all_domains, all_domain_suffixes)
-
-    # 其余字段排序
     sorted_keywords = sorted(list(all_domain_keywords))
     sorted_regex = sorted(list(all_domain_regex))
-
-    # 4. 合并和规范化 ip_cidr
     sorted_ips = merge_cidrs(all_ip_cidrs)
 
-    # 5. 重构 JSON 对象
     domain_rule_obj = {}
     ip_rule_obj = {}
 
@@ -216,32 +206,23 @@ def process_json_file(file_path: Path):
         ip_rule_obj['ip_cidr'] = sorted_ips
 
     new_rules = []
-    if domain_rule_obj: # 仅当存在至少一个域规则时才添加
+    if domain_rule_obj:
         new_rules.append(domain_rule_obj)
-    if ip_rule_obj: # 仅当存在 IP 规则时才添加
+    if ip_rule_obj:
         new_rules.append(ip_rule_obj)
 
-    # 按照您的“已处理”示例格式化
     new_data = {"version": 1, "rules": new_rules}
 
-    # 6. 写回文件
     try:
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(new_data, f, indent=2, ensure_ascii=False)
     except IOError as e:
         print(f"    [错误] 无法写入文件: {file_path.name} ({e})", file=sys.stderr)
 
-# -----------------------------------------------------------------------------
-# 核心功能：加载规则数据
-# -----------------------------------------------------------------------------
 def get_rule_data(file_path: Path) -> Dict[str, Dict[str, Any]]:
-    """
-    从已处理的文件加载域和 IP 规则对象。
-    返回 {"domain": {...}, "ip": {...}, "all_keys": {...}}
-    """
     domain_obj = {}
     ip_obj = {}
-    all_keys_obj = {} # 用于合并所有键
+    all_keys_obj = {}
 
     if not file_path.exists():
         return {"domain": {}, "ip": {}, "all_keys": {}}
@@ -254,82 +235,56 @@ def get_rule_data(file_path: Path) -> Dict[str, Dict[str, Any]]:
             if not isinstance(rule, dict):
                 continue
 
-            # 将所有键的值合并到 all_keys_obj
             for key, values in rule.items():
                 if isinstance(values, list):
                     all_keys_obj.setdefault(key, set()).update(values)
 
-            # 分离 IP 和 Domain
             if 'ip_cidr' in rule:
                 ip_obj = rule
             else:
-                # 假设所有非 IP 规则都是域规则
                 domain_obj.update(rule)
 
     except Exception as e:
         print(f"    [警告] 加载规则数据时出错: {file_path.name} ({e})", file=sys.stderr)
         return {"domain": {}, "ip": {}, "all_keys": {}}
 
-    # 将 all_keys_obj 中的 set 转换为 list
     all_keys_list_obj = {k: list(v) for k, v in all_keys_obj.items()}
 
     return {"domain": domain_obj, "ip": ip_obj, "all_keys": all_keys_list_obj}
 
-# -----------------------------------------------------------------------------
-# 核心功能：查找和移除 cn/!cn 之间的重复项 (增量更新)
-# -----------------------------------------------------------------------------
 def find_and_remove_dupes(file_cn_path: Path, file_noncn_path: Path, common_path: Path):
-    """
-    对比 cn 和 non-cn 文件：
-    1. 加载 cn, noncn 和 *旧的* common 数据。
-    2. 找到 cn 和 noncn 之间的 *新* 共同项。
-    3. 将 *新* 共同项与 *旧* 共同项合并，写入 common_path (非规范化)。
-    4. 从 cn 和 non-cn 文件中移除 *所有* 共同项 (包括旧的) 并保存。
-    """
-
     data_cn = get_rule_data(file_cn_path)
     data_noncn = get_rule_data(file_noncn_path)
-    data_common_old = get_rule_data(common_path) # 加载已有的共同文件
+    data_common_old = get_rule_data(common_path)
 
     new_common_all_keys = {}
     all_rule_keys = ['domain', 'domain_suffix', 'domain_keyword', 'domain_regex', 'ip_cidr']
 
-    # --- 对比所有键 ---
     for key in all_rule_keys:
         set_cn = set(data_cn["all_keys"].get(key, []))
         set_noncn = set(data_noncn["all_keys"].get(key, []))
         set_common_old = set(data_common_old["all_keys"].get(key, []))
 
-        # 1. 找到 *新* 的共同项
         common_items_new = set_cn.intersection(set_noncn)
-
-        # 2. 合并 *新*、*旧* 共同项
         common_items_all = common_items_new.union(set_common_old)
 
         if common_items_all:
-            # 3. 准备写入 common 文件 (增量)
-            new_common_all_keys[key] = list(common_items_all) # 使用 list, 稍后规范化
+            new_common_all_keys[key] = list(common_items_all)
 
-            # 4. 更新 cn/noncn 对象 (移除 *所有* 共同项)
             remaining_cn = set_cn - common_items_all
             remaining_noncn = set_noncn - common_items_all
 
-            # 更新 data_cn["all_keys"] 以便写回
             if remaining_cn:
                 data_cn["all_keys"][key] = list(remaining_cn)
             else:
                 data_cn["all_keys"].pop(key, None)
 
-            # 更新 data_noncn["all_keys"] 以便写回
             if remaining_noncn:
                 data_noncn["all_keys"][key] = list(remaining_noncn)
             else:
                 data_noncn["all_keys"].pop(key, None)
 
-    # --- 写回文件 ---
-
     def write_rules_from_all_keys(file_path: Path, all_keys_data: Dict[str, Any]):
-        """根据 all_keys dict 重构并写入 JSON 文件"""
         domain_rule_obj = {}
         ip_rule_obj = {}
 
@@ -366,25 +321,13 @@ def find_and_remove_dupes(file_cn_path: Path, file_noncn_path: Path, common_path
         except IOError as e:
             print(f"    [错误] 无法写入文件: {file_path.name} ({e})", file=sys.stderr)
 
-    # 1. 保存 *增量更新* 后的 common 文件 (稍后由步骤 2C 统一规范化)
     if new_common_all_keys:
         write_rules_from_all_keys(common_path, new_common_all_keys)
 
-    # 2. 保存更新后的 cn 文件 (已移除共同项)
     write_rules_from_all_keys(file_cn_path, data_cn["all_keys"])
-
-    # 3. 保存更新后的 non-cn 文件 (已移除共同项)
     write_rules_from_all_keys(file_noncn_path, data_noncn["all_keys"])
 
-
-# -----------------------------------------------------------------------------
-# 流程控制
-# -----------------------------------------------------------------------------
 def run_step1_pre_merge():
-    """
-    步骤 1: 预合并处理。
-    规范化 source 和 subset 目录中的所有 .json 文件。
-    """
     print("  --- 步骤 1 (Python): 正在规范化 'source' 目录... ---")
     SOURCE_DIR.mkdir(exist_ok=True)
     for f in SOURCE_DIR.glob("*.json"):
@@ -400,22 +343,12 @@ def run_step1_pre_merge():
             process_json_file(f)
 
 def run_step2_post_merge():
-    """
-    步骤 2: 合并后处理。
-    A. 再次规范化 'source' 目录 (处理新合并的未规范化文件)。
-    B. 执行 'cn/noncn' 对比，增量更新 'common'，并从 'source' 中移除共同项。
-    C. 规范化 'common' 目录 (处理增量更新后的文件)。
-    """
-
-    # 步骤 2A: 规范化 'source' 目录
     print("  --- 步骤 2A (Python): 正在规范化新合并的 'source' 文件... ---")
     for f in SOURCE_DIR.glob("*.json"):
-        # 排除带时间戳的备份 (YYYYMMDDTHHMMSSZ-...)
         if f.is_file() and not re.match(r'^\d{8}T\d{6}Z-', f.name):
             print(f"    正在处理 (source): {f.name}")
             process_json_file(f)
 
-    # 步骤 2B: 对比 cn/non-cn 对，增量更新 common
     print("  --- 步骤 2B (Python): 正在对比 cn/non-cn 并更新 'common' ... ---")
     pairs = [
         ("ai-cn", "ai-noncn", "ai-common"),
@@ -434,7 +367,6 @@ def run_step2_post_merge():
         else:
             print(f"    [跳过] 缺少文件对: {cn_name}.json / {noncn_name}.json")
 
-    # 步骤 2C: 规范化 'common' 目录
     print("  --- 步骤 2C (Python): 正在规范化 'common' 目录... ---")
     COMMON_DIR.mkdir(exist_ok=True)
     for f in COMMON_DIR.glob("*.json"):
@@ -442,9 +374,6 @@ def run_step2_post_merge():
             print(f"    正在处理 (common): {f.name}")
             process_json_file(f)
 
-# -----------------------------------------------------------------------------
-# 主执行函数
-# -----------------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(description="sing-box 规则 JSON 处理脚本")
     parser.add_argument(
@@ -468,15 +397,57 @@ def main():
 if __name__ == "__main__":
     main()
 EOF
-# --- 步骤 0: 结束 ---
 
 chmod +x "$PYTHON_SCRIPT_PATH"
 echo "Python 脚本已创建于: $PYTHON_SCRIPT_PATH"
 
-# --- 步骤 1: 预处理 (下载 subset 文件) ---
-# 1. 使用 mktemp 修复了并行下载时的文件名冲突
-# 2. 增加了 --fail 和 JSON 校验来处理 wget 下载 404 页面导致的 "Bad JSON" 错误
-# 3. 将 exclude (排除) URL 的下载设为可选，如果下载失败（如 404），则使用空规则代替
+# --- JSON 验证和修复 ---
+validate_and_fix_json() {
+  local file="$1"
+  local group_name="$2"
+
+  if [ ! -f "$file" ] || [ ! -s "$file" ]; then
+    echo "    [警告] 文件未找到或为空: $file"
+    return 1
+  fi
+
+  # 检查是否为 HTML 错误页面
+  if head -n 1 "$file" | grep -qi "<!DOCTYPE\|<html"; then
+    echo "    [警告] $file 看起来是 HTML 页面 (可能是 404)，删除"
+    rm -f "$file"
+    return 1
+  fi
+
+  if jq empty "$file" >/dev/null 2>&1; then
+    if ! jq 'has("version")' "$file" 2>/dev/null | grep -q true; then
+      echo "    [修复] 正在为 $file 添加 'version' 字段"
+      jq '.version = 1' "$file" > "${file}.tmp.$$" && mv "${file}.tmp.$$" "$file"
+    fi
+    return 0
+  else
+    echo "    [警告] $file 中 JSON 无效, 尝试修复..."
+    local temp_file="${file}.fixed.$$"
+
+    if jq '.' "$file" > "$temp_file" 2>/dev/null; then
+      mv "$temp_file" "$file"
+      echo "    [修复] 使用 'jq .' 成功修复"
+      return 0
+    fi
+
+    if jq 'if type == "array" then {version: 1, rules: .} else . end' "$file" > "$temp_file" 2>/dev/null; then
+      mv "$temp_file" "$file"
+      echo "    [修复] 成功包装了裸数组"
+      validate_and_fix_json "$file" "$group_name"
+      return 0
+    fi
+
+    echo "    [错误] 无法修复 JSON: $file"
+    rm -f "$file" "$temp_file"
+    return 1
+  fi
+}
+
+# --- 预处理 subset 文件 ---
 preprocess_ruleset() {
   local base_url="$1"
   local exclude_url="$2"
@@ -485,43 +456,33 @@ preprocess_ruleset() {
 
   echo "Preprocessing subset: $output_file"
 
-  # --- 修复 1: 使用 mktemp 创建唯一临时文件 ---
-  # 这修复了并行执行时所有进程写入同一个 $$ 文件的竞态条件
   local base_temp
   base_temp=$(mktemp "${TEMP_DIR}/base_XXXXXX.json")
   local exclude_temp
   exclude_temp=$(mktemp "${TEMP_DIR}/exclude_XXXXXX.json")
 
-  # 确保此函数返回时，无论成功还是失败，都删除临时文件
   trap 'rm -f "$base_temp" "$exclude_temp"' RETURN
 
-  # --- 优化 1: 强制 Base URL 下载和校验 ---
   echo "  Downloading base: $base_url"
-  # 使用 --fail 确保 wget 在遇到 404 等服务器错误时返回非零退出码
-  if ! wget -q --timeout=180 --tries=1 --fail "$base_url" -O "$base_temp"; then
-    echo "Error: [致命] 无法下载 $base_url (wget failed)"
-    return 1 # 返回错误，让 'wait' 捕捉
+  if ! download_file "$base_url" "$base_temp" 180; then
+    echo "Error: [致命] 无法下载 $base_url"
+    return 1
   fi
-  # 校验下载的 base 文件是否为有效 JSON
+
   if ! jq empty "$base_temp" >/dev/null 2>&1; then
      echo "Error: [致命] $base_url 下载了无效的 JSON (可能是 404 页面)"
      return 1
   fi
 
-  # --- 优化 2: 使 Exclude URL 下载变为可选且健壮 ---
   echo "  Downloading exclude: $exclude_url"
-  if ! wget -q --timeout=180 --tries=1 --fail "$exclude_url" -O "$exclude_temp" 2>/dev/null; then
-    # 如果下载失败（404, DNS 错误等），不要退出，而是使用空规则
+  if ! download_file "$exclude_url" "$exclude_temp" 180; then
     echo "    [警告] 无法下载 exclude: $exclude_url. 将使用空规则列表。"
     echo '{"version": 1, "rules": []}' > "$exclude_temp"
   elif ! jq empty "$exclude_temp" >/dev/null 2>&1; then
-    # 如果下载成功，但内容不是 JSON (例如 404 页面)，也使用空规则
     echo "    [警告] $exclude_url 下载了无效的 JSON. 将使用空规则列表。"
     echo '{"version": 1, "rules": []}' > "$exclude_temp"
   fi
 
-  # --- JQ 逻辑：从 base_rules 中移除 exclude_rules 中存在的规则 ---
-  # 此逻辑不变，现在它能安全地处理空的 exclude_temp
   jq --slurpfile exclude "$exclude_temp" '
     .rules as $base_rules |
     $exclude[0].rules as $exclude_rules |
@@ -538,20 +499,17 @@ preprocess_ruleset() {
     }
   ' "$base_temp" > "$output_file"
 
-  # 临时文件将由 'trap' 自动清理
-
-  # 最终校验生成的 $output_file
   if jq empty "$output_file" >/dev/null 2>&1; then
     echo "  Successfully generated subset: $output_file"
   else
     echo "Error: [致命] 为 $output_file 生成了无效的 JSON"
-    return 1 # 返回错误
+    return 1
   fi
 }
 
-# 预处理配置数组 (输出到 SUBSET_DIR)
+# --- 预处理配置 ---
 preprocess_configs=(
-# game
+  # game
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-cn@!cn.json"
   "srs/json/subset/geosite-category-games-cn@cn2.json"
@@ -568,7 +526,7 @@ preprocess_configs=(
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames@cn.json"
   "srs/json/subset/geosite-epicgames@!cn.json"
   "!cn"
-# ai
+  # ai
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-ai-cn.json"
   "https://raw.githubusercontent.com/paka666/rules/main/srs/json/subset/tmp/geosite-category-ai-cn@!cn.json"
   "srs/json/subset/geosite-category-ai-cn@cn.json"
@@ -581,7 +539,7 @@ preprocess_configs=(
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-jetbrains@cn.json"
   "srs/json/subset/jetbrains@!cn.json"
   "!cn"
-# network
+  # network
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn@!cn.json"
   "srs/json/subset/geosite-category-social-media-cn@cn.json"
@@ -605,71 +563,25 @@ preprocess_configs=(
 )
 
 echo "--- 步骤 1: 正在运行 'subset' 文件预处理 (下载) ---"
-# 并行执行 preprocess_ruleset
 pids=()
 for ((i=0; i<${#preprocess_configs[@]}; i+=4)); do
   preprocess_ruleset "${preprocess_configs[i]}" "${preprocess_configs[i+1]}" "${preprocess_configs[i+2]}" "${preprocess_configs[i+3]}" &
   pids+=($!)
 done
-# 等待所有后台下载任务完成
 echo "  Waiting for ${#pids[@]} subset generation jobs..."
 wait "${pids[@]}"
 echo "--- 步骤 1: 'subset' 文件预处理完成 ---"
 
-# --- 步骤 2: 运行 Python 预合并规范化 ---
+# --- 步骤 2: Python 预合并规范化 ---
 echo "--- 步骤 2: 正在运行 [Python 步骤 1] (预合并规范化) ---"
 "$PYTHON_SCRIPT_PATH" --step step1
 echo "--- 步骤 2: [Python 步骤 1] 完成 ---"
 
-# --- JSON 验证和修复 (用于下载的文件) ---
-validate_and_fix_json() {
-  local file="$1"
-  local group_name="$2"
-
-  if [ ! -f "$file" ] || [ ! -s "$file" ]; then
-    echo "    [警告] 文件未找到或为空: $file"
-    return 1
-  fi
-
-  if jq empty "$file" >/dev/null 2>&1; then
-    # JSON 有效，检查 'version'
-    if ! jq 'has("version")' "$file" 2>/dev/null | grep -q true; then
-      echo "    [修复] 正在为 $file 添加 'version' 字段"
-      jq '.version = 1' "$file" > "${file}.tmp.$$" && mv "${file}.tmp.$$" "$file"
-    fi
-    return 0
-  else
-    echo "    [警告] $file 中 JSON 无效, 尝试修复..."
-    local temp_file="${file}.fixed.$$"
-
-    # 尝试 1: 简单格式化
-    if jq '.' "$file" > "$temp_file" 2>/dev/null; then
-      mv "$temp_file" "$file"
-      echo "    [修复] 使用 'jq .' 成功修复"
-      return 0
-    fi
-
-    # 尝试 2: 包装数组
-    if jq 'if type == "array" then {version: 1, rules: .} else . end' "$file" > "$temp_file" 2>/dev/null; then
-      mv "$temp_file" "$file"
-      echo "    [修复] 成功包装了裸数组"
-      # 再次调用以确保 version 存在 (如果它不是数组)
-      validate_and_fix_json "$file" "$group_name"
-      return 0
-    fi
-
-    echo "    [错误] 无法修复 JSON: $file"
-    rm -f "$file" "$temp_file"
-    return 1
-  fi
-}
-
-# --- 合并函数 (仅合并，不编译) ---
+# --- 合并函数 ---
 merge_group() {
   local GROUP_NAME=$1
   shift
   local URLS=("$@")
-  # 目标文件现在是 SOURCE_DIR
   local LOCAL_JSON_FILE="${SOURCE_DIR}/${GROUP_NAME}.json"
 
   rm -f "${TEMP_DIR}/input-${GROUP_NAME}-"*.json
@@ -681,12 +593,10 @@ merge_group() {
   local local_files=()
   local remote_urls=()
 
-  # 区分本地源和 URL 源
   for url in "${URLS[@]}"; do
     if [ -z "$url" ]; then
       continue
     fi
-    # 检查是否为本地路径 (srs/, ./, /)
     if [[ "$url" == ${SOURCE_DIR}/* ]] || [[ "$url" == ${SUBSET_DIR}/* ]] || [[ "$url" == ./* ]] || [[ "$url" == /* ]]; then
       local_files+=("$url")
     else
@@ -694,7 +604,6 @@ merge_group() {
     fi
   done
 
-  # --- 1. 处理本地文件 (复制) ---
   for file_path in "${local_files[@]}"; do
     local output_file="${TEMP_DIR}/input-$GROUP_NAME-$i.json"
     if [ -f "$file_path" ] && [ -s "$file_path" ]; then
@@ -706,7 +615,6 @@ merge_group() {
     fi
   done
 
-  # --- 2. 处理远程 URL (并行下载) ---
   for url in "${remote_urls[@]}"; do
     local current_i=$i
     (
@@ -714,17 +622,14 @@ merge_group() {
       local output_file="${TEMP_DIR}/input-$GROUP_NAME-$file_index.json"
 
       echo "  Downloading: $url"
-      # 优化：添加 --fail 以处理 404
-      if wget -q --timeout=180 --tries=1 --fail "$url" -O "$output_file"; then
+      if download_file "$url" "$output_file" 180; then
         echo "    Downloaded: $url"
-        # 立即验证下载的文件
         if ! validate_and_fix_json "$output_file" "$GROUP_NAME"; then
           echo "    [错误] 下载的 $url 无效, 已删除。"
           rm -f "$output_file"
         fi
       else
         echo "Error: [致命] 无法下载 $url (group $GROUP_NAME)"
-        # 杀死父脚本
         kill -s TERM $$
       fi
     ) &
@@ -732,15 +637,12 @@ merge_group() {
     ((i++))
   done
 
-  # 等待所有下载完成
   if [ ${#pids[@]} -gt 0 ]; then
     echo "  Waiting for ${#pids[@]} downloads for group $GROUP_NAME..."
-    # 'wait' 会在 'set -e' 下自动检查失败的子进程
     wait "${pids[@]}"
     echo "  Downloads for $GROUP_NAME finished."
   fi
 
-  # --- 3. 合并 ---
   shopt -s nullglob
   local inputs=("${TEMP_DIR}/input-${GROUP_NAME}-"*.json)
   shopt -u nullglob
@@ -762,8 +664,6 @@ merge_group() {
     exit 1
   fi
 
-  # --- 4. 备份和替换 ---
-  # 规范化 (步骤 1) 后的 $LOCAL_JSON_FILE 现在是旧文件
   if [ -f "$LOCAL_JSON_FILE" ]; then
     local TIMESTAMP
     TIMESTAMP=$(date -u +%Y%m%dT%H%M%SZ)
@@ -772,7 +672,6 @@ merge_group() {
     echo "  Backed up old source to: $backup_file"
   fi
 
-  # 移动新合并的 (未规范化的) 文件
   mv -f "$merged_tmp" "$LOCAL_JSON_FILE"
   echo "  Saved merged UNPROCESSED JSON to: $LOCAL_JSON_FILE"
 
@@ -780,7 +679,7 @@ merge_group() {
   echo "Completed merge for $GROUP_NAME"
 }
 
-# --- 编译函数 (单独) ---
+# --- 编译函数 ---
 compile_srs_file() {
   local GROUP_NAME=$1
   local LOCAL_JSON_FILE="${SOURCE_DIR}/${GROUP_NAME}.json"
@@ -791,7 +690,6 @@ compile_srs_file() {
     return
   fi
 
-  # 查找此组的最新备份
   local json_backup
   json_backup=$(find "$SOURCE_DIR" -name "*-${GROUP_NAME}.json" -type f | sort -r | head -n 1)
 
@@ -803,7 +701,6 @@ compile_srs_file() {
     if [ -n "$json_backup" ] && [ -f "$json_backup" ]; then
       cp -a "$json_backup" "$LOCAL_JSON_FILE"
       echo "    Restored JSON from most recent backup: $json_backup"
-      # 尝试用备份重新编译
       if sing-box rule-set compile "$LOCAL_JSON_FILE" -o "$OUTPUT_SRS_FILE"; then
         echo "    Successfully compiled restored backup."
       else
@@ -823,7 +720,6 @@ compile_all_srs() {
 
   local pids=()
   for group in "${groups[@]}"; do
-    # 并行编译
     compile_srs_file "$group" &
     pids+=($!)
   done
@@ -833,22 +729,17 @@ compile_all_srs() {
   echo "--- 步骤 5: SRS 编译完成 ---"
 }
 
-# --- 清理备份 ---
 cleanup_old_backups() {
   echo "--- 步骤 6: 正在清理旧备份 (每组保留 3 个) ---"
   local groups=("ads" "games-cn" "games-noncn" "ai-cn" "ai-noncn" "media" "network-cn" "network-noncn" "cdn" "hkmotw" "private")
 
   for group in "${groups[@]}"; do
-    # 查找、排序、跳过前 3 个，然后删除其余的
     find "$SOURCE_DIR" -name "*-${group}.json" -type f | sort -r | tail -n +4 | xargs -r rm -f 2>/dev/null || true
   done
   echo "--- 步骤 6: 备份清理完成 ---"
 }
 
-# --- URL 定义 (路径已更新) ---
-# *** 脚本会使用您在下面数组中定义的 ${SOURCE_DIR} 和 ${SUBSET_DIR} 中的本地文件 ***
-# *** 以及在此处添加的任何远程 URL ***
-
+# --- URL 定义 ---
 ads_urls=(
   "${SOURCE_DIR}/ads.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-acfun-ads.json"
@@ -1374,7 +1265,7 @@ private_urls=(
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-private.json"
 )
 
-# --- 步骤 3: 运行主合并 ---
+# --- 步骤 3: 主合并 ---
 echo "--- 步骤 3: 正在运行主合并... ---"
 merge_group "ads" "${ads_urls[@]}"
 merge_group "games-cn" "${games_cn_urls[@]}"
@@ -1389,34 +1280,19 @@ merge_group "hkmotw" "${hkmotw_urls[@]}"
 merge_group "private" "${private_urls[@]}"
 echo "--- 步骤 3: 主合并完成 ---"
 
-
-# --- 步骤 4: 运行 Python 合并后处理 (规范化, cn/!cn 对比) ---
+# --- 步骤 4: Python 合并后处理 ---
 echo "--- 步骤 4: 正在运行 [Python 步骤 2] (合并后处理) ---"
 "$PYTHON_SCRIPT_PATH" --step step2
 echo "--- 步骤 4: [Python 步骤 2] 完成 ---"
 
-
-# --- 步骤 5: 编译所有 SRS 文件 ---
-# (已移至单独的函数 compile_all_srs)
+# --- 步骤 5: 编译 SRS ---
 compile_all_srs
 
-
-# --- 步骤 6: 清理旧备份 ---
-# (已移至单独的函数 cleanup_old_backups)
+# --- 步骤 6: 清理备份 ---
 cleanup_old_backups
 
-
-# --- 结束 ---
 echo "All groups processed successfully!"
 echo "Source JSON files are in: $SOURCE_DIR/"
 echo "Subset JSON files are in: $SUBSET_DIR/"
 echo "Common JSON files are in: $COMMON_DIR/"
 echo "Compiled SRS files are in: $SRS_DIR/"
-
-# --- Git 提交 (注释掉了，按需启用) ---
-# echo "Committing changes..."
-# git config --global user.name "GitHub Actions"
-# git config --global user.email "actions@github.com"
-# git add "${SRS_DIR}/"*.srs "${SOURCE_DIR}/"*.json "${COMMON_DIR}/"*.json
-# git commit -m "Daily rule update: $(date -u +%Y-%m-%dT%H%M%SZ)" || echo "No changes to commit"
-# git push origin main
