@@ -1,4 +1,3 @@
-```yaml
 name: Normalize files (UTF-8 + LF)
 
 on:
@@ -209,4 +208,3 @@ jobs:
       - name: Handle errors gracefully
         if: ${{ failure() }}
         run: echo "❌ Normalization encountered issues; check logs for details."
-```
