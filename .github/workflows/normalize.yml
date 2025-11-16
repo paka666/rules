@@ -14,6 +14,7 @@ jobs:
       TOKEN: ${{ secrets.ALL }}
     permissions:
       contents: write
+      workflows: write
 
     steps:
       - name: Checkout repository
