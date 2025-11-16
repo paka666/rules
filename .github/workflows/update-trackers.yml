@@ -1,17 +1,17 @@
 name: Update trackers daily
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/update-trackers.yml'
-      - 'py/update_trackers.py'
-      - 'trackers/*.txt'
-      - 'trackers/*.bak'
   schedule:
     - cron: "0 15 * * *"
   workflow_dispatch:
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - '.github/workflows/update-trackers.yml'
+#      - 'py/update_trackers.py'
+#      - 'trackers/*.txt'
+#      - 'trackers/*.bak'
 
 jobs:
   update-trackers:
@@ -25,14 +25,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.ALL }}
-
-      - name: Skip if auto commit
-        run: |
-          COMMIT_MSG="$(git log -1 --pretty=%B)"
-          if echo "$COMMIT_MSG" | grep -q "$$ auto $$"; then
-            echo "⏩ Skipping due to auto commit."
-            exit 0
-          fi
 
       - name: Mkdir
         run: |

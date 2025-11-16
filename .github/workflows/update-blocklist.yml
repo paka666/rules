@@ -1,21 +1,21 @@
 name: Update blocklist daily
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/update-blocklist.yml'
-      - 'py/preprocess.py'
-      - 'py/process_ip_blocklist.py'
-      - 'adh/tmp/*.txt'
-      - 'adh/tmp/*.json'
-      - 'adh/blocklist.txt'
-      - 'adh/domain-blocklist.txt'
-      - 'adh/backup/*.txt'
   schedule:
     - cron: "0 17 * * *"
   workflow_dispatch:
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - '.github/workflows/update-blocklist.yml'
+#      - 'py/preprocess.py'
+#      - 'py/process_ip_blocklist.py'
+#      - 'adh/tmp/*.txt'
+#      - 'adh/tmp/*.json'
+#      - 'adh/blocklist.txt'
+#      - 'adh/domain-blocklist.txt'
+#      - 'adh/backup/*.txt'
 
 jobs:
   build:
@@ -29,14 +29,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.ALL }}
-
-      - name: Skip if auto commit
-        run: |
-          COMMIT_MSG="$(git log -1 --pretty=%B)"
-          if echo "$COMMIT_MSG" | grep -q "$$ auto $$"; then
-            echo "⏩ Skipping due to auto commit."
-            exit 0
-          fi
 
       - name: Mkdir
         run: |

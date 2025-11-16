@@ -1,16 +1,16 @@
 name: Test
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/test.yml'
-      - 'srs/script/process_rules.py'
-      - 'srs/*/*.json'
   schedule:
     - cron: "0 16 * * *"
   workflow_dispatch:
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - '.github/workflows/test.yml'
+#      - 'srs/script/process_rules.py'
+#      - 'srs/*/*.json'
 
 jobs:
   merge:
@@ -24,14 +24,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.ALL }}
-
-      - name: Skip if auto commit
-        run: |
-          COMMIT_MSG="$(git log -1 --pretty=%B)"
-          if echo "$COMMIT_MSG" | grep -q "$$ auto $$"; then
-            echo "⏩ Skipping due to auto commit."
-            exit 0
-          fi
 
       - name: Mkdir
         run: |

@@ -1,35 +1,35 @@
 name: Update geo files daily
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/update-geo-files.yml'
-      - 'geo/geoip.dat'
-      - 'geo/geosite.dat'
-      - 'geo/gfwlist_loyalsoldier.txt'
-      - 'geo/gfwlist_anonymous.txt'
-      - 'geo/gfwlist_loukky.txt'
-      - 'geo/gfwlist_original.txt'
-      - 'geo/chnroute_clang.txt'
-      - 'geo/chnroute_gaoyifan.txt'
-      - 'geo/chnroute_clang_cidr.txt'
-      - 'geo/chnroute_soffchen.txt'
-      - 'geo/chnroute_hackl0us.txt'
-      - 'geo/chnroute_blackmatrix7.txt'
-      - 'geo/chnroute6_clang_ipv6.txt'
-      - 'geo/chnroute6_gaoyifan.txt'
-      - 'geo/chnroute6_blackmatrix7.txt'
-      - 'geo/chnlist_accelerated_domains.txt'
-      - 'geo/chnlist_apple_china.txt'
-      - 'geo/chnlist_loyalsoldier_china.txt'
-      - 'geo/chnlist_loyalsoldier_apple.txt'
-      - 'geo/chnlist_loyalsoldier_google.txt'
-      - 'geo/chnlist_blackmatrix7_domain.txt'
   schedule:
     - cron: '0 19 * * *'
   workflow_dispatch:
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - '.github/workflows/update-geo-files.yml'
+#      - 'geo/geoip.dat'
+#      - 'geo/geosite.dat'
+#      - 'geo/gfwlist_loyalsoldier.txt'
+#      - 'geo/gfwlist_anonymous.txt'
+#      - 'geo/gfwlist_loukky.txt'
+#      - 'geo/gfwlist_original.txt'
+#      - 'geo/chnroute_clang.txt'
+#      - 'geo/chnroute_gaoyifan.txt'
+#      - 'geo/chnroute_clang_cidr.txt'
+#      - 'geo/chnroute_soffchen.txt'
+#      - 'geo/chnroute_hackl0us.txt'
+#      - 'geo/chnroute_blackmatrix7.txt'
+#      - 'geo/chnroute6_clang_ipv6.txt'
+#      - 'geo/chnroute6_gaoyifan.txt'
+#      - 'geo/chnroute6_blackmatrix7.txt'
+#      - 'geo/chnlist_accelerated_domains.txt'
+#      - 'geo/chnlist_apple_china.txt'
+#      - 'geo/chnlist_loyalsoldier_china.txt'
+#      - 'geo/chnlist_loyalsoldier_apple.txt'
+#      - 'geo/chnlist_loyalsoldier_google.txt'
+#      - 'geo/chnlist_blackmatrix7_domain.txt'
 
 jobs:
   update-geo-files:
@@ -43,14 +43,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.ALL }}
-
-      - name: Skip if auto commit
-        run: |
-          COMMIT_MSG="$(git log -1 --pretty=%B)"
-          if echo "$COMMIT_MSG" | grep -q "$$ auto $$"; then
-            echo "⏩ Skipping due to auto commit."
-            exit 0
-          fi
 
       - name: remove old files
         run: |

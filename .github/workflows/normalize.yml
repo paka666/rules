@@ -22,14 +22,6 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.ALL }}
 
-      - name: Skip if auto commit
-        run: |
-          COMMIT_MSG="$(git log -1 --pretty=%B)"
-          if echo "$COMMIT_MSG" | grep -q "$$ auto $$"; then
-            echo "⏩ Skipping due to auto commit."
-            exit 0
-          fi
-
       - name: Set Git config
         run: |
           git config --global core.autocrlf input
