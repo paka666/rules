@@ -9,13 +9,29 @@ SRS_DIR="srs"
 TEMP_DIR="temp"
 PYTHON_SCRIPT_PATH="${TEMP_DIR}/process_rules.py"
 
+# --- 自动清理临时目录 ---
+cleanup_temp() {
+  rm -rf "$TEMP_DIR"
+}
+trap cleanup_temp EXIT
+
+# --- 检测系统工具 ---
+HAS_FLOCK=false
+if command -v flock &>/dev/null; then
+  HAS_FLOCK=true
+fi
+
+# 依赖检查
+for cmd in sing-box jq python3; do
+  command -v "$cmd" &>/dev/null || { echo "❌ Missing $cmd"; exit 1; }
+done
+
 # --- 检测下载工具 ---
 DOWNLOAD_TOOL=""
 if command -v curl &>/dev/null; then
   DOWNLOAD_TOOL="curl"
   echo "✓ 检测到 curl，将使用 curl 进行下载"
 elif command -v wget &>/dev/null; then
-  # 检查 wget 是否支持 --fail
   if wget --help 2>&1 | grep -q -- '--fail'; then
     DOWNLOAD_TOOL="wget"
     echo "✓ 检测到 wget (支持 --fail)，将使用 wget 进行下载"
@@ -32,37 +48,34 @@ fi
 download_file() {
   local url="$1"
   local output="$2"
-  local timeout="${3:-180}"
-  
+  local timeout="${3:-120}"
+
   case "$DOWNLOAD_TOOL" in
     curl)
-      curl -fsSL --max-time "$timeout" --retry 1 "$url" -o "$output" 2>/dev/null
-      return $?
+      if ! curl -fsSL --max-time "$timeout" --retry 3 "$url" -o "$output"; then
+        echo "    [错误] curl 下载失败: $url" >&2
+        return 1
+      fi
       ;;
     wget)
-      wget -q --timeout="$timeout" --tries=1 --fail "$url" -O "$output" 2>/dev/null
-      return $?
+      if ! wget -q --timeout="$timeout" --tries=3 --fail "$url" -O "$output"; then
+        echo "    [错误] wget 下载失败: $url" >&2
+        return 1
+      fi
       ;;
     wget-basic)
-      # BusyBox wget 或旧版本 - 不支持 --fail
-      wget -q --timeout="$timeout" --tries=1 "$url" -O "$output" 2>/dev/null
-      local ret=$?
-      # 检查文件大小，如果太小可能是错误页面
-      if [ $ret -eq 0 ] && [ -f "$output" ]; then
-        local size=$(wc -c < "$output" 2>/dev/null || echo "0")
-        if [ "$size" -lt 20 ]; then
-          rm -f "$output"
-          return 1
-        fi
+      if ! wget -q --timeout="$timeout" --tries=3 "$url" -O "$output"; then
+        echo "    [错误] wget-basic 下载失败: $url" >&2
+        return 1
       fi
-      return $ret
       ;;
   esac
+  return 0
 }
 
 # --- 步骤 0: 创建目录和 Python 脚本 ---
 echo "--- 步骤 0: 正在设置环境 ---"
-mkdir -p "$TEMP_DIR" "$SRS_DIR" "$SOURCE_DIR" "$SUBSET_DIR" "$COMMON_DIR"
+mkdir -p "$TEMP_DIR" "$SRS_DIR" "$SOURCE_DIR" "$SUBSET_DIR" "$COMMON_DIR" "${SUBSET_DIR}/tmp"
 
 cat << 'EOF' > "$PYTHON_SCRIPT_PATH"
 #!/usr/bin/env python3
@@ -95,7 +108,7 @@ def merge_cidrs(cidrs_list: Set[str]) -> List[str]:
             else:
                 v6_nets.append(net)
         except ValueError as e:
-            print(f"    [警告] 忽略无效的 IP/CIDR: '{cidr_str}' ({e})", file=sys.stderr)
+            print(f"    [错误] 忽略无效的 IP/CIDR: '{cidr_str}' ({e})", file=sys.stderr)
 
     merged_v4 = list(ipaddress.collapse_addresses(v4_nets))
     merged_v6 = list(ipaddress.collapse_addresses(v6_nets))
@@ -152,7 +165,7 @@ def process_json_file(file_path: Path):
         return
 
     if 'rules' not in data or not isinstance(data['rules'], list):
-        print(f"    [警告] 格式无效，跳过 (无 'rules' 列表): {file_path.name}", file=sys.stderr)
+        print(f"    [错误] 格式无效，跳过 (无 'rules' 列表): {file_path.name}", file=sys.stderr)
         return
 
     allowed_keys = {
@@ -236,8 +249,13 @@ def get_rule_data(file_path: Path) -> Dict[str, Dict[str, Any]]:
                 continue
 
             for key, values in rule.items():
+                # 改进的类型检查
                 if isinstance(values, list):
                     all_keys_obj.setdefault(key, set()).update(values)
+                elif isinstance(values, str):
+                    all_keys_obj.setdefault(key, set()).add(values)
+                else:
+                    print(f"    [错误] 规则键 '{key}' 的值类型无效 ({type(values).__name__}): {values}", file=sys.stderr)
 
             if 'ip_cidr' in rule:
                 ip_obj = rule
@@ -245,7 +263,7 @@ def get_rule_data(file_path: Path) -> Dict[str, Dict[str, Any]]:
                 domain_obj.update(rule)
 
     except Exception as e:
-        print(f"    [警告] 加载规则数据时出错: {file_path.name} ({e})", file=sys.stderr)
+        print(f"    [错误] 加载规则数据时出错: {file_path.name} ({e})", file=sys.stderr)
         return {"domain": {}, "ip": {}, "all_keys": {}}
 
     all_keys_list_obj = {k: list(v) for k, v in all_keys_obj.items()}
@@ -303,7 +321,7 @@ def find_and_remove_dupes(file_cn_path: Path, file_noncn_path: Path, common_path
                     v6_nets = sorted([n for n in ip_nets if n.version == 6], key=lambda n: (n.network_address, n.prefixlen))
                     ip_rule_obj[key] = [str(n) for n in v4_nets] + [str(n) for n in v6_nets]
                 except ValueError as e:
-                    print(f"    [警告] 在 write_rules_from_all_keys 中排序 IP 时出错: {e}", file=sys.stderr)
+                    print(f"    [错误] 在 write_rules_from_all_keys 中排序 IP 时出错: {e}", file=sys.stderr)
                     ip_rule_obj[key] = sorted(all_keys_data[key])
 
         new_rules = []
@@ -401,91 +419,194 @@ EOF
 chmod +x "$PYTHON_SCRIPT_PATH"
 echo "Python 脚本已创建于: $PYTHON_SCRIPT_PATH"
 
-# --- JSON 验证和修复 ---
+# --- JSON 验证和修复 (内存安全 & FD 修复版) ---
 validate_and_fix_json() {
   local file="$1"
-  local group_name="$2"
+  local group_name="${2:-unknown}"
+  local temp_file
+  temp_file=$(mktemp "${TEMP_DIR}/validate.tmp.XXXXXX.json")
+  local jq_err_file
+  jq_err_file=$(mktemp "${TEMP_DIR}/validate.err.XXXXXX.log")
+  local lock_file="${file}.lock"
 
-  if [ ! -f "$file" ] || [ ! -s "$file" ]; then
-    echo "    [警告] 文件未找到或为空: $file"
+  # mktemp 失败检查
+  if [ -z "$temp_file" ] || [ -z "$jq_err_file" ]; then
+    echo "Error: mktemp failed for temp_file or jq_err_file" >&2
     return 1
   fi
 
-  # 检查是否为 HTML 错误页面
-  if head -n 1 "$file" | grep -qi "<!DOCTYPE\|<html"; then
-    echo "    [警告] $file 看起来是 HTML 页面 (可能是 404)，删除"
+  # 清理函数
+  cleanup_validate() {
+    rm -f "$temp_file" "$jq_err_file" "$lock_file"
+  }
+  trap cleanup_validate RETURN
+
+  # 使用子shell隔离文件描述符操作，避免FD泄漏
+  (
+    if [ "$HAS_FLOCK" = true ]; then
+      exec 200>"$lock_file"
+      if ! flock -n 200; then
+        echo "    [错误] 文件 $file 正在被其他进程处理" >&2
+        exit 1
+      fi
+    fi
+
+    # 基本检查
+    if [ ! -f "$file" ] || [ ! -s "$file" ]; then
+      echo "    [错误] 文件未找到或为空: $file" >&2
+      exit 1
+    fi
+
+    # 检查HTML错误页面 (只检查内容，忽略 head 的错误输出)
+    if head -n 1 "$file" 2>/dev/null | grep -qi "<!DOCTYPE\|<html"; then
+      echo "    [错误] $file 是HTML页面,删除" >&2
+      rm -f "$file"
+      exit 1
+    fi
+
+    # 验证JSON - 使用临时文件存储 stderr 以避免大变量内存问题
+    if jq empty "$file" >/dev/null 2> "$jq_err_file"; then
+      # 检查并添加version字段
+      if ! jq -e '.version' "$file" >/dev/null 2>&1; then
+        echo "    [修复] 为 $file 添加 'version' 字段"
+        # 直接重定向到文件，避免 var=$(...)
+        if jq '.version = 1' "$file" > "$temp_file" 2> "$jq_err_file"; then
+          if [ -s "$temp_file" ]; then
+            mv -f "$temp_file" "$file"
+          else
+            echo "    [错误] 无法添加 version 字段: 输出为空" >&2
+            cat "$jq_err_file" >&2
+            exit 1
+          fi
+        else
+          echo "    [错误] 无法添加 version 字段" >&2
+          cat "$jq_err_file" >&2
+          exit 1
+        fi
+      fi
+      exit 0
+    else
+      # jq验证失败，显示错误
+      echo "    [错误] $file JSON无效" >&2
+      cat "$jq_err_file" >&2
+    fi
+
+    # 尝试修复
+    echo "    [错误] 尝试修复 $file ..." >&2
+
+    # 方法1: 使用jq格式化 (流式处理)
+    if jq '.' "$file" > "$temp_file" 2> "$jq_err_file"; then
+      if [ -s "$temp_file" ]; then
+        mv -f "$temp_file" "$file"
+        echo "    [修复] 使用 'jq .' 成功修复"
+        exit 0
+      fi
+    fi
+
+    # 方法2: 包装裸数组 (流式处理)
+    if jq 'if type == "array" then {version: 1, rules: .} else . end' "$file" > "$temp_file" 2> "$jq_err_file"; then
+      if [ -s "$temp_file" ]; then
+        mv -f "$temp_file" "$file"
+        echo "    [修复] 成功包装裸数组"
+        exit 0
+      fi
+    fi
+
+    echo "    [错误] 无法修复JSON: $file" >&2
+    cat "$jq_err_file" >&2
     rm -f "$file"
-    return 1
-  fi
+    exit 1
 
-  if jq empty "$file" >/dev/null 2>&1; then
-    if ! jq 'has("version")' "$file" 2>/dev/null | grep -q true; then
-      echo "    [修复] 正在为 $file 添加 'version' 字段"
-      jq '.version = 1' "$file" > "${file}.tmp.$$" && mv "${file}.tmp.$$" "$file"
-    fi
-    return 0
-  else
-    echo "    [警告] $file 中 JSON 无效, 尝试修复..."
-    local temp_file="${file}.fixed.$$"
+  )
 
-    if jq '.' "$file" > "$temp_file" 2>/dev/null; then
-      mv "$temp_file" "$file"
-      echo "    [修复] 使用 'jq .' 成功修复"
-      return 0
-    fi
-
-    if jq 'if type == "array" then {version: 1, rules: .} else . end' "$file" > "$temp_file" 2>/dev/null; then
-      mv "$temp_file" "$file"
-      echo "    [修复] 成功包装了裸数组"
-      validate_and_fix_json "$file" "$group_name"
-      return 0
-    fi
-
-    echo "    [错误] 无法修复 JSON: $file"
-    rm -f "$file" "$temp_file"
-    return 1
-  fi
+  # 捕获子shell的退出码
+  local ret=$?
+  return $ret
 }
 
-# --- 预处理 subset 文件 ---
+# --- 预处理 subset 文件 (内存安全 & 并发安全版) ---
 preprocess_ruleset() {
   local base_url="$1"
   local exclude_url="$2"
   local output_file="$3"
-  local output_type="$4"
 
   echo "Preprocessing subset: $output_file"
 
+  # CRITICAL FIX: 使用 mktemp 创建真正唯一的临时文件
   local base_temp
   base_temp=$(mktemp "${TEMP_DIR}/base_XXXXXX.json")
   local exclude_temp
   exclude_temp=$(mktemp "${TEMP_DIR}/exclude_XXXXXX.json")
+  local jq_err_file
+  jq_err_file=$(mktemp "${TEMP_DIR}/jq_err_XXXXXX.log")
 
-  trap 'rm -f "$base_temp" "$exclude_temp"' RETURN
-
-  echo "  Downloading base: $base_url"
-  if ! download_file "$base_url" "$base_temp" 180; then
-    echo "Error: [致命] 无法下载 $base_url"
+  # mktemp 失败检查
+  if [ -z "$base_temp" ] || [ -z "$exclude_temp" ] || [ -z "$jq_err_file" ]; then
+    echo "Error: mktemp failed for base/exclude/jq_err" >&2
     return 1
   fi
 
-  if ! jq empty "$base_temp" >/dev/null 2>&1; then
-     echo "Error: [致命] $base_url 下载了无效的 JSON (可能是 404 页面)"
+  # 清理函数
+  cleanup_preprocess() {
+    rm -f "$base_temp" "$exclude_temp" "$jq_err_file"
+  }
+  # 仅使用 RETURN，避免与全局 EXIT trap 冲突
+  trap cleanup_preprocess RETURN
+
+  # 判断 base_url
+  if [[ "$base_url" == /* ]] || [[ "$base_url" == ./* ]] || \
+     [[ "$base_url" == *"${SUBSET_DIR}"* ]] || [[ "$base_url" == *"${SOURCE_DIR}"* ]]; then
+    echo "  Using local base file: $base_url"
+    if [ -f "$base_url" ] && [ -s "$base_url" ]; then
+      cp "$base_url" "$base_temp"
+    else
+      echo "Error: [致命错误] 本地文件不存在或为空: $base_url" >&2
+      return 1
+    fi
+  else
+    echo "  Downloading base: $base_url"
+    if ! download_file "$base_url" "$base_temp" 120; then
+      echo "Error: [致命错误] 无法下载 $base_url" >&2
+      return 1
+    fi
+  fi
+
+  # 验证base文件 (避免变量捕获)
+  if ! jq empty "$base_temp" >/dev/null 2> "$jq_err_file"; then
+     echo "Error: [致命错误] $base_url 返回无效JSON" >&2
+     cat "$jq_err_file" >&2
      return 1
   fi
 
-  echo "  Downloading exclude: $exclude_url"
-  if ! download_file "$exclude_url" "$exclude_temp" 180; then
-    echo "    [警告] 无法下载 exclude: $exclude_url. 将使用空规则列表。"
-    echo '{"version": 1, "rules": []}' > "$exclude_temp"
-  elif ! jq empty "$exclude_temp" >/dev/null 2>&1; then
-    echo "    [警告] $exclude_url 下载了无效的 JSON. 将使用空规则列表。"
+  # 判断 exclude_url
+  if [[ "$exclude_url" == /* ]] || [[ "$exclude_url" == ./* ]] || \
+     [[ "$exclude_url" == *"${SUBSET_DIR}"* ]] || [[ "$exclude_url" == *"${SOURCE_DIR}"* ]]; then
+    echo "  Using local exclude file: $exclude_url"
+    if [ -f "$exclude_url" ] && [ -s "$exclude_url" ]; then
+      cp "$exclude_url" "$exclude_temp"
+    else
+      echo "    [错误] 本地exclude文件不存在: $exclude_url, 使用空规则" >&2
+      echo '{"version": 1, "rules": []}' > "$exclude_temp"
+    fi
+  else
+    echo "  Downloading exclude: $exclude_url"
+    if ! download_file "$exclude_url" "$exclude_temp" 120; then
+      echo "    [错误] 无法下载exclude: $exclude_url, 使用空规则" >&2
+      echo '{"version": 1, "rules": []}' > "$exclude_temp"
+    fi
+  fi
+
+  # 验证exclude文件
+  if ! jq empty "$exclude_temp" >/dev/null 2> "$jq_err_file"; then
+    echo "    [错误] $exclude_url 返回无效JSON, 使用空规则" >&2
+    cat "$jq_err_file" >&2
     echo '{"version": 1, "rules": []}' > "$exclude_temp"
   fi
 
-  jq --slurpfile exclude "$exclude_temp" '
+  # 处理规则 (直接重定向到文件，不经过变量)
+  if ! jq --slurpfile exclude "$exclude_temp" '
     .rules as $base_rules |
-    $exclude[0].rules as $exclude_rules |
+    ($exclude[0].rules // []) as $exclude_rules |
     {
       version: 1,
       rules: $base_rules | map(
@@ -497,14 +618,20 @@ preprocess_ruleset() {
         end
       )
     }
-  ' "$base_temp" > "$output_file"
-
-  if jq empty "$output_file" >/dev/null 2>&1; then
-    echo "  Successfully generated subset: $output_file"
-  else
-    echo "Error: [致命] 为 $output_file 生成了无效的 JSON"
+  ' "$base_temp" > "$output_file" 2> "$jq_err_file"; then
+    echo "Error: [致命错误] jq处理失败" >&2
+    cat "$jq_err_file" >&2
     return 1
   fi
+
+  # 验证输出文件
+  if ! jq empty "$output_file" >/dev/null 2> "$jq_err_file"; then
+    echo "Error: [致命错误] $output_file 生成的JSON无效" >&2
+    cat "$jq_err_file" >&2
+    return 1
+  fi
+
+  echo "  Successfully generated subset: $output_file"
 }
 
 # --- 预处理配置 ---
@@ -512,79 +639,103 @@ preprocess_configs=(
   # game
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-cn@!cn.json"
-  "srs/json/subset/geosite-category-games-cn@cn2.json"
-  "cn"
+  "${SUBSET_DIR}/geosite-category-games-cn@cn2.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-!cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-!cn@cn.json"
-  "srs/json/subset/geosite-category-games-!cn@!cn.json"
-  "!cn"
+  "${SUBSET_DIR}/geosite-category-games-!cn@!cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-platforms-download.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-platforms-download@cn.json"
-  "srs/json/subset/game-platforms-download@!cn.json"
-  "!cn"
+  "${SUBSET_DIR}/game-platforms-download@!cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames@cn.json"
-  "srs/json/subset/geosite-epicgames@!cn.json"
-  "!cn"
+  "${SUBSET_DIR}/geosite-epicgames@!cn.json"
+
   # ai
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-ai-cn.json"
-  "https://raw.githubusercontent.com/paka666/rules/main/srs/json/subset/tmp/geosite-category-ai-cn@!cn.json"
-  "srs/json/subset/geosite-category-ai-cn@cn.json"
-  "cn"
+  "${SUBSET_DIR}/tmp/geosite-category-ai-cn@!cn.json"
+  "${SUBSET_DIR}/geosite-category-ai-cn@cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-doubao.json"
-  "https://raw.githubusercontent.com/paka666/rules/main/srs/json/subset/tmp/geosite-doubao@!cn.json"
-  "srs/json/subset/doubao@cn.json"
-  "cn"
+  "${SUBSET_DIR}/tmp/geosite-doubao@!cn.json"
+  "${SUBSET_DIR}/doubao@cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-jetbrains.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-jetbrains@cn.json"
-  "srs/json/subset/jetbrains@!cn.json"
-  "!cn"
+  "${SUBSET_DIR}/jetbrains@!cn.json"
+
   # network
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn@!cn.json"
-  "srs/json/subset/geosite-category-social-media-cn@cn.json"
-  "cn"
+  "${SUBSET_DIR}/geosite-category-social-media-cn@cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-bank-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-bank-cn@!cn.json"
-  "srs/json/subset/geosite-category-bank-cn@cn.json"
-  "cn"
+  "${SUBSET_DIR}/geosite-category-bank-cn@cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-dev-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-dev-cn@!cn.json"
-  "srs/json/subset/geosite-category-dev-cn@cn2.json"
-  "cn"
+  "${SUBSET_DIR}/geosite-category-dev-cn@cn2.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-entertainment-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-entertainment-cn@!cn.json"
-  "srs/json/subset/geosite-category-entertainment-cn@cn2.json"
-  "cn"
+  "${SUBSET_DIR}/geosite-category-entertainment-cn@cn2.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-!cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-!cn@cn.json"
-  "srs/json/subset/geosite-category-social-media-!cn@!cn.json"
-  "!cn"
+  "${SUBSET_DIR}/geosite-category-social-media-!cn@!cn.json"
 )
 
 echo "--- 步骤 1: 正在运行 'subset' 文件预处理 (下载) ---"
 pids=()
-for ((i=0; i<${#preprocess_configs[@]}; i+=4)); do
-  preprocess_ruleset "${preprocess_configs[i]}" "${preprocess_configs[i+1]}" "${preprocess_configs[i+2]}" "${preprocess_configs[i+3]}" &
+for ((i=0; i<${#preprocess_configs[@]}; i+=3)); do
+  preprocess_ruleset "${preprocess_configs[i]}" "${preprocess_configs[i+1]}" "${preprocess_configs[i+2]}" &
   pids+=($!)
 done
 echo "  Waiting for ${#pids[@]} subset generation jobs..."
-wait "${pids[@]}"
+
+# 等待所有预处理任务并检查错误
+failed=0
+for pid in "${pids[@]}"; do
+  if ! wait "$pid"; then
+    failed=1
+  fi
+done
+
+if [ $failed -eq 1 ]; then
+  echo "Error: [致命错误] 某些预处理任务失败" >&2
+  exit 1
+fi
 echo "--- 步骤 1: 'subset' 文件预处理完成 ---"
 
-# --- 步骤 2: Python 预合并规范化 ---
 echo "--- 步骤 2: 正在运行 [Python 步骤 1] (预合并规范化) ---"
-"$PYTHON_SCRIPT_PATH" --step step1
+if ! "$PYTHON_SCRIPT_PATH" --step step1; then
+  echo "Error: [致命错误] Python 步骤 1 失败" >&2
+  exit 1
+fi
 echo "--- 步骤 2: [Python 步骤 1] 完成 ---"
 
-# --- 合并函数 ---
+# --- 合并函数 (使用文件日志，内存安全) ---
 merge_group() {
   local GROUP_NAME=$1
   shift
   local URLS=("$@")
   local LOCAL_JSON_FILE="${SOURCE_DIR}/${GROUP_NAME}.json"
+  local MAIN_PID=$$
 
-  rm -f "${TEMP_DIR}/input-${GROUP_NAME}-"*.json
+  # 使用 mktemp 创建唯一的日志文件
+  local merge_log
+  merge_log=$(mktemp "${TEMP_DIR}/merge-${GROUP_NAME}-XXXXXX.log")
+
+  # 清理函数
+  cleanup_merge() {
+    rm -f "${TEMP_DIR}/input-${GROUP_NAME}-"*.json
+    rm -f "${TEMP_DIR}/merged-${GROUP_NAME}.json"
+    rm -f "$merge_log"
+  }
+  trap cleanup_merge EXIT INT TERM
 
   echo "Starting merge for group: $GROUP_NAME"
 
@@ -593,65 +744,91 @@ merge_group() {
   local local_files=()
   local remote_urls=()
 
+  # 分类URL
   for url in "${URLS[@]}"; do
-    if [ -z "$url" ]; then
-      continue
-    fi
-    if [[ "$url" == ${SOURCE_DIR}/* ]] || [[ "$url" == ${SUBSET_DIR}/* ]] || [[ "$url" == ./* ]] || [[ "$url" == /* ]]; then
+    [ -z "$url" ] && continue
+    if [[ "$url" == ${SOURCE_DIR}/* ]] || [[ "$url" == ${SUBSET_DIR}/* ]] || \
+       [[ "$url" == ./* ]] || [[ "$url" == /* ]]; then
       local_files+=("$url")
     else
       remote_urls+=("$url")
     fi
   done
 
+  # 处理本地文件
   for file_path in "${local_files[@]}"; do
     local output_file="${TEMP_DIR}/input-$GROUP_NAME-$i.json"
     if [ -f "$file_path" ] && [ -s "$file_path" ]; then
       cp "$file_path" "$output_file"
       echo "  Copied local file: $file_path"
-      ((i++))
+      if validate_and_fix_json "$output_file" "$GROUP_NAME"; then
+        ((i++))
+      else
+        echo "  [错误] 本地文件 $file_path 验证失败, 跳过。" >&2
+        rm -f "$output_file"
+      fi
     else
-      echo "  [警告] 本地文件 $file_path 未找到或为空, 跳过。"
+      echo "  [错误] 本地文件 $file_path 未找到或为空, 跳过。" >&2
     fi
   done
 
+  # 处理远程URL - 修复并行索引问题
+  local idx=0
   for url in "${remote_urls[@]}"; do
-    local current_i=$i
+    local url_copy="$url"
+    local file_index=$((i + idx))
     (
-      local file_index=$current_i
       local output_file="${TEMP_DIR}/input-$GROUP_NAME-$file_index.json"
 
-      echo "  Downloading: $url"
-      if download_file "$url" "$output_file" 180; then
-        echo "    Downloaded: $url"
-        if ! validate_and_fix_json "$output_file" "$GROUP_NAME"; then
-          echo "    [错误] 下载的 $url 无效, 已删除。"
+      echo "  Downloading: $url_copy"
+      if download_file "$url_copy" "$output_file" 120; then
+        echo "    Downloaded: $url_copy"
+        if validate_and_fix_json "$output_file" "$GROUP_NAME"; then
+          echo "    Validated: $url_copy"
+        else
+          echo "    [错误] $url_copy 验证失败, 已删除。" >&2
           rm -f "$output_file"
+          exit 1
         fi
       else
-        echo "Error: [致命] 无法下载 $url (group $GROUP_NAME)"
-        kill -s TERM $$
+        echo "Error: [致命错误] 无法下载 $url_copy (group $GROUP_NAME)" >&2
+        rm -f "$output_file"
+        kill -s TERM $MAIN_PID
+        exit 1
       fi
     ) &
     pids+=($!)
-    ((i++))
+    ((idx++))
   done
 
+  # 更新索引
+  i=$((i + idx))
+
+  # 等待所有下载完成并检查错误
   if [ ${#pids[@]} -gt 0 ]; then
     echo "  Waiting for ${#pids[@]} downloads for group $GROUP_NAME..."
-    wait "${pids[@]}"
+    local failed=0
+    for pid in "${pids[@]}"; do
+      if ! wait "$pid"; then failed=1; fi
+    done
+    if [ $failed -eq 1 ]; then
+      echo "Error: [致命错误] 组 $GROUP_NAME 有下载失败" >&2
+      exit 1
+    fi
     echo "  Downloads for $GROUP_NAME finished."
   fi
 
+  # 检查可用输入
   shopt -s nullglob
   local inputs=("${TEMP_DIR}/input-${GROUP_NAME}-"*.json)
   shopt -u nullglob
 
   if [ "${#inputs[@]}" -eq 0 ]; then
-    echo "Error: [致命] 组 $GROUP_NAME 没有可用的输入文件 — 停止合并。"
+    echo "Error: [致命错误] 组 $GROUP_NAME 没有可用的输入文件，停止合并。" >&2
     exit 1
   fi
 
+  # 合并文件
   echo "  Merging ${#inputs[@]} files for group $GROUP_NAME..."
   local merged_tmp="${TEMP_DIR}/merged-${GROUP_NAME}.json"
   local config_flags=()
@@ -659,11 +836,14 @@ merge_group() {
     config_flags+=("-c" "$input_file")
   done
 
-  if ! sing-box rule-set merge "$merged_tmp" "${config_flags[@]}"; then
-    echo "Error: [致命] sing-box 合并 $GROUP_NAME 失败"
+  # sing-box 合并，日志输出到文件
+  if ! sing-box rule-set merge "$merged_tmp" "${config_flags[@]}" > "$merge_log" 2>&1; then
+    echo "Error: [致命错误] sing-box 合并 $GROUP_NAME 失败" >&2
+    cat "$merge_log" >&2
     exit 1
   fi
 
+  # 备份与保存
   if [ -f "$LOCAL_JSON_FILE" ]; then
     local TIMESTAMP
     TIMESTAMP=$(date -u +%Y%m%dT%H%M%SZ)
@@ -673,42 +853,59 @@ merge_group() {
   fi
 
   mv -f "$merged_tmp" "$LOCAL_JSON_FILE"
-  echo "  Saved merged UNPROCESSED JSON to: $LOCAL_JSON_FILE"
-
-  rm -f "${TEMP_DIR}/input-${GROUP_NAME}-"*.json
+  echo "  Saved merged JSON to: $LOCAL_JSON_FILE"
   echo "Completed merge for $GROUP_NAME"
 }
 
-# --- 编译函数 ---
+# --- 编译函数 (使用文件日志，修复日志显示) ---
 compile_srs_file() {
   local GROUP_NAME=$1
   local LOCAL_JSON_FILE="${SOURCE_DIR}/${GROUP_NAME}.json"
   local OUTPUT_SRS_FILE="${SRS_DIR}/${GROUP_NAME}.srs"
 
+  # 使用 mktemp
+  local compile_log
+  compile_log=$(mktemp "${TEMP_DIR}/compile-${GROUP_NAME}-XXXXXX.log")
+
   if [ ! -f "$LOCAL_JSON_FILE" ]; then
-    echo "  [警告] 编译跳过: 未找到 $LOCAL_JSON_FILE"
+    echo "  [错误] 编译跳过: 未找到 $LOCAL_JSON_FILE" >&2
     return
   fi
 
+  # 查找备份文件 - 显示find错误
   local json_backup
-  json_backup=$(find "$SOURCE_DIR" -name "*-${GROUP_NAME}.json" -type f | sort -r | head -n 1)
+  local find_output
+  if ! find_output=$(find "$SOURCE_DIR" -name "*-${GROUP_NAME}.json" -type f 2>&1); then
+    echo "    [错误] 查找备份时出错: $find_output" >&2
+    json_backup=""
+  else
+    json_backup=$(echo "$find_output" | sort -r | head -n 1)
+  fi
 
   echo "  Compiling SRS file for $GROUP_NAME..."
-  if sing-box rule-set compile "$LOCAL_JSON_FILE" -o "$OUTPUT_SRS_FILE"; then
+
+  # 编译并重定向输出到文件
+  if sing-box rule-set compile "$LOCAL_JSON_FILE" -o "$OUTPUT_SRS_FILE" > "$compile_log" 2>&1; then
     echo "    Successfully compiled: $OUTPUT_SRS_FILE"
+    rm -f "$compile_log"
   else
-    echo "    Error: [致命] 编译 $GROUP_NAME 失败"
+    echo "    Error: [致命错误] 编译 $GROUP_NAME 失败" >&2
+    cat "$compile_log" >&2
+
     if [ -n "$json_backup" ] && [ -f "$json_backup" ]; then
       cp -a "$json_backup" "$LOCAL_JSON_FILE"
       echo "    Restored JSON from most recent backup: $json_backup"
-      if sing-box rule-set compile "$LOCAL_JSON_FILE" -o "$OUTPUT_SRS_FILE"; then
+
+      if sing-box rule-set compile "$LOCAL_JSON_FILE" -o "$OUTPUT_SRS_FILE" > "$compile_log" 2>&1; then
         echo "    Successfully compiled restored backup."
+        rm -f "$compile_log"
       else
-        echo "    Error: [致命] 连备份 $json_backup 都编译失败！"
+        echo "    Error: [致命错误] 连备份 $json_backup 都编译失败！" >&2
+        cat "$compile_log" >&2
         exit 1
       fi
     else
-      echo "    Error: [致命] 编译失败且未找到备份文件可恢复。"
+      echo "    Error: [致命错误] 编译失败且未找到备份文件可恢复。" >&2
       exit 1
     fi
   fi
@@ -725,7 +922,19 @@ compile_all_srs() {
   done
 
   echo "  Waiting for ${#pids[@]} compile jobs..."
-  wait "${pids[@]}"
+
+  local failed=0
+  for pid in "${pids[@]}"; do
+    if ! wait "$pid"; then
+      failed=1
+    fi
+  done
+
+  if [ $failed -eq 1 ]; then
+    echo "Error: [致命错误] 某些编译任务失败" >&2
+    exit 1
+  fi
+
   echo "--- 步骤 5: SRS 编译完成 ---"
 }
 
@@ -734,7 +943,7 @@ cleanup_old_backups() {
   local groups=("ads" "games-cn" "games-noncn" "ai-cn" "ai-noncn" "media" "network-cn" "network-noncn" "cdn" "hkmotw" "private")
 
   for group in "${groups[@]}"; do
-    find "$SOURCE_DIR" -name "*-${group}.json" -type f | sort -r | tail -n +4 | xargs -r rm -f 2>/dev/null || true
+    find "$SOURCE_DIR" -name "*-${group}.json" -type f 2>/dev/null | sort -r | tail -n +4 | xargs -r rm -f || true
   done
   echo "--- 步骤 6: 备份清理完成 ---"
 }
@@ -1282,7 +1491,10 @@ echo "--- 步骤 3: 主合并完成 ---"
 
 # --- 步骤 4: Python 合并后处理 ---
 echo "--- 步骤 4: 正在运行 [Python 步骤 2] (合并后处理) ---"
-"$PYTHON_SCRIPT_PATH" --step step2
+if ! "$PYTHON_SCRIPT_PATH" --step step2; then
+  echo "Error: [致命错误] Python 步骤 2 失败" >&2
+  exit 1
+fi
 echo "--- 步骤 4: [Python 步骤 2] 完成 ---"
 
 # --- 步骤 5: 编译 SRS ---
