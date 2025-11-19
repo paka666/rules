@@ -125,6 +125,7 @@ http://211.75.205.187/announce
 http://211.75.205.187:6969/announce
 http://211.75.205.188/announce
 http://211.75.205.188:6969/announce
+http://211.75.205.189/announce
 http://211.75.205.189:6969/announce
 http://211.75.210.221/announce
 http://211.75.210.221:6969/announce
@@ -1056,6 +1057,7 @@ udp://211.75.205.187/announce
 udp://211.75.205.187:6969/announce
 udp://211.75.205.188/announce
 udp://211.75.205.188:6969/announce
+udp://211.75.205.189/announce
 udp://211.75.205.189:6969/announce
 udp://211.75.210.221/announce
 udp://211.75.210.221:6969/announce
