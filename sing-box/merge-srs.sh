@@ -218,9 +218,9 @@ has_critical_error = False
 error_counts = defaultdict(int)
 
 BASE_DIR = Path.cwd()
-SOURCE_DIR = BASE_DIR / "sing-box/json/source"
-SUBSET_DIR = BASE_DIR / "sing-box/json/subset"
-COMMON_DIR = BASE_DIR / "sing-box/json/common"
+SOURCE_DIR = BASE_DIR / "json/source"
+SUBSET_DIR = BASE_DIR / "json/subset"
+COMMON_DIR = BASE_DIR / "json/common"
 
 def mark_critical_error(msg: str):
     """标记发生严重错误"""
