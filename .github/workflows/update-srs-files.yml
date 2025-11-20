@@ -9,9 +9,9 @@ on:
 #      - main
 #    paths:
 #      - '.github/workflows/update-srs-files.yml'
-#      - 'srs/merge-srs.sh'
-#      - 'srs/json/**/*.json'
-#      - 'srs/*.srs'
+#      - 'sing-box/merge-srs.sh'
+#      - 'sing-box/json/**/*.json'
+#      - 'sing-box/srs/*.srs'
 
 jobs:
   merge:
@@ -26,10 +26,6 @@ jobs:
         with:
           token: ${{ secrets.ALL }}
           ref: ${{ github.head_ref }}
-
-#      - name: Mkdir
-#        run: |
-#          mkdir -p temp srs srs/json srs/json/common srs/json/source srs/json/subset
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -54,20 +50,20 @@ jobs:
 
       - name: Run merge script
         run: |
-          chmod +x srs/merge-srs.sh
-          bash srs/merge-srs.sh
+          chmod +x sing-box/merge-srs.sh
+          bash sing-box/merge-srs.sh
 
       - name: Upload Artifacts (Logs)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: execution-logs
-          path: srs/logs/
+          path: sing-box/logs
 
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "[auto] chore: update srs rules daily"
-          file_pattern: "srs/*.srs srs/json/**/*.json"
+          file_pattern: "sing-box/srs/*.srs sing-box/json/**/*.json"
           skip_dirty_check: false
           skip_fetch: true

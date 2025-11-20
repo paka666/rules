@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        ".cdn.jetbrains.com",
+        ".coze.com",
+        ".download-cdn.jetbrains.com.cn",
+        ".marscode.com",
+        ".trae.ai"
+      ],
+      "domain": [
+        "cdn.jetbrains.com",
+        "coze.com",
+        "download-cdn.jetbrains.com.cn",
+        "marscode.com",
+        "trae.ai"
+      ],
+      "domain_keyword": [],
+      "domain_regex": [],
+      "ip_cidr": []
+    }
+  ]
+}

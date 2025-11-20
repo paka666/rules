@@ -1,59 +1,46 @@
 #!/usr/bin/env bash
 # ============================================================================
-# merge-srs.sh - Sing-box Rule Set Merge Script (终极修复版 - 基于 test1/test2/test3 整合)
+# merge-srs.sh - Sing-box Rule Set Merge Script
 # ============================================================================
-# 修复与优化摘要 (基于 test1/test2/test3 查漏补缺):
-# [修复1: 从 test2] 全局 trap 冲突 - 使用更可靠的信号处理和多个 trap 确保清理。
-# [修复2: 从 test2] 路径判断逻辑 - 修复误判，使用完整路径匹配。
-# [修复3: 从 test2] find 命令输出处理 - 避免管道破坏多行输出，使用 sort -r | head/tail。
-# [修复4: 从 test2] 时间戳冲突 - 添加纳秒级精度 (GNU date)，macOS 兼容添加 $$ PID 后缀。
-# [修复5: 从 test2] 磁盘空间检查 - 添加预检和警告。
-# [修复6: 从 test3] 日志系统标准化 - 全局重定向所有 stdout/stderr 到日志，支持颜色；分层错误记录。
-# [修复7: 从 test2] 并发数限制 - 防止创建过多进程，使用批次控制。
-# [修复8: 从 test2] 数组空元素检查 - has_valid_array_elements 函数。
-# [修复9: 从 test2] 常量定义 - 避免魔法数字。
-# [修复10: 从 test2] 下载工具检测优化 - 区分 wget --fail 支持。
-# [修复11: 从 test3] Bash 版本检查 - 要求 Bash 4.0+ 以支持 local -n 等。
-# [修复12: 从 test1/test3] Python 错误传播 - 全局 has_critical_error，确保退出码传播。
-# [修复13: 从 test1/test3] 路径依赖 - 支持任意目录运行，使用 SCRIPT_DIR 绝对路径。
-# [修复14: 从 test1] 并发锁优化 - 跳过临时文件锁 (skip_lock=true)。
-# [修复15: 从 test1] 并发控制逻辑 - 修复数组操作错误，使用 pids 数组批次等待。
-# [修复16: 从 test1] 错误处理完整性 - 确保错误正确传播，失败时 fatal。
-# [优化1: 从 test1] macOS 时间戳修复 - 添加 $$ 作为后缀。
-# [优化2: 从 test1] 清理逻辑增强 - 防止意外删除，只清理确认的 TEMP_DIR。
-# [优化3: 新增] 日志分层 - 容易定位问题: 简要输出 (e.g., "Download failed: URL X")；不容易定位: 详情到日志 + 简要提示 (e.g., "jq error in file Y, see log")。
-# [优化4: 新增] Python 脚本完整补全 - 整合 test2 的 typing 和完整函数，确保 step2 去重逻辑。
-# [优化5: 新增] 所有潜在失败点日志 - download/jq/sing-box/python 等捕获输出到 merge_log/compile_log 并 tee 到主日志。
-# ============================================================================
+
 # 检查 Bash 版本
 if [ "${BASH_VERSINFO:-0}" -lt 4 ]; then
   echo "Error: Bash 4.0+ is required. On macOS, install via 'brew install bash'." >&2
   exit 1
 fi
+
 set -euo pipefail
+
 # ============================================================================
 # 1. 基础环境与日志配置
 # ============================================================================
+
 # 获取脚本所在目录的绝对路径
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR" || exit 1
+
 # 日志配置
 readonly LOG_DIR="${SCRIPT_DIR}/logs"
 mkdir -p "$LOG_DIR"
 readonly LOG_FILE="${LOG_DIR}/merge-$(date '+%Y%m%d-%H%M%S').log"
+
 # 保存原始文件描述符
 exec 3>&1
 exec 4>&2
+
 # 重定向所有输出到屏幕和日志文件 (兼容 Linux/macOS 进程替换)
 echo "--- Logging initialized: $LOG_FILE ---"
 exec > >(tee -a "$LOG_FILE") 2>&1
+
 # 定义带颜色的日志函数
 log_info() {
   echo -e "\033[32m[INFO]\033[0m $(date '+%Y-%m-%d %H:%M:%S') - $*"
 }
+
 log_warn() {
   echo -e "\033[33m[WARN]\033[0m $(date '+%Y-%m-%d %H:%M:%S') - $*" >&2
 }
+
 log_error() {
   local msg="[ERROR] $(date '+%Y-%m-%d %H:%M:%S') - $*"
   echo -e "\033[31m${msg}\033[0m" >&2
@@ -62,14 +49,17 @@ log_error() {
     echo "$*" >> "$LOG_FILE"
   fi
 }
+
 log_fatal() {
   local msg="[FATAL] $(date '+%Y-%m-%d %H:%M:%S') - $*"
   echo -e "\033[41;37m${msg}\033[0m" >&2
   exec 1>&3 2>&4
   exit 1
 }
+
 log_info "=== Script started at $(date) ==="
 log_info "Logging to: $LOG_FILE"
+
 # ============================================================================
 # 2. 常量定义
 # ============================================================================
@@ -78,13 +68,15 @@ readonly MAX_CONCURRENT_DOWNLOADS=20
 readonly MAX_CONCURRENT_COMPILES=10
 readonly MIN_DISK_SPACE_MB=1000
 readonly BACKUP_KEEP_COUNT=3
+
 # 目录配置
 readonly SOURCE_DIR="${SCRIPT_DIR}/json/source"
 readonly SUBSET_DIR="${SCRIPT_DIR}/json/subset"
 readonly COMMON_DIR="${SCRIPT_DIR}/json/common"
-readonly SRS_DIR="${SCRIPT_DIR}"
+readonly SRS_DIR="${SCRIPT_DIR}/srs"
 readonly TEMP_DIR="${SCRIPT_DIR}/temp"
 readonly PYTHON_SCRIPT_PATH="${TEMP_DIR}/process_rules.py"
+
 # ============================================================================
 # 3. 清理与信号处理
 # ============================================================================
@@ -94,9 +86,11 @@ cleanup_temp() {
     rm -rf "$TEMP_DIR"
   fi
 }
+
 trap 'cleanup_temp' EXIT
 trap 'cleanup_temp; exit 130' INT
 trap 'cleanup_temp; exit 143' TERM
+
 # ============================================================================
 # 4. 系统检查
 # ============================================================================
@@ -112,12 +106,14 @@ check_disk_space() {
     log_warn "Could not check disk space, proceeding anyway"
   fi
 }
+
 # 工具检测
 HAS_FLOCK=false
 if command -v flock &>/dev/null; then
   HAS_FLOCK=true
   log_info "flock detected, file locking enabled"
 fi
+
 log_info "Checking dependencies..."
 for cmd in sing-box jq python3; do
   if ! command -v "$cmd" &>/dev/null; then
@@ -125,6 +121,7 @@ for cmd in sing-box jq python3; do
   fi
 done
 log_info "All dependencies satisfied"
+
 detect_download_tool() {
   if command -v curl &>/dev/null; then
     echo "curl"
@@ -141,16 +138,20 @@ detect_download_tool() {
     log_fatal "Neither curl nor wget found"
   fi
 }
+
 readonly DOWNLOAD_TOOL=$(detect_download_tool)
+
 # ============================================================================
 # 5. 核心函数
 # ============================================================================
+
 download_file() {
   local url="$1"
   local output="$2"
   local timeout="${3:-$DOWNLOAD_TIMEOUT}"
   local dl_log
   dl_log=$(mktemp "${TEMP_DIR}/dl-XXXXXX.log") || return 1
+
   case "$DOWNLOAD_TOOL" in
     curl)
       if ! curl -fsSL --max-time "$timeout" --retry 3 "$url" -o "$output" 2>"$dl_log"; then
@@ -177,6 +178,7 @@ download_file() {
   rm -f "$dl_log"
   return 0
 }
+
 is_local_path() {
   local path="$1"
   [[ "$path" =~ ^/ ]] && return 0
@@ -187,12 +189,14 @@ is_local_path() {
   [[ "$path" == *"${COMMON_DIR}"* ]] && return 0
   return 1
 }
+
 # ============================================================================
 # 6. Python 脚本生成
 # ============================================================================
 log_info "=== Step 0: Setting up environment ==="
 check_disk_space "."
 mkdir -p "$TEMP_DIR" "$SRS_DIR" "$SOURCE_DIR" "$SUBSET_DIR" "$COMMON_DIR" "${SUBSET_DIR}/tmp"
+
 cat << 'PYTHON_SCRIPT_EOF' > "$PYTHON_SCRIPT_PATH"
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -200,6 +204,7 @@ cat << 'PYTHON_SCRIPT_EOF' > "$PYTHON_SCRIPT_PATH"
 Sing-box Rule Set Processing Script
 全局错误标志 has_critical_error，确保传播到 Bash
 """
+
 import json
 import ipaddress
 import sys
@@ -208,26 +213,33 @@ import argparse
 from pathlib import Path
 from typing import List, Set, Dict, Any, Tuple
 from collections import defaultdict
+
 has_critical_error = False
 error_counts = defaultdict(int)
+
 BASE_DIR = Path.cwd()
-SOURCE_DIR = BASE_DIR / "srs/json/source"
-SUBSET_DIR = BASE_DIR / "srs/json/subset"
-COMMON_DIR = BASE_DIR / "srs/json/common"
+SOURCE_DIR = BASE_DIR / "sing-box/json/source"
+SUBSET_DIR = BASE_DIR / "sing-box/json/subset"
+COMMON_DIR = BASE_DIR / "sing-box/json/common"
+
 def mark_critical_error(msg: str):
     """标记发生严重错误"""
     global has_critical_error
     has_critical_error = True
     print(f"[CRITICAL ERROR] {msg}", file=sys.stderr)
+
 def merge_cidrs(cidrs_list: Set[str]) -> List[str]:
     """合并和验证 CIDR 地址列表"""
     valid_ip_nets = []
+
     for cidr_str in cidrs_list:
         if not cidr_str:
             continue
+
         s_clean = re.sub(r'\s+', '', cidr_str.strip())
         if not s_clean:
             continue
+
         try:
             net = ipaddress.ip_network(s_clean, strict=False)
             valid_ip_nets.append(net)
@@ -235,37 +247,51 @@ def merge_cidrs(cidrs_list: Set[str]) -> List[str]:
             error_counts['invalid_ip'] += 1
             if error_counts['invalid_ip'] <= 10:
                 print(f"[WARNING] Invalid IP/CIDR ignored: '{cidr_str}' - {e}", file=sys.stderr)
+
     if not valid_ip_nets:
         return []
+
     v4_nets = [n for n in valid_ip_nets if n.version == 4]
     v6_nets = [n for n in valid_ip_nets if n.version == 6]
+
     merged_v4 = list(ipaddress.collapse_addresses(v4_nets)) if v4_nets else []
     merged_v6 = list(ipaddress.collapse_addresses(v6_nets)) if v6_nets else []
+
     sorted_v4 = sorted(merged_v4, key=lambda n: (n.network_address, n.prefixlen))
     sorted_v6 = sorted(merged_v6, key=lambda n: (n.network_address, n.prefixlen))
+
     return [str(n) for n in sorted_v4] + [str(n) for n in sorted_v6]
+
 def normalize_domains_and_suffixes(
     all_domains: Set[str],
     all_domain_suffixes: Set[str]
 ) -> Tuple[List[str], List[str]]:
     """规范化域名和后缀"""
+
     def _normalize_item(raw: str) -> str | None:
         if not raw:
             return None
+
         s = re.sub(r'\s+', '', raw.strip())
         if not s:
             return None
+
         s = re.sub(r'^(?:\.www\.|www\.)', '', s, flags=re.IGNORECASE)
         s = s.lstrip('.').lower()
+
         return s if s else None
+
     normalized_set: Set[str] = set()
     for item in all_domains | all_domain_suffixes:
         cleaned = _normalize_item(item)
         if cleaned:
             normalized_set.add(cleaned)
+
     final_domains = sorted(list(normalized_set))
     final_domain_suffixes = sorted([f".{d}" for d in normalized_set])
+
     return final_domains, final_domain_suffixes
+
 def process_json_file(file_path: Path):
     """处理单个 JSON 文件"""
     try:
@@ -277,9 +303,11 @@ def process_json_file(file_path: Path):
     except IOError as e:
         mark_critical_error(f"Cannot read file: {file_path.name} - {e}")
         return
+
     if 'rules' not in data or not isinstance(data['rules'], list):
         mark_critical_error(f"Invalid format (no 'rules' list): {file_path.name}")
         return
+
     allowed_keys = {
         'domain',
         'domain_suffix',
@@ -287,30 +315,37 @@ def process_json_file(file_path: Path):
         'domain_regex',
         'ip_cidr'
     }
+
     all_domains = set()
     all_domain_suffixes = set()
     all_domain_keywords = set()
     all_domain_regex = set()
     all_ip_cidrs = set()
+
     for rule_obj in data.get('rules', []):
         if not isinstance(rule_obj, dict):
             continue
+
         unknown_keys = set(rule_obj.keys()) - allowed_keys
         if unknown_keys:
             mark_critical_error(f"Unknown rule keys in {file_path.name}: {unknown_keys}")
             print("Script aborted. Please check JSON format or update 'allowed_keys'.", file=sys.stderr)
             sys.exit(1)
+
         all_domains.update(rule_obj.get('domain', []))
         all_domain_suffixes.update(rule_obj.get('domain_suffix', []))
         all_domain_keywords.update(rule_obj.get('domain_keyword', []))
         all_domain_regex.update(rule_obj.get('domain_regex', []))
         all_ip_cidrs.update(rule_obj.get('ip_cidr', []))
+
     sorted_domains, sorted_suffixes = normalize_domains_and_suffixes(all_domains, all_domain_suffixes)
     sorted_keywords = sorted(list(all_domain_keywords))
     sorted_regex = sorted(list(all_domain_regex))
     sorted_ips = merge_cidrs(all_ip_cidrs)
+
     domain_rule_obj = {}
     ip_rule_obj = {}
+
     if sorted_domains:
         domain_rule_obj['domain'] = sorted_domains
     if sorted_suffixes:
@@ -319,32 +354,41 @@ def process_json_file(file_path: Path):
         domain_rule_obj['domain_keyword'] = sorted_keywords
     if sorted_regex:
         domain_rule_obj['domain_regex'] = sorted_regex
+
     if sorted_ips:
         ip_rule_obj['ip_cidr'] = sorted_ips
+
     new_rules = []
     if domain_rule_obj:
         new_rules.append(domain_rule_obj)
     if ip_rule_obj:
         new_rules.append(ip_rule_obj)
+
     new_data = {"version": 1, "rules": new_rules}
+
     try:
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(new_data, f, indent=2, ensure_ascii=False)
     except IOError as e:
         mark_critical_error(f"Cannot write file: {file_path.name} - {e}")
+
 def get_rule_data(file_path: Path) -> Dict[str, Dict[str, Any]]:
     """获取规则数据"""
     domain_obj = {}
     ip_obj = {}
     all_keys_obj = {}
+
     if not file_path.exists():
         return {"domain": {}, "ip": {}, "all_keys": {}}
+
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
+
         for rule in data.get('rules', []):
             if not isinstance(rule, dict):
                 continue
+
             for key, values in rule.items():
                 if isinstance(values, list):
                     all_keys_obj.setdefault(key, set()).update(values)
@@ -352,70 +396,92 @@ def get_rule_data(file_path: Path) -> Dict[str, Dict[str, Any]]:
                     all_keys_obj.setdefault(key, set()).add(values)
                 else:
                     print(f"[WARNING] Invalid value type for key '{key}': {type(values).__name__}", file=sys.stderr)
+
             if 'ip_cidr' in rule:
                 ip_obj = rule
             else:
                 domain_obj.update(rule)
+
     except Exception as e:
         mark_critical_error(f"Failed to load rule data: {file_path.name} - {e}")
         return {"domain": {}, "ip": {}, "all_keys": {}}
+
     all_keys_list_obj = {k: list(v) for k, v in all_keys_obj.items()}
+
     return {"domain": domain_obj, "ip": ip_obj, "all_keys": all_keys_list_obj}
+
 def find_and_remove_dupes(file_cn_path: Path, file_noncn_path: Path, common_path: Path):
     """查找并移除重复规则"""
     data_cn = get_rule_data(file_cn_path)
     data_noncn = get_rule_data(file_noncn_path)
     data_common_old = get_rule_data(common_path)
+
     new_common_all_keys = {}
     all_rule_keys = ['domain', 'domain_suffix', 'domain_keyword', 'domain_regex', 'ip_cidr']
+
     for key in all_rule_keys:
         set_cn = set(data_cn["all_keys"].get(key, []))
         set_noncn = set(data_noncn["all_keys"].get(key, []))
         set_common_old = set(data_common_old["all_keys"].get(key, []))
+
         common_items_new = set_cn.intersection(set_noncn)
         common_items_all = common_items_new.union(set_common_old)
+
         if common_items_all:
             new_common_all_keys[key] = list(common_items_all)
+
             remaining_cn = set_cn - common_items_all
             remaining_noncn = set_noncn - common_items_all
+
             if remaining_cn:
                 data_cn["all_keys"][key] = list(remaining_cn)
             else:
                 data_cn["all_keys"].pop(key, None)
+
             if remaining_noncn:
                 data_noncn["all_keys"][key] = list(remaining_noncn)
             else:
                 data_noncn["all_keys"].pop(key, None)
+
     def write_rules_from_all_keys(file_path: Path, all_keys_data: Dict[str, Any]):
         domain_rule_obj = {}
         ip_rule_obj = {}
+
         domain_keys = ['domain', 'domain_suffix', 'domain_keyword', 'domain_regex']
         ip_keys = ['ip_cidr']
+
         for key in domain_keys:
             if key in all_keys_data:
                 domain_rule_obj[key] = sorted(all_keys_data[key])
+
         for key in ip_keys:
             if key in all_keys_data and all_keys_data[key]:
                 sorted_merged_ips = merge_cidrs(set(all_keys_data[key]))
                 if sorted_merged_ips:
                     ip_rule_obj[key] = sorted_merged_ips
+
         new_rules = []
         if domain_rule_obj:
             new_rules.append(domain_rule_obj)
         if ip_rule_obj:
             new_rules.append(ip_rule_obj)
+
         new_data = {"version": 1, "rules": new_rules}
+
         try:
             file_path.parent.mkdir(parents=True, exist_ok=True)
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(new_data, f, indent=2, ensure_ascii=False)
         except IOError as e:
             mark_critical_error(f"Cannot write common file: {file_path.name} - {e}")
+
     # 写新 common
     write_rules_from_all_keys(common_path, new_common_all_keys)
+
     # 写更新后的 cn/noncn
     write_rules_from_all_keys(file_cn_path, data_cn["all_keys"])
     write_rules_from_all_keys(file_noncn_path, data_noncn["all_keys"])
+
 def run_step1_pre_merge():
     """预合并规范化"""
     SOURCE_DIR.mkdir(exist_ok=True)
@@ -426,40 +492,48 @@ def run_step1_pre_merge():
     for f in SUBSET_DIR.glob("*.json"):
         if f.is_file():
             process_json_file(f)
+
 def run_step2_post_merge():
     """后合并处理，包括去重"""
     SOURCE_DIR.mkdir(exist_ok=True)
     COMMON_DIR.mkdir(exist_ok=True)
+
     # 处理 source JSON (排除备份)
     for f in SOURCE_DIR.glob("*.json"):
         if f.is_file() and not re.match(r'^\d{8}T\d{6}', f.name):
             process_json_file(f)
+
     # 处理对称组去重 (e.g., games-cn/noncn, ai-cn/noncn, network-cn/noncn)
     groups = [("games-cn", "games-noncn"), ("ai-cn", "ai-noncn"), ("network-cn", "network-noncn")]
     for cn_group, noncn_group in groups:
         cn_path = SOURCE_DIR / f"{cn_group}.json"
         noncn_path = SOURCE_DIR / f"{noncn_group}.json"
-        common_path = COMMON_DIR / f"{cn_group.rsplit('-',1)[0]}-common.json"  # e.g., games-common.json
+        common_path = COMMON_DIR / f"{cn_group.rsplit('-',1)[0]}-common.json"
         if cn_path.exists() and noncn_path.exists():
             find_and_remove_dupes(cn_path, noncn_path, common_path)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--step', choices=['step1', 'step2'], required=True)
     args = parser.parse_args()
+
     if args.step == 'step1':
         run_step1_pre_merge()
     elif args.step == 'step2':
         run_step2_post_merge()
+
     # 退出码检查
     if has_critical_error:
         print("\n[FATAL] Critical errors occurred during Python processing.", file=sys.stderr)
         sys.exit(1)
     else:
         sys.exit(0)
+
 if __name__ == "__main__":
     main()
 PYTHON_SCRIPT_EOF
 chmod +x "$PYTHON_SCRIPT_PATH"
+
 # ============================================================================
 # 7. JSON 验证函数
 # ============================================================================
@@ -467,13 +541,16 @@ validate_and_fix_json() {
   local file="$1"
   local group_name="${2:-unknown}"
   local skip_lock="${3:-false}"
+
   local temp_file
   temp_file=$(mktemp "${TEMP_DIR}/validate.tmp.XXXXXX.json") || return 1
   local jq_err_file
   jq_err_file=$(mktemp "${TEMP_DIR}/validate.err.XXXXXX.log") || return 1
   local lock_file="${file}.lock"
+
   cleanup_validate() { rm -f "$temp_file" "$jq_err_file" "$lock_file"; }
   trap cleanup_validate RETURN
+
   (
     # 仅非跳过时加锁
     if [ "$HAS_FLOCK" = true ] && [ "$skip_lock" != "true" ]; then
@@ -483,15 +560,18 @@ validate_and_fix_json() {
         exit 1
       fi
     fi
+
     if [ ! -f "$file" ] || [ ! -s "$file" ]; then
       log_error "File not found or empty: $file"
       exit 1
     fi
+
     if head -n 1 "$file" 2>/dev/null | grep -qi "<!DOCTYPE\|<html"; then
       log_error "File is HTML (download error): $file"
       rm -f "$file"
       exit 1
     fi
+
     if jq empty "$file" >/dev/null 2>"$jq_err_file"; then
       # 检查 version
       if ! jq -e '.version' "$file" >/dev/null 2>&1; then
@@ -504,13 +584,14 @@ validate_and_fix_json() {
       fi
       exit 0
     else
-      # 尝试修复
+
       if jq '.' "$file" > "$temp_file" 2>"$jq_err_file" && [ -s "$temp_file" ]; then
         mv -f "$temp_file" "$file"; exit 0
       fi
       if jq 'if type == "array" then {version: 1, rules: .} else . end' "$file" > "$temp_file" 2>"$jq_err_file" && [ -s "$temp_file" ]; then
         mv -f "$temp_file" "$file"; exit 0
       fi
+
       log_error "Invalid JSON and fix failed: $file" "$(cat "$jq_err_file")"
       rm -f "$file"
       exit 1
@@ -518,6 +599,7 @@ validate_and_fix_json() {
   )
   return $?
 }
+
 # ============================================================================
 # 8. 预处理配置
 # ============================================================================
@@ -531,17 +613,21 @@ preprocess_ruleset() {
   exclude_temp=$(mktemp "${TEMP_DIR}/preprocess-exclude.XXXXXX.json") || return 1
   local jq_err_file
   jq_err_file=$(mktemp "${TEMP_DIR}/preprocess-jq.XXXXXX.err") || return 1
+
   cleanup_preprocess() { rm -f "$base_temp" "$exclude_temp" "$jq_err_file"; }
   trap cleanup_preprocess RETURN
+
   # 下载 base
   if ! download_file "$base_url" "$base_temp"; then
     log_error "Failed to download base: $base_url"
     return 1
   fi
+
   if ! jq empty "$base_temp" >/dev/null 2>"$jq_err_file"; then
     log_error "Invalid JSON from base URL: $base_url" "$(cat "$jq_err_file")"
     return 1
   fi
+
   # 下载 exclude
   if [ -n "$exclude_url" ]; then
     if ! download_file "$exclude_url" "$exclude_temp" "$DOWNLOAD_TIMEOUT"; then
@@ -551,10 +637,12 @@ preprocess_ruleset() {
   else
     echo '{"version": 1, "rules": []}' > "$exclude_temp"
   fi
+
   if ! jq empty "$exclude_temp" >/dev/null 2>"$jq_err_file"; then
     log_error "Invalid JSON from exclude URL: $exclude_url" "$(cat "$jq_err_file")"
     echo '{"version": 1, "rules": []}' > "$exclude_temp"
   fi
+
   # 处理规则 (排除)
   if ! jq --slurpfile exclude "$exclude_temp" '
     .rules as $base_rules |
@@ -574,54 +662,69 @@ preprocess_ruleset() {
     log_error "jq processing failed for preprocess: $base_url" "$(cat "$jq_err_file")"
     return 1
   fi
+
   if ! jq empty "$output_file" >/dev/null 2>"$jq_err_file"; then
     log_error "Generated JSON invalid: $output_file" "$(cat "$jq_err_file")"
     return 1
   fi
+
   log_info "Successfully generated subset: $output_file"
 }
+
 has_valid_array_elements() {
   local -n arr=$1
   [ ${#arr[@]} -gt 0 ] && [ -n "${arr[0]}" ]
 }
+
 # 预处理配置
 preprocess_configs=(
   # game
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-cn@!cn.json"
   "${SUBSET_DIR}/geosite-category-games-cn@cn2.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-!cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-!cn@cn.json"
   "${SUBSET_DIR}/geosite-category-games-!cn@!cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-platforms-download.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-platforms-download@cn.json"
   "${SUBSET_DIR}/game-platforms-download@!cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames@cn.json"
   "${SUBSET_DIR}/geosite-epicgames@!cn.json"
+
   # ai
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-ai-cn.json"
   "${SUBSET_DIR}/tmp/geosite-category-ai-cn@!cn.json"
   "${SUBSET_DIR}/geosite-category-ai-cn@cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-doubao.json"
   "${SUBSET_DIR}/tmp/geosite-doubao@!cn.json"
   "${SUBSET_DIR}/doubao@cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-jetbrains.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-jetbrains@cn.json"
   "${SUBSET_DIR}/jetbrains@!cn.json"
+
   # network
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn@!cn.json"
   "${SUBSET_DIR}/geosite-category-social-media-cn@cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-bank-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-bank-cn@!cn.json"
   "${SUBSET_DIR}/geosite-category-bank-cn@cn.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-dev-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-dev-cn@!cn.json"
   "${SUBSET_DIR}/geosite-category-dev-cn@cn2.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-entertainment-cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-entertainment-cn@!cn.json"
   "${SUBSET_DIR}/geosite-category-entertainment-cn@cn2.json"
+
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-!cn.json"
   "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-!cn@cn.json"
   "${SUBSET_DIR}/geosite-category-social-media-!cn@!cn.json"
@@ -631,43 +734,52 @@ preprocess_configs=(
 # ============================================================================
 if has_valid_array_elements preprocess_configs; then
   log_info "=== Step 1: Running 'subset' file preprocessing ==="
-  local total=${#preprocess_configs[@]}
-  local pids=()
+
+  total=${#preprocess_configs[@]}
+  pids=()
+
   for ((i=0; i<total; i+=3)); do
     if [ ${#pids[@]} -ge $MAX_CONCURRENT_DOWNLOADS ]; then
       log_info "Waiting for current batch (${#pids[@]} jobs)..."
-      local failed=0
+      failed=0
       for pid in "${pids[@]}"; do
         if ! wait "$pid"; then
           failed=1
           log_error "Preprocessing job failed (PID: $pid)"
         fi
       done
+
       if [ $failed -eq 1 ]; then
         log_fatal "Some preprocessing tasks failed, aborting"
       fi
+
       pids=()
     fi
+
     preprocess_ruleset "${preprocess_configs[i]}" "${preprocess_configs[i+1]}" "${preprocess_configs[i+2]}" &
     pids+=($!)
   done
+
   if [ ${#pids[@]} -gt 0 ]; then
     log_info "Waiting for final batch (${#pids[@]} jobs)..."
-    local failed=0
+    failed=0
     for pid in "${pids[@]}"; do
       if ! wait "$pid"; then
         failed=1
         log_error "Preprocessing job failed (PID: $pid)"
       fi
     done
+
     if [ $failed -eq 1 ]; then
       log_fatal "Some preprocessing tasks failed"
     fi
   fi
+
   log_info "=== Step 1: 'subset' file preprocessing completed ==="
 else
   log_info "=== Step 1: Skipped (no preprocess_configs) ==="
 fi
+
 # ============================================================================
 # 步骤 2: Python 预合并
 # ============================================================================
@@ -676,6 +788,7 @@ if ! "$PYTHON_SCRIPT_PATH" --step step1; then
   log_fatal "Python step 1 failed (check logs above)"
 fi
 log_info "=== Step 2: [Python Step 1] completed ==="
+
 # ============================================================================
 # 9. 合并函数
 # ============================================================================
@@ -684,25 +797,32 @@ merge_group() {
   shift
   local URLS=("$@")
   local LOCAL_JSON_FILE="${SOURCE_DIR}/${GROUP_NAME}.json"
+
   local merge_log
   merge_log=$(mktemp "${TEMP_DIR}/merge-${GROUP_NAME}-XXXXXX.log") || return 1
+
   cleanup_merge() {
     rm -f "${TEMP_DIR}/input-${GROUP_NAME}-"*.json
     rm -f "${TEMP_DIR}/merged-${GROUP_NAME}.json"
     rm -f "$merge_log"
   }
   trap cleanup_merge RETURN
+
   log_info "Starting merge for group: $GROUP_NAME"
+
   local file_index=1
   local pids=()
+
   # 第一遍：处理本地文件
   for url in "${URLS[@]}"; do
     [ -z "$url" ] && continue
+
     if is_local_path "$url"; then
       local output_file="${TEMP_DIR}/input-${GROUP_NAME}-${file_index}.json"
       if [ -f "$url" ] && [ -s "$url" ]; then
         cp "$url" "$output_file"
         log_info "Copied local file: $url"
+
         if validate_and_fix_json "$output_file" "$GROUP_NAME" "false"; then
           ((file_index++))
         else
@@ -714,10 +834,13 @@ merge_group() {
       fi
     fi
   done
+
   # 第二遍：并发下载远程文件
   local download_start_index=$file_index
+
   for url in "${URLS[@]}"; do
     [ -z "$url" ] && continue
+
     if ! is_local_path "$url"; then
       if [ ${#pids[@]} -ge $MAX_CONCURRENT_DOWNLOADS ]; then
         log_info "Waiting for download batch (${#pids[@]} jobs)..."
@@ -727,17 +850,22 @@ merge_group() {
             failed=1
           fi
         done
+
         if [ $failed -eq 1 ]; then
           log_error "Some downloads failed for group $GROUP_NAME"
           return 1
         fi
+
         pids=()
       fi
+
       (
         local output_file="${TEMP_DIR}/input-${GROUP_NAME}-${file_index}.json"
+
         log_info "Downloading: $url"
         if download_file "$url" "$output_file" "$DOWNLOAD_TIMEOUT"; then
           log_info "Downloaded: $url"
+
           if validate_and_fix_json "$output_file" "$GROUP_NAME" "true"; then
             log_info "Validated: $url"
           else
@@ -751,10 +879,12 @@ merge_group() {
           exit 1
         fi
       ) &
+
       pids+=($!)
       ((file_index++))
     fi
   done
+
   # 等待所有下载
   if [ ${#pids[@]} -gt 0 ]; then
     log_info "Waiting for final download batch (${#pids[@]} jobs)..."
@@ -764,28 +894,34 @@ merge_group() {
         failed=1
       fi
     done
+
     if [ $failed -eq 1 ]; then
       log_fatal "Group $GROUP_NAME has failed downloads"
     fi
   fi
+
   # 检查输入
   shopt -s nullglob
   local inputs=("${TEMP_DIR}/input-${GROUP_NAME}-"*.json)
   shopt -u nullglob
+
   if [ "${#inputs[@]}" -eq 0 ]; then
     log_fatal "Group $GROUP_NAME has no available input files"
   fi
-  # 合并捕获到日志
+
+  # 合并&捕获到日志
   log_info "Merging ${#inputs[@]} files for group $GROUP_NAME..."
   local merged_tmp="${TEMP_DIR}/merged-${GROUP_NAME}.json"
   local config_flags=()
   for input_file in "${inputs[@]}"; do
     config_flags+=("-c" "$input_file")
   done
+
   if ! sing-box rule-set merge "$merged_tmp" "${config_flags[@]}" > "$merge_log" 2>&1; then
     log_error "sing-box merge failed for $GROUP_NAME" "$(cat "$merge_log")"
     return 1
   fi
+
   # 时间戳
   if [ -f "$LOCAL_JSON_FILE" ]; then
     local TIMESTAMP
@@ -799,10 +935,12 @@ merge_group() {
     mv -f "$LOCAL_JSON_FILE" "$backup_file"
     log_info "Backed up old source to: $backup_file"
   fi
+
   mv -f "$merged_tmp" "$LOCAL_JSON_FILE"
   log_info "Saved merged JSON to: $LOCAL_JSON_FILE"
   log_info "Completed merge for $GROUP_NAME"
 }
+
 # ============================================================================
 # 10. 编译函数
 # ============================================================================
@@ -810,20 +948,26 @@ compile_srs_file() {
   local GROUP_NAME=$1
   local LOCAL_JSON_FILE="${SOURCE_DIR}/${GROUP_NAME}.json"
   local OUTPUT_SRS_FILE="${SRS_DIR}/${GROUP_NAME}.srs"
+
   local compile_log
   compile_log=$(mktemp "${TEMP_DIR}/compile-${GROUP_NAME}-XXXXXX.log") || return 1
+
   cleanup_compile() {
     rm -f "$compile_log"
   }
   trap cleanup_compile RETURN
+
   if [ ! -f "$LOCAL_JSON_FILE" ]; then
     log_warn "Compile skipped: not found $LOCAL_JSON_FILE"
     return 0
   fi
+
   # 查找最新备份
   local json_backup
   json_backup=$(find "$SOURCE_DIR" -name "*-${GROUP_NAME}.json" -type f 2>/dev/null | sort -r | head -n 1)
+
   log_info "Compiling SRS file for $GROUP_NAME..."
+
   if sing-box rule-set compile "$LOCAL_JSON_FILE" -o "$OUTPUT_SRS_FILE" > "$compile_log" 2>&1; then
     log_info "Successfully compiled: $OUTPUT_SRS_FILE"
     return 0
@@ -833,6 +977,7 @@ compile_srs_file() {
     if [ -n "$json_backup" ] && [ -f "$json_backup" ]; then
       log_info "Attempting restore from backup: $json_backup"
       cp -a "$json_backup" "$LOCAL_JSON_FILE"
+
       if sing-box rule-set compile "$LOCAL_JSON_FILE" -o "$OUTPUT_SRS_FILE" > "$compile_log" 2>&1; then
         log_info "Successfully compiled from backup"
         return 0
@@ -846,11 +991,14 @@ compile_srs_file() {
     fi
   fi
 }
+
 compile_all_srs() {
   log_info "=== Step 5: Compiling all SRS files ==="
   local groups=("ads" "games-cn" "games-noncn" "ai-cn" "ai-noncn" "media" "network-cn" "network-noncn" "cdn" "hkmotw" "private")
+
   local pids=()
   local failed_groups=()
+
   for group in "${groups[@]}"; do
     if [ ${#pids[@]} -ge $MAX_CONCURRENT_COMPILES ]; then
       log_info "Waiting for compile batch..."
@@ -859,30 +1007,37 @@ compile_all_srs() {
       done
       pids=()
     fi
+
     compile_srs_file "$group" &
     pids+=($!)
   done
+
   if [ ${#pids[@]} -gt 0 ]; then
     log_info "Waiting for final compile batch..."
     for pid in "${pids[@]}"; do
       wait "$pid" || true
     done
   fi
+
   if [ ${#failed_groups[@]} -gt 0 ]; then
     log_error "Failed to compile: ${failed_groups[*]}"
     log_fatal "Some compilation tasks failed"
   fi
+
   log_info "=== Step 5: SRS compilation completed ==="
 }
+
 # ============================================================================
 # 11. 清理旧备份
 # ============================================================================
 cleanup_old_backups() {
   log_info "=== Step 6: Cleaning old backups (keeping $BACKUP_KEEP_COUNT per group) ==="
   local groups=("ads" "games-cn" "games-noncn" "ai-cn" "ai-noncn" "media" "network-cn" "network-noncn" "cdn" "hkmotw" "private")
+
   for group in "${groups[@]}"; do
     local backup_count
     backup_count=$(find "$SOURCE_DIR" -name "*-${group}.json" -type f 2>/dev/null | wc -l)
+
     if [ "$backup_count" -gt "$BACKUP_KEEP_COUNT" ]; then
       log_info "Cleaning backups for $group (found: $backup_count, keeping: $BACKUP_KEEP_COUNT)"
       find "$SOURCE_DIR" -name "*-${group}.json" -type f 2>/dev/null | \
@@ -891,8 +1046,10 @@ cleanup_old_backups() {
         xargs -r rm -f 2>/dev/null || true
     fi
   done
+
   log_info "=== Step 6: Backup cleanup completed ==="
 }
+
 # ============================================================================
 # 12. URL 定义
 # ============================================================================
@@ -1423,7 +1580,9 @@ private_urls=(
 # ============================================================================
 # 13. 执行主流程
 # ============================================================================
+
 log_info "=== Step 3: Running main merge... ==="
+
 if [ ${#ads_urls[@]} -gt 0 ]; then
   merge_group "ads" "${ads_urls[@]}" || log_error "Failed to merge ads"
 fi
@@ -1457,7 +1616,9 @@ fi
 if [ ${#private_urls[@]} -gt 0 ]; then
   merge_group "private" "${private_urls[@]}" || log_error "Failed to merge private"
 fi
+
 log_info "=== Step 3: Main merge completed ==="
+
 # ============================================================================
 # 步骤 4: Python 后处理
 # ============================================================================
@@ -1466,11 +1627,13 @@ if ! "$PYTHON_SCRIPT_PATH" --step step2; then
   log_fatal "Python step 2 failed (check logs above)"
 fi
 log_info "=== Step 4: [Python Step 2] completed ==="
+
 # ============================================================================
 # 步骤 5 & 6: 编译和清理
 # ============================================================================
 compile_all_srs
 cleanup_old_backups
+
 # ============================================================================
 # 完成
 # ============================================================================
