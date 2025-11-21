@@ -35,11 +35,11 @@ cd "$SCRIPT_DIR" || exit 1
 # ============================================================================
 
 # 性能配置
-readonly DOWNLOAD_TIMEOUT=120              # 下载超时(秒)
-readonly MAX_CONCURRENT_DOWNLOADS=20       # 最大并发下载数
-readonly MAX_CONCURRENT_COMPILES=10        # 最大并发编译数
-readonly MIN_DISK_SPACE_MB=1000            # 最小磁盘空间(MB)
-readonly BACKUP_KEEP_COUNT=3               # 保留备份数量
+readonly DOWNLOAD_TIMEOUT=120
+readonly MAX_CONCURRENT_DOWNLOADS=20
+readonly MAX_CONCURRENT_COMPILES=10
+readonly MIN_DISK_SPACE_MB=1000
+readonly BACKUP_KEEP_COUNT=3
 
 # 目录配置
 readonly SOURCE_DIR="${SCRIPT_DIR}/json/source"
@@ -78,6 +78,8 @@ init_logging() {
   exec > >(tee -a "$LOG_FILE") 2>&1
 
   log_info "📋 日志文件: $LOG_FILE"
+  log_info "🖥️  系统信息: $(uname -a)"
+  log_info "🐚 Bash 版本: ${BASH_VERSION}"
 }
 
 # 彩色日志函数
@@ -98,14 +100,28 @@ log_error() {
   # 如果有详细错误信息,追加到日志文件
   if [ -n "$detail" ]; then
     echo "    详细信息: $detail" >> "$LOG_FILE"
+    echo "    详细信息: $detail" >&2
   fi
 }
 
 log_fatal() {
   local msg="$1"
+  local detail="${2:-}"
   echo -e "\033[41;37m[FATAL]\033[0m $(date '+%Y-%m-%d %H:%M:%S') - $msg" >&2
 
   # 恢复原始输出
+  if [ -n "$detail" ]; then
+    echo "    详细信息: $detail" >&2
+  fi
+
+  # 确保日志文件存在
+  if [ -f "$LOG_FILE" ]; then
+    echo "" >&2
+    echo "📋 完整日志请查看: $LOG_FILE" >&2
+    echo "最后50行日志:" >&2
+    tail -50 "$LOG_FILE" >&2 || true
+  fi
+
   exec 1>&3 2>&4
 
   # 执行清理
@@ -222,6 +238,9 @@ check_dependencies() {
   for cmd in sing-box jq python3; do
     if ! command -v "$cmd" &>/dev/null; then
       missing+=("$cmd")
+    else
+      local version=$($cmd --version 2>&1 | head -1 || echo "unknown")
+      log_info "  ✓ $cmd: $version"
     fi
   done
 
@@ -450,11 +469,13 @@ preprocess_ruleset() {
   if is_local_path "$base_url"; then
     if [ -f "$base_url" ] && [ -s "$base_url" ]; then
       cp "$base_url" "$base_temp"
+      log_info "  ✓ 使用本地 base: $(basename "$base_url")"
     else
       log_error "本地文件不存在: $base_url"
       return 1
     fi
   else
+    log_info "  ↓ 下载 base: $(basename "$base_url")"
     if ! download_file "$base_url" "$base_temp" "$DOWNLOAD_TIMEOUT"; then
       log_error "下载 base 失败: $base_url"
       return 1
@@ -472,13 +493,15 @@ preprocess_ruleset() {
     if is_local_path "$exclude_url"; then
       if [ -f "$exclude_url" ] && [ -s "$exclude_url" ]; then
         cp "$exclude_url" "$exclude_temp"
+        log_info "  ✓ 使用本地 exclude: $(basename "$exclude_url")"
       else
-        log_warn "本地排除文件不存在,使用空规则: $exclude_url"
+        log_warn "  ! 本地排除文件不存在,使用空规则: $exclude_url"
         echo '{"version": 1, "rules": []}' > "$exclude_temp"
       fi
     else
+      log_info "  ↓ 下载 exclude: $(basename "$exclude_url")"
       if ! download_file "$exclude_url" "$exclude_temp" "$DOWNLOAD_TIMEOUT"; then
-        log_warn "下载 exclude 失败,使用空规则: $exclude_url"
+        log_warn "  ! 下载 exclude 失败,使用空规则: $exclude_url"
         echo '{"version": 1, "rules": []}' > "$exclude_temp"
       fi
     fi
@@ -493,6 +516,8 @@ preprocess_ruleset() {
   fi
 
   # 执行规则差集计算
+  mkdir -p "$(dirname "$output_file")"
+
   if ! jq --slurpfile exclude "$exclude_temp" '
     .rules as $base_rules |
     ($exclude[0].rules // []) as $exclude_rules |
@@ -1857,13 +1882,17 @@ main() {
 
     local -a pids=()
     local progress=0
+    local failed_tasks=0
 
     for ((i=0; i<total; i+=3)); do
       # 并发控制
       if [ ${#pids[@]} -ge $MAX_CONCURRENT_DOWNLOADS ]; then
         log_info "⏳ 等待预处理批次..."
         for pid in "${pids[@]}"; do
-          wait "$pid" || log_fatal "预处理任务失败"
+          if ! wait "$pid"; then
+            ((failed_tasks++))
+          wait "$pid" || log_fatal "预处理任务失败 (PID: $pid)"
+          fi
         done
         pids=()
       fi
@@ -1871,8 +1900,13 @@ main() {
       ((progress++))
       log_progress $progress $((total / 3)) "$(basename "${preprocess_configs[i+2]}")"
 
-      # 后台执行
-      preprocess_ruleset "${preprocess_configs[i]}" "${preprocess_configs[i+1]}" "${preprocess_configs[i+2]}" &
+      # 后台执行时捕获错误
+      (
+        if ! preprocess_ruleset "${preprocess_configs[i]}" "${preprocess_configs[i+1]}" "${preprocess_configs[i+2]}"; then
+          log_error "预处理失败: ${preprocess_configs[i+2]}"
+          exit 1
+        fi
+      ) &
       pids+=($!)
     done
 
@@ -1880,8 +1914,14 @@ main() {
     if [ ${#pids[@]} -gt 0 ]; then
       log_info "⏳ 等待最后批次..."
       for pid in "${pids[@]}"; do
-        wait "$pid" || log_fatal "预处理任务失败"
+        if ! wait "$pid"; then
+          ((failed_tasks++))
+        fi
       done
+    fi
+
+    if [ $failed_tasks -gt 0 ]; then
+      log_fatal "预处理失败: $failed_tasks 个任务失败"
     fi
 
     log_info "✅ === 第1步完成: 子集预处理 ==="
