@@ -821,7 +821,7 @@ compile_common_srs() {
     # 后台编译
     (
       log_info "⚙️  编译 Common: $name"
-      
+
       local compile_log
       compile_log=$(mktemp "${TEMP_DIR}/compile-common-${name}.XXXXXX.log") || exit 1
       register_temp_file "$compile_log"

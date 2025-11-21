@@ -4,11 +4,17 @@
     {
       "domain": [
         "cdn.jetbrains.com",
-        "download-cdn.jetbrains.com.cn"
+        "coze.com",
+        "download-cdn.jetbrains.com.cn",
+        "marscode.com",
+        "trae.ai"
       ],
       "domain_suffix": [
         ".cdn.jetbrains.com",
-        ".download-cdn.jetbrains.com.cn"
+        ".coze.com",
+        ".download-cdn.jetbrains.com.cn",
+        ".marscode.com",
+        ".trae.ai"
       ]
     }
   ]
