@@ -782,12 +782,24 @@ compile_srs_file() {
   fi
 }
 
-# 批量编译所有分组
+# 批量编译所有分组 (修复版: 包含 common 文件)
 compile_all_srs() {
   log_info "⚙️  === 开始编译所有 SRS 文件 ==="
 
   local groups=("ads" "games-cn" "games-noncn" "ai-cn" "ai-noncn" "media"
                 "network-cn" "network-noncn" "cdn" "hkmotw" "private")
+
+# 自动将 Common 目录下的文件加入编译列表
+  shopt -s nullglob
+  for common_file in "${COMMON_DIR}"/*.json; do
+    local name
+    name=$(basename "$common_file" .json)
+    # 将 common 文件复制到 source 目录以便统一处理 (sing-box compile 需要)
+    cp -f "$common_file" "${SOURCE_DIR}/${name}.json"
+    groups+=("$name")
+    log_info "  ➕ 添加公共规则集: $name"
+  done
+  shopt -u nullglob
 
   local -a pids=()
   local -a failed_groups=()
@@ -934,24 +946,40 @@ def merge_cidrs(cidrs):
 
 
 def normalize_domains(items, is_domain=False):
-    """规范化域名列表"""
+    """规范化域名列表（增强版：过滤无效条目）"""
     result = set()
 
     for item in items:
-        if not item:
-            continue
+        if not item: continue
 
         # 清理空白
         s = re.sub(r'\s+', '', item.strip())
-        if not s:
-            continue
+        if not s: continue
 
+        # ===【新增】过滤无效条目 ===
+        # 1. 长度检查：至少2个字符
+        if len(s) < 2: continue
+
+        # 2. 过滤纯符号/纯数字单字符
+        if len(s) == 1: continue
+
+        # 3. 过滤纯符号字符串（如 ".", "$", "\\", "^" 等）
+        if re.match(r'^[^a-zA-Z0-9\u4e00-\u9fa5]+$', s): continue
+
+        # 4. 域名特殊检查
         if is_domain:
             # 移除 www 前缀
             s = re.sub(r'^(?:\.www\.|www\.)', '', s, flags=re.IGNORECASE)
             s = s.lstrip('.').lower()
 
-        if s:
+            # 过滤无效域名：必须包含字母或数字
+            if not re.search(r'[a-z0-9]', s): continue
+
+            # 过滤纯数字域名（通常无效）
+            if re.match(r'^[0-9]+$', s): continue
+
+        # 最终长度检查
+        if len(s) >= 2:
             result.add(s)
 
     return sorted(list(result))
@@ -996,10 +1024,10 @@ def process_json_file(file_path: Path):
         ips.update(rule.get('ip_cidr', []))
 
     # 规范化处理
-    final_domains = normalize_domains(domains, True)
-    final_suffixes = sorted([f".{d}" for d in normalize_domains(suffixes, True)])
-    final_keywords = sorted(list(keywords))
-    final_regexs = sorted(list(regexs))
+    final_domains = normalize_domains(domains, is_domain=True)
+    final_suffixes = sorted([f".{d}" for d in normalize_domains(suffixes, is_domain=True)])
+    final_keywords = normalize_domains(keywords, is_domain=False)
+    final_regexs = normalize_domains(regexs, is_domain=False)
     final_ips = merge_cidrs(ips)
 
     # 构建新规则
