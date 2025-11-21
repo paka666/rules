@@ -20,8 +20,14 @@ set -euo pipefail
 # ============================================================================
 
 # [必需] 检查 Bash 版本 (需要 4.3+ 支持 nameref 和关联数组)
-if [ "${BASH_VERSINFO:-0}" -lt 4 ] || ([ "${BASH_VERSINFO:-0}" -eq 4 ] && [ "${BASH_VERSINFO[1]}" -lt 3 ]); then
-  echo "❌ 错误: 需要 Bash 4.3+。macOS 请运行: brew install bash" >&2
+##if [ "${BASH_VERSINFO:-0}" -lt 4 ] || ([ "${BASH_VERSINFO:-0}" -eq 4 ] && [ "${BASH_VERSINFO[1]}" -lt 3 ]); then
+##  echo "❌ 错误: 需要 Bash 4.3+。macOS 请运行: brew install bash" >&2
+##  exit 1
+##fi
+
+# [必需] 检查 Bash 版本 (需要 4.0+ 支持 nameref 和关联数组)
+if [ "${BASH_VERSINFO:-0}" -lt 4 ]; then
+  echo "❌ 错误: 需要 Bash 4.0+，当前版本: ${BASH_VERSION}，macOS 请运行: brew install bash" >&2
   exit 1
 fi
 
