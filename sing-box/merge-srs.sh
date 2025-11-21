@@ -345,7 +345,7 @@ download_file() {
 # 第八部分: JSON 验证 (修复版)
 # ============================================================================
 
-# JSON验证和修复 (修复文件锁问题 & set -u 兼容性 - 最终版)
+# JSON验证和修复 (修复文件锁访问问题 & set -u 兼容性 - 最终版)
 validate_and_fix_json() {
   local file="$1"
   local group_name="${2:-unknown}"
@@ -782,24 +782,78 @@ compile_srs_file() {
   fi
 }
 
-# 批量编译所有分组 (修复版: 包含 common 文件)
+# ============================================================================
+# 【新增】第十一点五部分: Common 目录独立编译
+# ============================================================================
+
+# 编译 Common 目录下的 JSON 文件
+compile_common_srs() {
+  log_info "⚙️  === 开始编译 Common 规则集 ==="
+
+  shopt -s nullglob
+  local common_files=("${COMMON_DIR}"/*.json)
+  shopt -u nullglob
+
+  if [ ${#common_files[@]} -eq 0 ]; then
+    log_info "ℹ️  Common 目录为空,跳过编译"
+    return 0
+  fi
+
+  local -a pids=()
+  local progress=0
+
+  for common_file in "${common_files[@]}"; do
+    local name=$(basename "$common_file" .json)
+    local srs_file="${SRS_DIR}/${name}.srs"
+
+    # 并发控制
+    if [ ${#pids[@]} -ge $MAX_CONCURRENT_COMPILES ]; then
+      log_info "⏳ 等待编译批次..."
+      for pid in "${pids[@]}"; do
+        wait "$pid" || true
+      done
+      pids=()
+    fi
+
+    ((++progress))
+    log_progress $progress ${#common_files[@]} "$name"
+
+    # 后台编译
+    (
+      log_info "⚙️  编译 Common: $name"
+      
+      local compile_log
+      compile_log=$(mktemp "${TEMP_DIR}/compile-common-${name}.XXXXXX.log") || exit 1
+      register_temp_file "$compile_log"
+
+      if sing-box rule-set compile "$common_file" -o "$srs_file" > "$compile_log" 2>&1; then
+        log_info "✅ Common 编译成功: $name"
+        exit 0
+      else
+        log_error "Common 编译失败: $name" "$(cat "$compile_log")"
+        exit 1
+      fi
+    ) &
+    pids+=($!)
+  done
+
+  # 等待最后批次
+  if [ ${#pids[@]} -gt 0 ]; then
+    log_info "⏳ 等待最后编译批次..."
+    for pid in "${pids[@]}"; do
+      wait "$pid" || true
+    done
+  fi
+
+  log_info "✅ === Common 规则集编译完成 ==="
+}
+
+# 批量编译所有分组
 compile_all_srs() {
   log_info "⚙️  === 开始编译所有 SRS 文件 ==="
 
   local groups=("ads" "games-cn" "games-noncn" "ai-cn" "ai-noncn" "media"
                 "network-cn" "network-noncn" "cdn" "hkmotw" "private")
-
-# 自动将 Common 目录下的文件加入编译列表
-  shopt -s nullglob
-  for common_file in "${COMMON_DIR}"/*.json; do
-    local name
-    name=$(basename "$common_file" .json)
-    # 将 common 文件复制到 source 目录以便统一处理 (sing-box compile 需要)
-    cp -f "$common_file" "${SOURCE_DIR}/${name}.json"
-    groups+=("$name")
-    log_info "  ➕ 添加公共规则集: $name"
-  done
-  shopt -u nullglob
 
   local -a pids=()
   local -a failed_groups=()
@@ -831,7 +885,7 @@ compile_all_srs() {
     done
   fi
 
-  log_info "✅ === SRS 编译完成 ==="
+  log_info "✅ === Source 目录 SRS 编译完成 ==="
 }
 
 # ============================================================================
@@ -1090,7 +1144,10 @@ def get_rule_data(file_path: Path):
 
 
 def find_and_remove_duplicates(cn_file: Path, noncn_file: Path, common_file: Path):
-    """查找并移除 CN 和 NonCN 之间的重复项,保存到 common"""
+    """
+    查找并移除 CN 和 NonCN 之间的重复项,保存到 common
+    【新增】支持 Common 增量更新:新的重复项会与旧的 common 内容合并
+    """
 
     # 检查文件存在性
     if not (cn_file.exists() and noncn_file.exists()):
@@ -1102,9 +1159,11 @@ def find_and_remove_duplicates(cn_file: Path, noncn_file: Path, common_file: Pat
     # 读取数据
     data_cn = get_rule_data(cn_file)
     data_noncn = get_rule_data(noncn_file)
-    data_common_old = get_rule_data(common_file)
 
-    # 新的 common 数据
+    # 【关键】读取旧的 common 文件(如果存在)
+    data_common_old = get_rule_data(common_file) if common_file.exists() else {}
+
+    # 新的 common 数据(用于累积)
     new_common = {}
 
     # 所有规则键
@@ -1115,22 +1174,28 @@ def find_and_remove_duplicates(cn_file: Path, noncn_file: Path, common_file: Pat
         set_noncn = set(data_noncn.get(key, []))
         set_common_old = set(data_common_old.get(key, []))
 
-        # 计算交集
+        # 计算交集(新发现的重复项)
         common_new = set_cn.intersection(set_noncn)
 
-        # 合并旧的 common
+        # 【核心增量逻辑】合并旧的 common 内容
+        # 累积更新: 旧内容 + 新重复项
         common_all = common_new.union(set_common_old)
 
         if common_all:
             new_common[key] = list(common_all)
 
-            # 从原始集合中移除
+            # 从原始集合中移除所有 common 内容(包括旧的)
             data_cn[key] = list(set_cn - common_all)
             data_noncn[key] = list(set_noncn - common_all)
 
     # 保存函数
     def save_rules(path: Path, data_dict):
+        """保存规则到JSON文件"""
         if not data_dict:
+            # 如果数据为空,写入空规则集
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, 'w', encoding='utf-8') as f:
+                json.dump({"version": 1, "rules": []}, f, indent=2, ensure_ascii=False)
             return
 
         rules = []
@@ -1158,6 +1223,7 @@ def find_and_remove_duplicates(cn_file: Path, noncn_file: Path, common_file: Pat
     # 保存结果
     if new_common:
         save_rules(common_file, new_common)
+        print(f"  ✓ 已更新 common: {common_file.name} (累积 {len(new_common)} 个规则类型)")
 
     save_rules(cn_file, data_cn)
     save_rules(noncn_file, data_noncn)
@@ -1184,7 +1250,7 @@ def run_step1_pre_merge():
 
 
 def run_step2_post_merge():
-    """步骤2: 合并后处理(去重、分离 common)"""
+    """步骤2: 合并后处理(去重、分离 common - 增量更新版)"""
     print("[INFO] === Python 步骤2: 合并后处理 ===")
 
     SOURCE_DIR.mkdir(parents=True, exist_ok=True)
@@ -1998,11 +2064,17 @@ main() {
   log_info "✅ === 第4步完成 ==="
   log_info ""
 
-  # === 步骤5: 编译 SRS ===
+  # === 步骤5: 编译 Source 目录的 SRS ===
+  log_info "⚙️  === 第5步: 编译 Source 规则集 ==="
   compile_all_srs
   log_info ""
 
-  # === 步骤6: 清理备份 ===
+  # === 步骤6: 【新增】独立编译 Common 目录的 SRS ===
+  log_info "⚙️  === 第6步: 编译 Common 规则集(增量更新后) ==="
+  compile_common_srs
+  log_info ""
+
+  # === 步骤7: 清理备份 ===
   cleanup_old_backups
   log_info ""
 
