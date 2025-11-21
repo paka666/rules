@@ -727,7 +727,7 @@ merge_group() {
 # 第十一部分: 规则编译 (带恢复机制)
 # ============================================================================
 
-# 编译 SRS 文件
+# 编译 SRS 文件 (修复版: 兼容 set -u)
 compile_srs_file() {
   local group_name="$1"
   local json_file="${SOURCE_DIR}/${group_name}.json"
@@ -746,9 +746,9 @@ compile_srs_file() {
   compile_log=$(mktemp "${TEMP_DIR}/compile-${group_name}.XXXXXX.log") || return 1
   register_temp_file "$compile_log"
 
-  # 清理函数
+  # 清理函数 (加固: 使用 :- 防止变量未定义报错)
   cleanup_compile() {
-    rm -f "$compile_log" 2>/dev/null || true
+    rm -f "${compile_log:-}" 2>/dev/null || true
   }
   trap cleanup_compile RETURN
 
@@ -803,7 +803,7 @@ compile_all_srs() {
       pids=()
     fi
 
-    ((progress++))
+    ((++progress))
     log_progress $progress ${#groups[@]} "$group"
 
     # 后台编译
