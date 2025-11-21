@@ -345,7 +345,7 @@ download_file() {
 # 第八部分: JSON 验证 (修复版)
 # ============================================================================
 
-# JSON验证和修复 (修复文件锁问题 & set -u 兼容性)
+# JSON验证和修复 (修复文件锁问题 & set -u 兼容性 - 最终版)
 validate_and_fix_json() {
   local file="$1"
   local group_name="${2:-unknown}"
@@ -379,17 +379,22 @@ validate_and_fix_json() {
     fi
   fi
 
-  # 清理函数
+  # 清理函数 (修复核心: 给所有变量增加 :- 默认值保护)
   local cleanup_done=false
   cleanup_validation() {
+    # 防止 cleanup_done 未绑定
     [ "${cleanup_done:-false}" = true ] && return
     cleanup_done=true
 
-    rm -f "$temp_file" "$jq_err_file" 2>/dev/null || true
+    # 防止 temp_file / jq_err_file 未绑定
+    rm -f "${temp_file:-}" "${jq_err_file:-}" 2>/dev/null || true
 
-    if [ "$need_lock" = "true" ] && [ "$HAS_FLOCK" = true ]; then
-      eval "exec ${lock_fd}>&-"
-      rm -f "$lock_file"
+    if [ "${need_lock:-}" = "true" ] && [ "${HAS_FLOCK:-}" = true ]; then
+      # 防止 lock_fd / lock_file 未绑定
+      if [ -n "${lock_fd:-}" ]; then
+        eval "exec ${lock_fd}>&-" 2>/dev/null || true
+      fi
+      rm -f "${lock_file:-}" 2>/dev/null || true
     fi
   }
   trap cleanup_validation RETURN
