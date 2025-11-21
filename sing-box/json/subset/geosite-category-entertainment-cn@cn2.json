@@ -1257,26 +1257,6 @@
         ".zcjbgame.com",
         ".zhanqi.tv",
         ".zhuoyuegame.com"
-      ],
-      "domain_regex": [
-        "$",
-        "+",
-        "-",
-        ".",
-        "\\",
-        "^",
-        "a",
-        "d",
-        "e",
-        "h",
-        "i",
-        "k",
-        "m",
-        "n",
-        "o",
-        "t",
-        "y",
-        "z"
       ]
     }
   ]

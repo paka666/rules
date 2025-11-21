@@ -362,31 +362,10 @@
         ".watchespn.com"
       ],
       "domain_regex": [
-        "$",
         "(^|\\.)apiproxy-device-prod-nlb-.+\\.amazonaws\\.com$",
         "(^|\\.)apiproxy-website-nlb-prod-.+\\.amazonaws\\.com$",
         "(^|\\.)dualstack\\.apiproxy-.+\\.amazonaws\\.com$",
-        "(^|\\.)dualstack\\.ichnaea-web-.+\\.amazonaws\\.com$",
-        "-",
-        ".",
-        "1",
-        "7",
-        "?",
-        "[",
-        "\\",
-        "]",
-        "^",
-        "a",
-        "d",
-        "e",
-        "h",
-        "i",
-        "k",
-        "m",
-        "n",
-        "s",
-        "t",
-        "z"
+        "(^|\\.)dualstack\\.ichnaea-web-.+\\.amazonaws\\.com$"
       ]
     },
     {

@@ -648,7 +648,6 @@
         "x.ai",
         "yogalayout.com",
         "youtrack.cloud",
-        "z",
         "zuckerberg.com",
         "zuckerberg.net"
       ],
@@ -1298,36 +1297,8 @@
         ".x.ai",
         ".yogalayout.com",
         ".youtrack.cloud",
-        ".z",
         ".zuckerberg.com",
         ".zuckerberg.net"
-      ],
-      "domain_regex": [
-        "$",
-        "+",
-        "-",
-        ".",
-        "S",
-        "\\",
-        "^",
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "g",
-        "h",
-        "m",
-        "n",
-        "o",
-        "p",
-        "r",
-        "s",
-        "t",
-        "u",
-        "w",
-        "y",
-        "z"
       ]
     }
   ]

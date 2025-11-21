@@ -3,7 +3,6 @@
   "rules": [
     {
       "domain": [
-        "1",
         "17roco.com",
         "3304399.com",
         "3304399.net",
@@ -38,10 +37,8 @@
         "4399yyy.com",
         "5054399.com",
         "5054399.net",
-        "6",
         "71acg.com",
         "71acg.net",
-        "9",
         "9xgame.com",
         "aki-game.com",
         "akspeedy.com",
@@ -253,7 +250,6 @@
         "zhuoyuegame.com"
       ],
       "domain_suffix": [
-        ".1",
         ".17roco.com",
         ".3304399.com",
         ".3304399.net",
@@ -288,10 +284,8 @@
         ".4399yyy.com",
         ".5054399.com",
         ".5054399.net",
-        ".6",
         ".71acg.com",
         ".71acg.net",
-        ".9",
         ".9xgame.com",
         ".aki-game.com",
         ".akspeedy.com",
@@ -503,25 +497,7 @@
         ".zhuoyuegame.com"
       ],
       "domain_regex": [
-        "$",
-        "+",
-        "-",
-        ".",
-        "\\",
-        "^",
-        "^.+-mihayo\\.akamaized\\.net$",
-        "a",
-        "d",
-        "e",
-        "h",
-        "i",
-        "k",
-        "m",
-        "n",
-        "o",
-        "t",
-        "y",
-        "z"
+        "^.+-mihayo\\.akamaized\\.net$"
       ]
     }
   ]
