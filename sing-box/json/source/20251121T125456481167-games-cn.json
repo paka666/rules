@@ -505,10 +505,25 @@
         ".zhuoyuegame.com"
       ],
       "domain_regex": [
+        "$",
         "+",
+        "-",
+        ".",
+        "\\",
+        "^",
         "^.+-mihayo\\.akamaized\\.net$",
+        "a",
+        "d",
+        "e",
         "h",
-        "y"
+        "i",
+        "k",
+        "m",
+        "n",
+        "o",
+        "t",
+        "y",
+        "z"
       ]
     }
   ]

@@ -1630,13 +1630,7 @@
         ".zenlesszonezero.com"
       ],
       "domain_regex": [
-        "^epicgames-download\\d\\.akamaized\\.net$",
-        "c",
-        "g",
-        "l",
-        "p",
-        "s",
-        "w"
+        "^epicgames-download\\d\\.akamaized\\.net$"
       ]
     }
   ]
