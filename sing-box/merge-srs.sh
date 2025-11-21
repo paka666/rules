@@ -345,7 +345,7 @@ download_file() {
 # 第八部分: JSON 验证 (修复版)
 # ============================================================================
 
-# JSON验证和修复 (修复文件锁问题)
+# JSON验证和修复 (修复文件锁问题 & set -u 兼容性)
 validate_and_fix_json() {
   local file="$1"
   local group_name="${2:-unknown}"
@@ -382,7 +382,7 @@ validate_and_fix_json() {
   # 清理函数
   local cleanup_done=false
   cleanup_validation() {
-    [ "$cleanup_done" = true ] && return
+    [ "${cleanup_done:-false}" = true ] && return
     cleanup_done=true
 
     rm -f "$temp_file" "$jq_err_file" 2>/dev/null || true
