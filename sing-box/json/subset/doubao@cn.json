@@ -2,28 +2,10 @@
   "version": 1,
   "rules": [
     {
-      "domain_suffix": [
-        ".butterfly-static.cn",
-        ".butterflyai.cn",
-        ".coze.cn",
-        ".coze.com",
-        ".coze.site",
-        ".cozebaas.cn",
-        ".cozefn.cn",
-        ".cozeide.cn",
-        ".doubao.com",
-        ".doubaocdn.com",
-        ".hi-butterfly.cn",
-        ".maoxiangai.com",
-        ".myparallelstory.com",
-        ".picpic-ai.cn",
-        ".pixeldance.com"
-      ],
       "domain": [
         "butterfly-static.cn",
         "butterflyai.cn",
         "coze.cn",
-        "coze.com",
         "coze.site",
         "cozebaas.cn",
         "cozefn.cn",
@@ -36,9 +18,22 @@
         "picpic-ai.cn",
         "pixeldance.com"
       ],
-      "domain_keyword": [],
-      "domain_regex": [],
-      "ip_cidr": []
+      "domain_suffix": [
+        ".butterfly-static.cn",
+        ".butterflyai.cn",
+        ".coze.cn",
+        ".coze.site",
+        ".cozebaas.cn",
+        ".cozefn.cn",
+        ".cozeide.cn",
+        ".doubao.com",
+        ".doubaocdn.com",
+        ".hi-butterfly.cn",
+        ".maoxiangai.com",
+        ".myparallelstory.com",
+        ".picpic-ai.cn",
+        ".pixeldance.com"
+      ]
     }
   ]
 }

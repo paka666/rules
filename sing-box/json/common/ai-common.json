@@ -3,17 +3,25 @@
   "rules": [
     {
       "domain": [
+        "c",
         "cdn.jetbrains.com",
         "coze.com",
         "download-cdn.jetbrains.com.cn",
+        "e",
+        "m",
         "marscode.com",
+        "o",
         "trae.ai"
       ],
       "domain_suffix": [
+        ".c",
         ".cdn.jetbrains.com",
         ".coze.com",
         ".download-cdn.jetbrains.com.cn",
+        ".e",
+        ".m",
         ".marscode.com",
+        ".o",
         ".trae.ai"
       ]
     }
