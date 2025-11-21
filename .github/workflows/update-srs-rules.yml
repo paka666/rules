@@ -8,7 +8,7 @@ on:
 #    branches:
 #      - main
 #    paths:
-#      - '.github/workflows/update-srs-files.yml'
+#      - '.github/workflows/update-srs-rules.yml'
 #      - 'sing-box/merge-srs.sh'
 #      - 'sing-box/json/**/*.json'
 #      - 'sing-box/srs/*.srs'
@@ -24,7 +24,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.ALL }}
           ref: ${{ github.head_ref }}
 
       - name: Set up Python 3.12
