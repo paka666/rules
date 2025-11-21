@@ -64,6 +64,7 @@
         "www4-static.gog-statics.com",
         "xboxlive.cn",
         "xn--mts47c3w9b1qr.cn",
+        "supercell.com",
         "xz.pphimalayanrt.com"
       ],
       "domain_suffix": [
@@ -128,6 +129,7 @@
         ".www4-static.gog-statics.com",
         ".xboxlive.cn",
         ".xn--mts47c3w9b1qr.cn",
+        ".supercell.com",
         ".xz.pphimalayanrt.com"
       ],
       "domain_regex": [
