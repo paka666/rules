@@ -91,6 +91,7 @@ http://185.230.4.150:1337/announce
 http://185.232.169.109/announce
 http://185.5.97.139:8089/announce
 http://185.70.187.79:6969/announce
+http://187.34.25.113:6969/announce
 http://187.57.130.109:6969/announce
 http://187.57.14.62:6969/announce
 http://188.165.253.109:1337/announce
@@ -1034,6 +1035,7 @@ udp://185.44.82.25:1337/announce
 udp://185.5.97.139:8089/announce
 udp://185.86.149.205:1337/announce
 udp://185.87.45.163:6969/announce
+udp://187.34.25.113:6969/announce
 udp://187.57.130.109:6969/announce
 udp://188.165.253.109:1337/announce
 udp://189.18.97.201:6969/announce
