@@ -1288,122 +1288,12 @@ def run_step2_post_merge():
         for error_type, count in error_counts.items():
             print(f"  {error_type}: {count}", file=sys.stderr)
 
-def process_noncn_ips():
-    """
-    处理非CN IP集合 (优化版)
-    逻辑: (HKMoTw + CDN) - GeoIP-CN
-    技术: 使用 address_exclude 实现精确的 CIDR 拆分
-    """
-    print("[INFO] === Python Step 3: 生成 geoip-noncn (精确差集) ===")
-
-    SOURCE_DIR.mkdir(parents=True, exist_ok=True)
-    SUBSET_DIR.mkdir(parents=True, exist_ok=True)
-
-    hkmotw_file = SOURCE_DIR / "hkmotw.json"
-    cdn_file = SOURCE_DIR / "cdn.json"
-    geoip_cn_file = SOURCE_DIR / "geoip-cn-temp.json"
-    output_file = SUBSET_DIR / "geoip-noncn.json"
-
-    # 1. 检查文件
-    if not geoip_cn_file.exists():
-        print("[ERROR] 缺少 geoip-cn-temp.json")
-        return
-
-    # 2. 读取并合并目标集合 (HK + CDN)
-    # 使用 set 去重
-    target_cidrs = set()
-    target_cidrs.update(get_rule_data(hkmotw_file).get('ip_cidr', []))
-    target_cidrs.update(get_rule_data(cdn_file).get('ip_cidr', []))
-
-    # 3. 读取排除集合 (CN)
-    exclude_cidrs = set(get_rule_data(geoip_cn_file).get('ip_cidr', []))
-
-    print(f"  合并源 (HK+CDN): {len(target_cidrs)} 条")
-    print(f"  排除源 (CN): {len(exclude_cidrs)} 条")
-
-    # 4. 转换、合并、分离 v4/v6 (减少计算量)
-    def parse_and_collapse(cidr_list):
-        nets = []
-        for c in cidr_list:
-            try:
-                # strict=False 允许处理非规范写法
-                nets.append(ipaddress.ip_network(c.strip(), strict=False))
-            except ValueError: pass
-
-        v4 = [n for n in nets if n.version == 4]
-        v6 = [n for n in nets if n.version == 6]
-
-        # collapse_addresses 自动处理重叠和相邻合并
-        return list(ipaddress.collapse_addresses(v4)), list(ipaddress.collapse_addresses(v6))
-
-    target_v4, target_v6 = parse_and_collapse(target_cidrs)
-    exclude_v4, exclude_v6 = parse_and_collapse(exclude_cidrs)
-
-    print(f"  优化后源: v4={len(target_v4)}, v6={len(target_v6)}")
-
-    # 5. 执行差集运算 (核心逻辑)
-    # 算法: 遍历目标网段，如果与 CN 网段有重叠，则剔除重叠部分
-
-    def subtract_networks(targets, excludes):
-        if not targets: return []
-        if not excludes: return targets
-
-        final_list = []
-
-        # 针对每个目标网段
-        for tgt in targets:
-            # 维护一个“剩余部分”的列表，初始就是目标网段本身
-            remaining = [tgt]
-
-            # 遍历排除列表 (由于 exclude 已经 collapse 过，互不重叠)
-            for exc in excludes:
-                new_remaining = []
-                for r in remaining:
-                    # 如果两者有重叠
-                    if r.overlaps(exc):
-                        try:
-                            # address_exclude 会返回去除 exc 后的碎片列表
-                            # 例如: 192.168.0.0/16 排除 192.168.1.0/24
-                            # 会返回剩下的多个 /17, /18... /24 网段
-                            new_remaining.extend(r.address_exclude(exc))
-                        except ValueError:
-                            # 如果 exc 包含 r，address_exclude 可能会报错或返回空，视情况
-                            # 这里的逻辑是：如果 r 被 exc 完全包含，则 r 消失
-                            pass
-                    else:
-                        new_remaining.append(r)
-                remaining = new_remaining
-                # 如果剩余部分没了，提前结束内循环
-                if not remaining:
-                    break
-
-            final_list.extend(remaining)
-
-        # 再次合并碎片
-        return list(ipaddress.collapse_addresses(final_list))
-
-    print("  正在计算 IPv4 差集 (可能耗时)...")
-    final_v4 = subtract_networks(target_v4, exclude_v4)
-
-    print("  正在计算 IPv6 差集...")
-    final_v6 = subtract_networks(target_v6, exclude_v6)
-
-    final_result = [str(n) for n in final_v4] + [str(n) for n in final_v6]
-    print(f"  最终结果: {len(final_result)} 条 IP/CIDR")
-
-    # 6. 保存
-    try:
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump({"version": 1, "rules": [{"ip_cidr": final_result}]}, f, indent=2)
-        print(f"  ✓ 已保存: {output_file.name}")
-    except Exception as e:
-        mark_critical_error(f"保存失败: {e}")
 
 def main():
     """主函数"""
     parser = argparse.ArgumentParser(description='Sing-box 规则集处理')
-    parser.add_argument('--step', choices=['step1', 'step2', 'step3'], required=True,
-                       help='执行步骤: step1=合并前规范化, step2=合并后处理, step3=生成非CN IP集')
+    parser.add_argument('--step', choices=['step1', 'step2'], required=True,
+                       help='执行步骤: step1=合并前规范化, step2=合并后处理')
 
     args = parser.parse_args()
 
@@ -1412,8 +1302,6 @@ def main():
             run_step1_pre_merge()
         elif args.step == 'step2':
             run_step2_post_merge()
-        elif args.step == 'step3':
-            process_noncn_ips()
 
         if has_critical_error:
             print("\n[FATAL] Python 处理过程中发生严重错误", file=sys.stderr)
@@ -1960,7 +1848,6 @@ init_url_configs() {
   # 网络 NonCN
   network_noncn_urls=(
     "${SOURCE_DIR}/network-noncn.json"
-    "${SUBSET_DIR}/geoip-noncn.json"
     "${SUBSET_DIR}/geosite-category-social-media-!cn@!cn.json"
     "${SUBSET_DIR}/tmp/geosite-trae@!cn.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/geoip-facebook.json"
@@ -2150,34 +2037,6 @@ main() {
   fi
   log_info "✅ === 第2步完成 ==="
   log_info ""
-
-  # =========================================================
-  # [调整] Step 2.5: 优先处理非CN IP集合
-  # 原因: network-noncn 的合并依赖于此步骤生成的 json 文件
-  # =========================================================
-  log_info "🌐 === 第2.5步: 生成非CN IP集合 (Pre-computation) ==="
-
-  # 1. 下载 geoip-cn (用于做减法)
-  local geoip_cn_temp="${SOURCE_DIR}/geoip-cn-temp.json"
-  log_info "📥 下载 geoip-cn.json..."
-  if download_file "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/geoip-cn.json" "$geoip_cn_temp"; then
-
-    # 2. 调用 Python 生成 geoip-noncn.json
-    log_info "🔄 计算差集: (HKMoTw + CDN) - CN ..."
-    if "$PYTHON_SCRIPT_PATH" --step step3; then
-        log_info "✅ 非CN IP集合生成完毕"
-    else
-        log_fatal "Python step3 处理失败"
-    fi
-
-    # 3. 清理下载的临时 CN 文件
-    rm -f "$geoip_cn_temp"
-  else
-    log_error "geoip-cn 下载失败，跳过非CN IP生成 (可能导致 network-noncn 不完整)"
-  fi
-
-  log_info ""
-  # =========================================================
 
   # === 步骤3: 合并规则组 ===
   log_info "🔗 === 第3步: 合并规则组 ==="
