@@ -4,6 +4,10 @@
     {
       "domain": [
         "aboutfacebook.com",
+        "ai.com",
+        "challenges.cloudflare.com",
+        "stripe.com",
+        "sentry.io",
         "accessfacebookfromschool.com",
         "accountkit.com",
         "acebooik.com",
@@ -654,6 +658,10 @@
       ],
       "domain_suffix": [
         ".aboutfacebook.com",
+        ".ai.com",
+        ".challenges.cloudflare.com",
+        ".stripe.com",
+        ".sentry.io",
         ".accessfacebookfromschool.com",
         ".accountkit.com",
         ".acebooik.com",

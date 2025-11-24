@@ -361,6 +361,11 @@
         ".watchdisneyfe.com",
         ".watchespn.com"
       ],
+      "domain_keyword": [
+        "apiproxy-device-prod-nlb-",
+        "dualstack.apiproxy-",
+        "netflixdnstest"
+      ],
       "domain_regex": [
         "(^|\\.)apiproxy-device-prod-nlb-.+\\.amazonaws\\.com$",
         "(^|\\.)apiproxy-website-nlb-prod-.+\\.amazonaws\\.com$",
@@ -372,6 +377,12 @@
       "ip_cidr": [
         "23.246.0.0/18",
         "37.77.184.0/21",
+        "8.41.4.0/24",
+        "38.72.126.0/24",
+        "66.197.128.0/17",
+        "69.53.224.0/19",
+        "103.87.204.0/22",
+        "203.75.84.0/24",
         "45.57.0.0/17",
         "64.120.128.0/17",
         "66.197.128.0/19",
