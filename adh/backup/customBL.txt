@@ -172916,6 +172916,7 @@ an.boku0.ru
 an.cailtteve.mydns.bz
 an.calinck.mydns.bz
 an.calinck.server-on.net
+an.caliuicnck.mydns.bz
 an.calltteve.server-on.net
 an.cl
 an.cl-pro.net
@@ -172927,6 +172928,7 @@ an.elitoras.ru
 an.fy-7a.ru
 an.horoton.ru
 an.ht-if.ru
+an.ifcolnvfim.mydns.bz
 an.infclog.mydns.bz
 an.infelog.mydns.bz
 an.infiyou.mydns.bz
@@ -172934,6 +172936,7 @@ an.infiyou.server-on.net
 an.infoconfim.mydns.bz
 an.intyounfo.server-on.net
 an.inyounfo.mydns.bz
+an.isyouirinfo.mydns.bz
 an.isyounfo.mydns.bz
 an.isyounfo.server-on.net
 an.k5b2q.ru
@@ -172947,6 +172950,7 @@ an.ntlink.server-on.net
 an.q6o4.ru
 an.qjf-1-o.ru
 an.secure.tacoda.net
+an.sevilivierif.mydns.bz
 an.sevilrivierif.mydns.bz
 an.sevilverif.mydns.bz
 an.sevrverif.server-on.net
@@ -172961,6 +172965,7 @@ an.veraity.mydns.bz
 an.vericy.server-on.net
 an.verifyserve.live-on.net
 an.verity.mydns.bz
+an.verninity.mydns.bz
 an.vernity.mydns.bz
 an.web.id
 an.worldbaseballclassic.com
@@ -181877,6 +181882,7 @@ app.legeth.com
 app.lehigtapp.com
 app.lenvny.com
 app.libre2.space
+app.limesurvey.us
 app.lincom.co.kr
 app.linewizeconnect.com
 app.livcloud.info
@@ -181900,6 +181906,7 @@ app.medyanetads.com
 app.meet-video-call.online
 app.meet-video.live
 app.meeting-zone.online
+app.merreo.org
 app.mexc.work
 app.miargentina.online
 app.microsoftstaticapi.com
@@ -181969,6 +181976,7 @@ app.qr-fun.com
 app.qrcodescannerpro.com
 app.quantumservice.lat
 app.quickvidintro.com
+app.qwary.org
 app.rabbltx.xyz
 app.radiws.com
 app.radiys.com
@@ -182012,6 +182020,7 @@ app.skill-share.org
 app.skylight.money
 app.slardar.icu
 app.sll.li
+app.sloneek.us
 app.smartnewsource.com
 app.smartyou.es
 app.sncyhkttp.nl
@@ -224091,9 +224100,11 @@ bn.banucaglayan.com
 bn.bfast.com
 bn.bishoten.ru
 bn.cail1teve.mydns.bz
+bn.cailiuicnck.mydns.bz
 bn.calinck.server-on.net
 bn.calltteve.server-on.net
 bn.conhosst.com
+bn.document-hometax.mydns.bz
 bn.elitoras.ru
 bn.futur-city.fr
 bn.g-69-p.ru
@@ -224106,7 +224117,10 @@ bn.imguol.com
 bn.imortinfo.live-on.net
 bn.incoincfim.mydns.bz
 bn.infelog.server-on.net
+bn.infiailog.mydns.bz
 bn.infiyou.server-on.net
+bn.isyouirinfo.mydns.bz
+bn.loglli1syou.mydns.bz
 bn.m5k1k.ru
 bn.necessarius.net
 bn.networkbn.click
@@ -224128,6 +224142,7 @@ bn.tiang.server-on.net
 bn.timerto.ru
 bn.vericy.mydns.bz
 bn.verity.server-on.net
+bn.verninity.mydns.bz
 bn.voranfi.ru
 bn.winloogon.com
 bn0.no-ip.info
@@ -241291,6 +241306,7 @@ bzloyhl.com
 bzmyu.com
 bzn.pentest.rocks.financesoft.kg
 bznabyzfts.duckdns.org
+bzncd.nto11link.mydns.bz
 bzness.store
 bznizrhd.xyz
 bznrm.com
@@ -243828,7 +243844,9 @@ caijingjun2010.3322.org
 cail1teve.mydns.bz
 caili1000.com
 cailinhardell.com
+cailiteve.mydns.bz
 cailiucnck.mydns.bz
+cailiuicnck.mydns.bz
 cailongithenhi.ddns.net
 cailopapoo.net
 cailpercovers.com
@@ -244272,6 +244290,7 @@ calito888.ddns.net
 calitoway.duckdns.org
 calitus.hopto.org
 caliucnck.mydns.bz
+caliuicnck.mydns.bz
 calivethis.com
 calivorna.com
 calixovra.com
@@ -264075,6 +264094,7 @@ cilician.matsuro.ru
 cilicofahev.eu
 ciling.live
 ciliqikytec.eu
+ciliuicnck.mydns.bz
 cilium.dedspac.ru
 cilkaanallese.com
 cill.ml
@@ -272353,6 +272373,7 @@ cn.isyoiurnfo.mydns.bz
 cn.isyounfo.mydns.bz
 cn.isyounfo.server-on.net
 cn.klipkunefia.shop
+cn.loglli1syou.mydns.bz
 cn.lol
 cn.ls1ks.xyz
 cn.luluzhu.me
@@ -320759,10 +320780,13 @@ dn.ailone.mydns.bz
 dn.b2-ra.ru
 dn.binsetup.com
 dn.c.richmetrics.com
+dn.cailiteve.mydns.bz
+dn.cailiuicnck.mydns.bz
 dn.cailteve.mydns.bz
 dn.cailtteve.mydns.bz
 dn.calinck.server-on.net
 dn.calltteve.server-on.net
+dn.ciliuicnck.mydns.bz
 dn.dataofpages.com
 dn.dulichbiendao.org
 dn.elitoras.ru
@@ -320779,6 +320803,7 @@ dn.isyounfo.mydns.bz
 dn.isyounfo.server-on.net
 dn.jnipatch.com/downloads/latest/device/android
 dn.jsdelivr.autos
+dn.loglli1syou.mydns.bz
 dn.logllilssyou.mydns.bz
 dn.logllisyou.mydns.bz
 dn.mynq.ru
@@ -320795,6 +320820,7 @@ dn.statisticscripts.com
 dn.topstart.site
 dn.twoon.co.kr
 dn.veraity.mydns.bz
+dn.verality.mydns.bz
 dn000893.ferozo.com/agenda/ckU4orOn4/
 dn01-au.imrworldwide.com
 dn01-cn.imrworldwide.com
@@ -323050,6 +323076,7 @@ document-decryption.me
 document-downloads.ddns.net
 document-forwarding.com
 document-guard.com
+document-hometax.mydns.bz
 document-invoiceviewer.online
 document-joint.icu
 document-listing.ddns.net
@@ -326778,6 +326805,7 @@ download-capcut.com
 download-capcut.online
 download-cdn.com
 download-cdn.top
+download-center.pro
 download-center.top
 download-central.com
 download-chrome.com
@@ -459403,6 +459431,7 @@ ifcgxc.zbccx.xyz
 ifcloudir.ga
 ifcoinvfim.mydns.bz
 ifcol.exitfuel.com
+ifcolnvfim.mydns.bz
 ifconcept.faith
 ifconfig.co
 ifconfig.me
@@ -460412,6 +460441,7 @@ iiacbbsincz.com
 iiagaeqoocmogkgk.xyz
 iiagjaggg.com
 iiagmkwauqmmqmes.xyz
+iiailog.mydns.bz
 iiaiuiyiiiasooqo.xyz
 iiaiwsoisgyycmku.xyz
 iiajhvdifds.com
@@ -466309,6 +466339,7 @@ infet.live
 infflux.cfd
 inffoq.xyz
 infiads.com
+infiailog.mydns.bz
 inficlie.com
 infids.top
 infigames.com
@@ -471061,6 +471092,7 @@ inyfxup.huobenben.cc
 inyint.info
 inyjafjvta.duckdns.org
 inyjjhohjbpddpmbg.su
+inyoiurnfo.mydns.bz
 inyounfo.mydns.bz
 inyouremail.com
 inyuashacalcutta.top
@@ -475719,6 +475751,7 @@ isyncautoupdater.in
 isynergy.no-ip.biz
 isyoeigwosuyugca.xyz
 isyoiurnfo.mydns.bz
+isyouirinfo.mydns.bz
 isyounfo.mydns.bz
 isyounfo.server-on.net
 isyournfo.mydns.bz
@@ -523134,6 +523167,7 @@ limerugaf.top
 limes.dedspac.ru
 limes.virosat.ru
 limesfile.com
+limesurvey.us
 limev.icu
 limevvire.net
 limewine.info
@@ -529253,6 +529287,7 @@ logkeeps.bid
 logliberation.xiti.com
 loglider.com.br
 loglink9.site
+loglli1syou.mydns.bz
 logllilssyou.mydns.bz
 logllisyou.mydns.bz
 logln-token-sms-cy.b0tnet.com
@@ -556653,6 +556688,7 @@ merqualynthavorex.com
 merquilon.my
 merquonita.my
 merqybots.no-ip.biz
+merreo.org
 merret.cl/nip/
 merrill.drfqopmnlight.com
 merrilled.cc
@@ -560318,6 +560354,7 @@ microsoft.level2.fr
 microsoft.mdaq.online
 microsoft.microcaft.xyz
 microsoft.mrface.com
+microsoft.ms-drivers.cam
 microsoft.myiphost.com
 microsoft.mypicture.info
 microsoft.net.linkpc.net
@@ -561987,6 +562024,7 @@ milat.fun
 milatees-a9.click
 milati-ir.ml
 milatirn.online
+milauth-mygovin.serveftp.com
 milax.cf
 milax.ml
 milbankllp.net
@@ -575335,6 +575373,7 @@ ms-dll-service.site
 ms-dns-resolver1.com
 ms-downloading.com
 ms-drivadptrwin.com
+ms-drivers.cam
 ms-en-microsoft.com
 ms-endpoint.com
 ms-ethics.net
@@ -585789,8 +585828,10 @@ nad.g-content.bid
 nad.ifcoinvfim.mydns.bz
 nad.lognisyou.live-on.net
 nad.lognisyou.mydns.bz
+nad.sevirverif.keyword-on.net
 nad.sevirverif.mydns.bz
 nad.sevirvrerif.keyword-on.net
+nad.veraty.keyword-on.net
 nad.veraty.live-on.net
 nad9ib6.bxtian.com
 nada.dedspac.ru
@@ -589758,6 +589799,8 @@ nbd.isyournfo.mydns.bz
 nbd.lognisyou.live-on.net
 nbd.lognisyou.mydns.bz
 nbd.nidayou.keyword-on.net
+nbd.sevirverif.keyword-on.net
+nbd.veraty.keyword-on.net
 nbd.veraty.live-on.net
 nbd.veraty.mydns.bz
 nbd6ug3fq3lx4ja.org
@@ -590028,6 +590071,9 @@ ncd.iyoiurnfo.mydns.bz
 ncd.lognisyou.live-on.net
 ncd.lognisyou.mydns.bz
 ncd.nidayou.keyword-on.net
+ncd.nto11link.mydns.bz
+ncd.sevirverif.keyword-on.net
+ncd.veraty.keyword-on.net
 ncd.veraty.live-on.net
 ncdanmark.org
 ncdark.no-ip.biz
@@ -590500,8 +590546,10 @@ ndd.calianck.keyword-on.net
 ndd.calicnck.mydns.bz
 ndd.lognisyou.live-on.net
 ndd.lognisyou.mydns.bz
+ndd.nto11link.mydns.bz
 ndd.sevirverif.mydns.bz
 ndd.sevirvrerif.keyword-on.net
+ndd.veraty.keyword-on.net
 ndd3vefo8at1wpwwlanr9oy7uu6xgm4h.richfityou.com
 nddadmusth.click
 ndddb.world
@@ -593691,6 +593739,7 @@ netpoll.nl
 netpond.com
 netprefs.com
 netpug.com
+netpulse.today
 netpumper.com
 netpurity.info
 netpy.usa.cc
@@ -602424,6 +602473,7 @@ nline-literature.com
 nline-ooo.ru
 nlinecare1.com/Panel/
 nlink.mydns.bz
+nlink.server-on.net
 nlinka.link
 nlinka.online
 nlinkb.link
@@ -612338,6 +612388,7 @@ ntnhacker-37066.portmap.host
 ntnjs.com
 ntnpstatica.com
 ntnwcxtwgxwecrdxr.com
+nto11link.mydns.bz
 ntoele.wiontechieq.bio
 ntohnxgjijsgi.com
 nton-kovalenko.ru
@@ -685501,6 +685552,7 @@ qwartwz.ga
 qwartwz.gq
 qwartwz.ml
 qwartwz.tk
+qwary.org
 qwasaws.pro
 qwasd.3322.org
 qwasdfhj.tk
@@ -687595,6 +687647,7 @@ race-mas.gl.at.ply.gg
 race-oracle.gl.at.ply.gg
 race-ship-explanation.com
 race-think-client.com
+race-wins.gl.at.ply.gg
 race.belarusapple.top
 race.dedspac.ru
 race.ulitron.ru
@@ -693646,6 +693699,7 @@ reco.ws
 reco8100may.duckdns.org
 recochitas.no-ip.org
 recoder.top
+recogb.cfd
 recogniano.com
 recognitionplate.com
 recognitionsit.com
@@ -738405,6 +738459,7 @@ sevhyg11.top
 sevicebill.itemdb.com
 sevices848-activate-info.ga
 sevihy33.top
+sevilivierif.mydns.bz
 sevilrivierif.mydns.bz
 sevilrverif.mydns.bz
 sevilverif.mydns.bz
@@ -738412,6 +738467,7 @@ sevimlicanlilarhikarakat.xyz
 sevins.live
 sevirs.live
 seviru61.top
+sevirverif.keyword-on.net
 sevirverif.mydns.bz
 sevirvrerif.keyword-on.net
 sevisntkshop.top
@@ -751621,6 +751677,7 @@ slon.works
 slonar.website
 slonceciekawe.click
 sloneczna10tka.pl
+sloneek.us
 sloo.dedspac.ru
 sloo0oo7.no-ip.biz
 sloom.dedspac.ru
@@ -813954,6 +814011,7 @@ tubemastergpt.site
 tubenech.com
 tubeololo.org
 tubeplus.me
+tubeplus.ru
 tubeporn.de.ms
 tubeprox.com
 tuber.dedspac.ru
@@ -842875,6 +842933,7 @@ veracity-revision.info
 veradom.p-e.kr
 veragotess.co.in
 veraity.mydns.bz
+verality.mydns.bz
 veramoreiramarioursino.efacturas.net
 verandsatin.ru
 veranev.com
@@ -842884,6 +842943,7 @@ veraothu.cyou
 veraport.n-e.kr
 verathisventures.com
 veratrum.space
+veraty.keyword-on.net
 veraty.live-on.net
 veraty.mydns.bz
 verb.dedspac.ru
@@ -843573,6 +843633,7 @@ vernaudon-photographe.com
 verne.dedspac.ru
 vernerfonbraun.pw
 verniedruzia.com
+verninity.mydns.bz
 vernity.mydns.bz
 vernolimarevox.xyz
 vernomjune.duckdns.org
@@ -892852,6 +892913,7 @@ xmyip.com
 xmynk1wss.top
 xmzigyvewe.com
 xmzlong.com
+xn-----7kcbbdybdo9amekuqnj1ax5p.xn--p1ai
 xn-----btdbbadu7bnh9b6ntaida28o.live
 xn-----btdbbadu7bnh9b6ntaide77o.live
 xn-----btdbbd4dgjr4pragdax95nba48d.live
@@ -905639,6 +905701,7 @@ yousufshah.noip.biz
 yousunhard.com
 yousweeps.vip
 yout.ube.gr.com
+youtapp.ru
 youte8883serverleet.ml
 youth-compromise.gl.at.ply.gg
 youth-latex.gl.at.ply.gg
@@ -905679,9 +905742,14 @@ youtube-dmca.com
 youtube-downloader.click
 youtube-ex.site
 youtube-free-videos.com
+youtube-free.ru
 youtube-grabber.world
 youtube-in.site
 youtube-partners.com
+youtube-plus.cc
+youtube-plus.fun
+youtube-plus.life
+youtube-plus.top
 youtube-proxy.co
 youtube-proxy.com
 youtube-site.com
