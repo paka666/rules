@@ -76,6 +76,7 @@ http://171.104.226.87:6969/announce
 http://173.254.204.71:1096/announce
 http://177.112.215.99:6969/announce
 http://177.215.65.176:6969/announce
+http://177.215.67.115:6969/announce
 http://177.215.67.185:6969/announce
 http://178.175.143.27/announce
 http://178.33.73.26:2710/announce
@@ -1022,6 +1023,7 @@ udp://176.31.250.174:6969/announce
 udp://176.99.7.59:6969/announce
 udp://177.112.215.99:6969/announce
 udp://177.215.65.176:6969/announce
+udp://177.215.67.115:6969/announce
 udp://178.128.94.74:6969/announce
 udp://178.170.48.154:1337/announce
 udp://178.33.73.26:2710/announce
