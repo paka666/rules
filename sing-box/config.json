@@ -1,0 +1,1623 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "info",
+    "output": "/var/log/singbox.log",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns_resolver",
+        "type": "udp",
+        "server": "202.102.213.68",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns_remote",
+        "type": "https",
+        "server": "1.1.1.1",
+        "path": "/dns-query",
+        "detour": "自动选择"
+      },
+      {
+        "tag": "dns_smartdns",
+        "type": "udp",
+        "server": "127.0.0.1",
+        "server_port": 6053,
+        "detour": "direct"
+      }
+    ],
+    "rules": [
+      {
+        "clash_mode": "全局直连",
+        "server": "dns_smartdns"
+      },
+      {
+        "clash_mode": "全局代理",
+        "server": "dns_smartdns"
+      },
+      {
+        "rule_set": ["ads"],
+        "action": "reject",
+        "method": "default",
+        "disable_cache": true
+      },
+      {
+        "rule_set": [
+          "private",
+          "games-cn",
+          "games-common",
+          "games-noncn",
+          "ai-cn",
+          "ai-common",
+          "ai-noncn",
+          "media",
+          "network-cn",
+          "network-common",
+          "network-noncn"
+        ],
+        "server": "dns_smartdns"
+      }
+    ],
+    "final": "dns_smartdns",
+    "strategy": "prefer_ipv4",
+    "independent_cache": true,
+    "fakeip": {
+      "enabled": false,
+      "inet4_range": "198.18.0.0/15",
+      "inet6_range": "fc00::/18"
+    }
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "/usr/bin/singbox/cache.db",
+      "cache_id": "cache_db",
+      "store_fakeip": false
+    },
+    "clash_api": {
+      "default_mode": "rule",
+      "external_ui": "/usr/bin/singbox/ui/metacubexd",
+      "external_controller": "0.0.0.0:9090",
+      "secret": ""
+    }
+  },
+  "ntp": {
+    "enabled": true,
+    "server": "ntp.ntsc.ac.cn",
+    "server_port": 123,
+    "interval": "30m",
+    "detour": "direct"
+  },
+  "inbounds": [
+    {
+      "tag": "tun-in",
+      "type": "tun",
+      "interface_name": "tun0",
+      "address": ["172.19.0.1/30","fdfe:dcba:9876::1/126"],
+      "route_address": ["0.0.0.0/1","128.0.0.0/1","::/1","8000::/1"],
+      "route_exclude_address": [
+        "0.0.0.0/8",
+        "10.0.0.0/8",
+        "100.64.0.0/10",
+        "127.0.0.0/8",
+        "169.254.0.0/16",
+        "172.16.0.0/12",
+        "192.0.0.0/24",
+        "192.0.2.0/24",
+        "192.31.196.0/24",
+        "192.52.193.0/24",
+        "192.88.99.0/24",
+        "192.168.0.0/16",
+        "192.175.48.0/24",
+        "198.18.0.0/15",
+        "198.51.100.0/24",
+        "203.0.113.0/24",
+        "224.0.0.0/4",
+        "233.252.0.0/24",
+        "240.0.0.0/4",
+        "255.255.255.255/32",
+        "::/128",
+        "::1/128",
+        "::ffff:0:0/96",
+        "64:ff9b::/96",
+        "64:ff9b:1::/48",
+        "100::/64",
+        "2001::/23",
+        "2001:db8::/32",
+        "2002::/16",
+        "2620:4f:8000::/48",
+        "3fff::/20",
+        "5f00::/16",
+        "fc00::/7",
+        "fe80::/10",
+        "ff00::/8"
+      ],
+      "mtu": 9000,
+      "auto_route": true,
+      "strict_route": true,
+      "stack": "system",
+      "domain_strategy": "prefer_ipv4",
+      "endpoint_independent_nat": true,
+      "sniff": true,
+      "sniff_override_destination": true,
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "0.0.0.0",
+          "server_port": 1080
+        }
+      }
+    },
+    {
+      "tag": "dns-in",
+      "type": "direct",
+      "listen": "127.0.0.1",
+      "listen_port": 5053,
+      "network": "udp"
+    },
+    {
+      "tag": "mixed-in",
+      "type": "mixed",
+      "listen": "0.0.0.0",
+      "listen_port": 2080,
+      "sniff": true,
+      "sniff_override_destination": true,
+      "domain_strategy": "prefer_ipv4",
+      "users": []
+    },
+    {
+      "domain_strategy": "prefer_ipv4",
+      "listen": "127.0.0.1",
+      "listen_port": 2333,
+      "sniff": true,
+      "sniff_override_destination": true,
+      "tag": "socks-in",
+      "type": "socks",
+      "users": []
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "HK 01",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13001,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "HK 02",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13002,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "HK 03",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13003,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "HK 04",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13004,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "HK 05",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13005,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "HK 06",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13006,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "HK 07 x0.2",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13007,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "HK 08 x0.2",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13008,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "HK 09 HKT",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13009,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "HK 10 HKT",
+      "type": "trojan",
+      "server": "naiu-hk.05vr9nyqg5.download",
+      "server_port": 13010,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "香港HKT | 解锁流媒体",
+      "server": "hkt.g.hk.download.windowsupdatea.com",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-hkt1.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "香港HKT2 | 解锁流媒体",
+      "server": "hkt.g.hk2.download.windowsupdatea.com",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-hkt2.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "TW 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13035,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "台湾Hinet | 解锁流媒体",
+      "server": "glc.g.tw.download.windowsupdatea.com",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-tw1.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "台湾Hinet-1号线路 | 解锁流媒体",
+      "server": "77.75.199.33",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-hinet.glccf.top",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true,
+      "transport": {
+        "type": "ws",
+        "path": "/guolicheng/hinet",
+        "headers": {
+          "Host": [
+            "glc-hinet.glccf.top"
+          ]
+        },
+        "max_early_data": 2048,
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      }
+    },
+    {
+      "tag": "JP 01",
+      "type": "trojan",
+      "server": "naiu-jp.05vr9nyqg5.download",
+      "server_port": 13011,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "JP 02",
+      "type": "trojan",
+      "server": "naiu-jp.05vr9nyqg5.download",
+      "server_port": 13012,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "JP 03",
+      "type": "trojan",
+      "server": "naiu-jp.05vr9nyqg5.download",
+      "server_port": 13013,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "JP 04",
+      "type": "trojan",
+      "server": "naiu-jp.05vr9nyqg5.download",
+      "server_port": 13014,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "JP 05",
+      "type": "trojan",
+      "server": "naiu-jp.05vr9nyqg5.download",
+      "server_port": 13015,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "JP 06",
+      "type": "trojan",
+      "server": "naiu-jp.05vr9nyqg5.download",
+      "server_port": 13016,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "JP 07 x0.2",
+      "type": "trojan",
+      "server": "naiu-jp.05vr9nyqg5.download",
+      "server_port": 13017,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "JP 08 x0.2",
+      "type": "trojan",
+      "server": "naiu-jp.05vr9nyqg5.download",
+      "server_port": 13018,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "日本-1号",
+      "server": "133.167.38.153",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-jp1.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "日本-3号",
+      "server": "219.94.248.177",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-jp3.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "日本-4号",
+      "server": "219.94.252.114",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-jp4.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "SG 01",
+      "type": "trojan",
+      "server": "naiu-sg.05vr9nyqg5.download",
+      "server_port": 13027,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "SG 02",
+      "type": "trojan",
+      "server": "naiu-sg.05vr9nyqg5.download",
+      "server_port": 13028,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "SG 03",
+      "type": "trojan",
+      "server": "naiu-sg.05vr9nyqg5.download",
+      "server_port": 13029,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "SG 04",
+      "type": "trojan",
+      "server": "naiu-sg.05vr9nyqg5.download",
+      "server_port": 13030,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "SG 05",
+      "type": "trojan",
+      "server": "naiu-sg.05vr9nyqg5.download",
+      "server_port": 13031,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "SG 06",
+      "type": "trojan",
+      "server": "naiu-sg.05vr9nyqg5.download",
+      "server_port": 13032,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "SG 07 x0.2",
+      "type": "trojan",
+      "server": "naiu-sg.05vr9nyqg5.download",
+      "server_port": 13033,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "SG 08 x0.2",
+      "type": "trojan",
+      "server": "naiu-sg.05vr9nyqg5.download",
+      "server_port": 13034,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "新加坡",
+      "server": "140.245.33.165",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-sg1.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "新加坡 | 解锁流媒体",
+      "server": "77.75.199.33",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-sg1.glccf.top",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true,
+      "transport": {
+        "type": "ws",
+        "path": "/guolicheng/sg1",
+        "headers": {
+          "Host": [
+            "glc-sg1.glccf.top"
+          ]
+        },
+        "max_early_data": 2048,
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      }
+    },
+    {
+      "tag": "US 01",
+      "type": "trojan",
+      "server": "naiu-us.05vr9nyqg5.download",
+      "server_port": 13019,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "US 02",
+      "type": "trojan",
+      "server": "naiu-us.05vr9nyqg5.download",
+      "server_port": 13020,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "US 03",
+      "type": "trojan",
+      "server": "naiu-us.05vr9nyqg5.download",
+      "server_port": 13021,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "US 04",
+      "type": "trojan",
+      "server": "naiu-us.05vr9nyqg5.download",
+      "server_port": 13022,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "US 05",
+      "type": "trojan",
+      "server": "naiu-us.05vr9nyqg5.download",
+      "server_port": 13023,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "US 06",
+      "type": "trojan",
+      "server": "naiu-us.05vr9nyqg5.download",
+      "server_port": 13024,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "US 07 x0.2",
+      "type": "trojan",
+      "server": "naiu-us.05vr9nyqg5.download",
+      "server_port": 13025,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "US 08 x0.2",
+      "type": "trojan",
+      "server": "naiu-us.05vr9nyqg5.download",
+      "server_port": 13026,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "KR 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13036,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "韩国-1号",
+      "server": "152.70.95.69",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-kr1.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "DE 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13039,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "德国 | 解锁流媒体",
+      "server": "77.75.199.233",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-de.glccf.top",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true,
+      "transport": {
+        "type": "ws",
+        "path": "/guolicheng/de",
+        "headers": {
+          "Host": [
+            "glc-de.glccf.top"
+          ]
+        },
+        "max_early_data": 2048,
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "德国 | 解锁流媒体-vless",
+      "server": "132.226.207.189",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-de1.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "FR 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13038,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "vless",
+      "tag": "法国 | 解锁流媒体",
+      "server": "77.75.199.33",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "fr1.glccf.top",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true,
+      "transport": {
+        "type": "ws",
+        "path": "/guolicheng/fr",
+        "headers": {
+          "Host": [
+            "fr1.glccf.top"
+          ]
+        },
+        "max_early_data": 2048,
+        "early_data_header_name": "Sec-WebSocket-Protocol"
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "法国 | 解锁流媒体-vless",
+      "server": "141.145.197.62",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-fr1.windowsupdatea.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "AE 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13041,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "ES 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13047,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "GB 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13037,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "IE 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13050,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "IN 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13040,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "IT 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13049,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "NL 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13048,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "RU 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13044,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "TR 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13046,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "tag": "UA 01",
+      "type": "trojan",
+      "server": "naiu-other.05vr9nyqg5.download",
+      "server_port": 13045,
+      "password": "26583bb0-51f7-4503-9022-ef3645fb14d5",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "cloudflare.node-ssl.cdn-alibaba.com"
+      },
+      "tcp_fast_open": true
+    },
+    {
+      "type": "selector",
+      "tag": "全局设置",
+      "outbounds": [
+        "direct",
+        "自动选择",
+        "手动选择",
+        "香港节点",
+        "台湾节点",
+        "新加坡节点",
+        "美国节点",
+        "日本节点",
+        "其他节点"
+      ]
+    },
+    {
+      "tag": "自动选择",
+      "type": "urltest",
+      "outbounds": [
+        "HK 01",
+        "HK 02",
+        "HK 03",
+        "HK 04",
+        "HK 05",
+        "HK 06",
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "HK 09 HKT",
+        "HK 10 HKT",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "TW 01",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体",
+        "JP 01",
+        "JP 02",
+        "JP 03",
+        "JP 04",
+        "JP 05",
+        "JP 06",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号",
+        "SG 01",
+        "SG 02",
+        "SG 03",
+        "SG 04",
+        "SG 05",
+        "SG 06",
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "新加坡",
+        "新加坡 | 解锁流媒体",
+        "US 01",
+        "US 02",
+        "US 03",
+        "US 04",
+        "US 05",
+        "US 06",
+        "US 07 x0.2",
+        "US 08 x0.2",
+        "KR 01",
+        "韩国-1号",
+        "DE 01",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "FR 01",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless",
+        "AE 01",
+        "ES 01",
+        "GB 01",
+        "IE 01",
+        "IN 01",
+        "IT 01",
+        "NL 01",
+        "RU 01",
+        "TR 01",
+        "UA 01"
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "5m",
+      "tolerance": 50
+    },
+    {
+      "tag": "手动选择",
+      "type": "selector",
+      "default": "自动选择",
+      "outbounds": [
+        "direct",
+        "自动选择",
+        "HK 01",
+        "HK 02",
+        "HK 03",
+        "HK 04",
+        "HK 05",
+        "HK 06",
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "HK 09 HKT",
+        "HK 10 HKT",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "TW 01",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体",
+        "JP 01",
+        "JP 02",
+        "JP 03",
+        "JP 04",
+        "JP 05",
+        "JP 06",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号",
+        "SG 01",
+        "SG 02",
+        "SG 03",
+        "SG 04",
+        "SG 05",
+        "SG 06",
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "新加坡",
+        "新加坡 | 解锁流媒体",
+        "US 01",
+        "US 02",
+        "US 03",
+        "US 04",
+        "US 05",
+        "US 06",
+        "US 07 x0.2",
+        "US 08 x0.2",
+        "KR 01",
+        "韩国-1号",
+        "DE 01",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "FR 01",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless",
+        "AE 01",
+        "ES 01",
+        "GB 01",
+        "IE 01",
+        "IN 01",
+        "IT 01",
+        "NL 01",
+        "RU 01",
+        "TR 01",
+        "UA 01"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "香港节点",
+      "outbounds": [
+        "HK 01",
+        "HK 02",
+        "HK 03",
+        "HK 04",
+        "HK 05",
+        "HK 06",
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "HK 09 HKT",
+        "HK 10 HKT",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "台湾节点",
+      "outbounds": [
+        "TW 01",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "新加坡节点",
+      "outbounds": [
+        "SG 01",
+        "SG 02",
+        "SG 03",
+        "SG 04",
+        "SG 05",
+        "SG 06",
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "新加坡",
+        "新加坡 | 解锁流媒体"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "美国节点",
+      "outbounds": [
+        "US 01",
+        "US 02",
+        "US 03",
+        "US 04",
+        "US 05",
+        "US 06",
+        "US 07 x0.2",
+        "US 08 x0.2"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "日本节点",
+      "outbounds": [
+        "JP 01",
+        "JP 02",
+        "JP 03",
+        "JP 04",
+        "JP 05",
+        "JP 06",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "其他节点",
+      "outbounds": [
+        "KR 01",
+        "韩国-1号",
+        "DE 01",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "FR 01",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless",
+        "AE 01",
+        "ES 01",
+        "GB 01",
+        "IE 01",
+        "IN 01",
+        "IT 01",
+        "NL 01",
+        "RU 01",
+        "TR 01",
+        "UA 01"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "游戏节点",
+      "outbounds": [
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "US 07 x0.2",
+        "US 08 x0.2",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "流媒体节点",
+      "outbounds": [
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体",
+        "新加坡 | 解锁流媒体",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "AIGC节点",
+      "outbounds": [
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "TW 01",
+        "KR 01",
+        "DE 01",
+        "FR 01",
+        "AE 01",
+        "ES 01",
+        "GB 01",
+        "IE 01",
+        "IN 01",
+        "IT 01",
+        "NL 01",
+        "RU 01",
+        "TR 01",
+        "UA 01",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号",
+        "韩国-1号",
+        "新加坡",
+        "新加坡 | 解锁流媒体",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless",
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "US 07 x0.2",
+        "US 08 x0.2"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "游戏",
+      "outbounds": ["游戏节点","自动选择","手动选择"]
+    },
+    {
+      "type": "selector",
+      "tag": "AIGC",
+      "outbounds": ["AIGC节点","自动选择","手动选择"]
+    },
+    {
+      "type": "selector",
+      "tag": "流媒体",
+      "outbounds": ["流媒体节点","自动选择","手动选择"]
+    },
+    {
+      "type": "selector",
+      "tag": "proxy",
+      "outbounds": ["自动选择","手动选择"]
+    }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "default_domain_resolver": "dns_resolver",
+    "rule_set": [
+      {
+        "tag": "ads",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/ads.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "private",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/private.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "games-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/games-cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "games-noncn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/games-noncn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "games-common",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/games-common.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "ai-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/ai-cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "ai-noncn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/ai-noncn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "ai-common",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/ai-common.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "media",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/media.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "network-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/network-cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "network-noncn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/network-noncn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "network-common",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/paka666/rules/main/sing-box/srs/network-common.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "geoip-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.bgithub.xyz/lyc8503/sing-box-rules/rule-set-geoip/geoip-cn.srs",
+        "download_detour": "direct"
+      }
+    ],
+    "rules": [
+      {
+        "protocol": "dns",
+        "outbound": "dns-out"
+      },
+      {
+        "clash_mode": "全局直连",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "全局代理",
+        "outbound": "手动选择"
+      },
+      {
+        "rule_set": ["ads"],
+        "outbound": "block"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "direct"
+      },
+      {
+        "rule_set": ["private","games-cn","ai-cn","network-cn"],
+        "outbound": "direct"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": ["games-common","ai-common","network-common"]
+          },
+          {
+            "rule_set": ["geoip-cn"]
+          }
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": ["games-noncn","games-common"],
+        "outbound": "游戏"
+      },
+      {
+        "rule_set": ["ai-noncn","ai-common"],
+        "outbound": "AIGC"
+      },
+      {
+        "rule_set": ["media"],
+        "outbound": "流媒体"
+      },
+      {
+        "rule_set": ["network-noncn","network-common"],
+        "outbound": "proxy"
+      }
+    ],
+    "final": "proxy"
+  }
+}
