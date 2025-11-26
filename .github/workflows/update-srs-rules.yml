@@ -15,7 +15,7 @@ on:
 
 jobs:
   merge:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm64
 
     permissions:
       contents: write
@@ -25,11 +25,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
-
-      - name: Enable qemu for arm64
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -41,9 +36,15 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y jq qemu-user-static #libre2-dev
+          sudo apt-get install -y jq #libre2-dev
           sudo apt-get clean
           sudo rm -rf /var/lib/apt/lists/*
+
+      - name: Install aarch64 musl linker
+        run: |
+          wget https://dl-cdn.alpinelinux.org/alpine/edge/main/aarch64/musl-1.2.5-r21.apk -O musl.apk
+          tar xzf musl.apk data.tar.xz
+          sudo tar xf data.tar.xz -C /
 
       - name: Install local arm64 sing-box
         run: |
