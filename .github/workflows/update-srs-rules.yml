@@ -45,6 +45,11 @@ jobs:
           sudo apt-get clean
           sudo rm -rf /var/lib/apt/lists/*
 
+      - name: Debug workspace
+        run: |
+          pwd
+          ls -R .
+
       - name: Install local arm64 sing-box
         run: |
           sudo mkdir -p /usr/local/bin
