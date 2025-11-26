@@ -4,14 +4,14 @@ on:
   schedule:
     - cron: "0 16 * * *"
   workflow_dispatch:
-#  push:
-#    branches:
-#      - main
-#    paths:
-#      - '.github/workflows/update-srs-rules.yml'
-#      - 'sing-box/merge-srs.sh'
-#      - 'sing-box/json/**/*.json'
-#      - 'sing-box/srs/*.srs'
+# push:
+#   branches:
+#     - main
+#   paths:
+#     - '.github/workflows/update-srs-rules.yml'
+#     - 'sing-box/merge-srs.sh'
+#     - 'sing-box/json/**/*.json'
+#     - 'sing-box/srs/*.srs'
 
 jobs:
   merge:
@@ -35,32 +35,70 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-#          cache: 'pip'
-#          cache-dependency-path: '**/requirements.txt'
+#         cache: 'pip'
+#         cache-dependency-path: '**/requirements.txt'
 
       - name: Install system dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y jq p7zip-full qemu-user-static musl-tools binfmt-support #libre2-dev
+          sudo apt-get install -y jq p7zip-full qemu-user-static binfmt-support wget
           sudo apt-get clean
           sudo rm -rf /var/lib/apt/lists/*
 
-      - name: Install aarch64 musl linker
+      - name: Install ARM64 musl and libgcc
         run: |
+          # 下载并安装 musl
           wget https://dl-cdn.alpinelinux.org/alpine/edge/main/aarch64/musl-1.2.5-r21.apk -O musl.apk
           7z x musl.apk -so | sudo tar -xf - -C /
 
-      - name: Install local arm64 sing-box
+          # 下载并安装 libgcc (musl 版本)
+          wget https://dl-cdn.alpinelinux.org/alpine/edge/main/aarch64/libgcc-14.2.0-r4.apk -O libgcc.apk
+          7z x libgcc.apk -so | sudo tar -xf - -C /
+
+          # 验证安装
+          echo "=== 检查已安装的库 ==="
+          ls -la /lib/ld-musl-aarch64.so.1 || echo "⚠️ musl 链接器未找到"
+          ls -la /lib/libgcc_s.so.1 || ls -la /usr/lib/libgcc_s.so.1 || echo "⚠️ libgcc_s 未找到"
+
+      - name: Setup sing-box
         run: |
           sudo mkdir -p /usr/local/bin
           sudo cp sing-box/core/sing-box1.12.12-r36 /usr/local/bin/sing-box
           sudo chmod +x /usr/local/bin/sing-box
-#          curl -fsSL https://sing-box.app/install.sh | sh
+          echo "=== sing-box 文件信息 ==="
+          file /usr/local/bin/sing-box
+#         curl -fsSL https://sing-box.app/install.sh | sh
 
-#      - name: Install Python dependencies
-#        run: |
-#          python -m pip install --upgrade pip
-#          pip install -r py/requirements.txt
+#     - name: Install Python dependencies
+#       run: |
+#         python -m pip install --upgrade pip
+#         pip install -r py/requirements.txt
+
+      - name: Test sing-box with QEMU
+        run: |
+          echo "=== 测试 sing-box 运行 ==="
+          qemu-aarch64-static /usr/local/bin/sing-box version || {
+            echo "⚠️ 直接运行失败，尝试设置 LD_LIBRARY_PATH..."
+            export LD_LIBRARY_PATH=/lib:/usr/lib
+            qemu-aarch64-static /usr/local/bin/sing-box version
+          }
+
+      - name: Create sing-box wrapper
+        run: |
+          sudo tee /usr/local/bin/sing-box-wrapper > /dev/null <<'EOF'
+          #!/bin/bash
+          # 使用 QEMU 运行 ARM64 musl 二进制文件
+          exec qemu-aarch64-static /usr/local/bin/sing-box "$@"
+          EOF
+
+          sudo chmod +x /usr/local/bin/sing-box-wrapper
+          sudo mv /usr/local/bin/sing-box /usr/local/bin/sing-box-arm64
+          sudo mv /usr/local/bin/sing-box-wrapper /usr/local/bin/sing-box
+
+      - name: Verify sing-box
+        run: |
+          echo "=== 验证 sing-box 版本 ==="
+          sing-box version
 
       - name: Run merge script
         run: |
