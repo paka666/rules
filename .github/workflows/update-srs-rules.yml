@@ -45,11 +45,6 @@ jobs:
           sudo apt-get clean
           sudo rm -rf /var/lib/apt/lists/*
 
-      - name: Install aarch64 musl linker
-        run: |
-          wget https://dl-cdn.alpinelinux.org/alpine/edge/main/aarch64/musl-1.2.5-r21.apk -O musl.apk
-          7zz x musl.apk -so | sudo tar xf - -C /
-
       - name: Install local arm64 sing-box
         run: |
           sudo mkdir -p /usr/local/bin
