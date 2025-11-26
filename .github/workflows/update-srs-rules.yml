@@ -41,9 +41,14 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y jq 7zip qemu-user-static musl-tools binfmt-support #libre2-dev
+          sudo apt-get install -y jq p7zip-full qemu-user-static musl-tools binfmt-support #libre2-dev
           sudo apt-get clean
           sudo rm -rf /var/lib/apt/lists/*
+
+      - name: Install aarch64 musl linker
+        run: |
+          wget https://dl-cdn.alpinelinux.org/alpine/edge/main/aarch64/musl-1.2.5-r21.apk -O musl.apk
+          7z x musl.apk -so | sudo tar -xf - -C /
 
       - name: Install local arm64 sing-box
         run: |
