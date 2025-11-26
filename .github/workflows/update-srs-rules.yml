@@ -15,7 +15,7 @@ on:
 
 jobs:
   merge:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-24.04-arm64
 
     permissions:
       contents: write
@@ -43,8 +43,8 @@ jobs:
       - name: Install aarch64 musl linker
         run: |
           wget https://dl-cdn.alpinelinux.org/alpine/edge/main/aarch64/musl-1.2.5-r21.apk -O musl.apk
-          tar xzf musl.apk data.tar.xz
-          sudo tar xf data.tar.xz -C /
+          ar x musl.apk data.tar.gz
+          sudo tar xf data.tar.gz -C /
 
       - name: Install local arm64 sing-box
         run: |
