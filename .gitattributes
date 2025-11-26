@@ -30,3 +30,4 @@
 * text eol=lf
 *.pdf binary
 *.jar binary
+*.12-r36 binary
