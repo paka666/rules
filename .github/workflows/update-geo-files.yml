@@ -47,11 +47,6 @@ jobs:
           rm -rf geo
           mkdir -p geo
 
-      - name: Setup Git config
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
       - name: Download and process geo files
         run: |
           # geoip 文件

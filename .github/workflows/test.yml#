@@ -39,7 +39,7 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y jq  libre2-dev
           sudo apt-get clean
-          sudo rm -rf /var/lib/apt/lists/*
+          sudo rm -rf /var/lib/apt/lists
 
       - name: Install Python dependencies
         run: |
