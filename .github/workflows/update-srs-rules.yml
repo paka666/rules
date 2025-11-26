@@ -47,10 +47,10 @@ jobs:
 
       - name: Install local arm64 sing-box
         run: |
-#          curl -fsSL https://sing-box.app/install.sh | sh
           sudo mkdir -p /usr/local/bin
           sudo cp /sing-box/core/sing-box1.12.12-r36 /usr/local/bin/sing-box
           sudo chmod +x /usr/local/bin/sing-box
+#          curl -fsSL https://sing-box.app/install.sh | sh
 
 #      - name: Install Python dependencies
 #        run: |
