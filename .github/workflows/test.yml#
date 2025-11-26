@@ -23,7 +23,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Mkdir
+      - name: Create directory
         run: |
           mkdir -p temp srs srs/json srs/json/same
 
@@ -34,10 +34,12 @@ jobs:
           cache: 'pip'
           cache-dependency-path: '**/requirements.txt'
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update -y
           sudo apt-get install -y jq  libre2-dev
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
 
       - name: Install Python dependencies
         run: |
@@ -52,3 +54,5 @@ jobs:
         with:
           commit_message: "[auto] chore: test"
           file_pattern: "srs/json/*/*.json"
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com

@@ -28,7 +28,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Mkdir
+      - name: Set Git config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create directories
         run: |
           mkdir -p temp adh/tmp adh/backup
 
@@ -51,6 +56,8 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y libre2-dev
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
 
       - name: Install Python dependencies
         run: |

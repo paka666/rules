@@ -26,6 +26,11 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
+      - name: Enable qemu for arm64
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
@@ -33,14 +38,19 @@ jobs:
 #          cache: 'pip'
 #          cache-dependency-path: '**/requirements.txt'
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y jq  #libre2-dev
+          sudo apt-get install -y jq qemu-user-static #libre2-dev
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
 
-      - name: Install sing-box
+      - name: Install local arm64 sing-box
         run: |
-          curl -fsSL https://sing-box.app/install.sh | sh
+#          curl -fsSL https://sing-box.app/install.sh | sh
+          sudo mkdir -p /usr/local/bin
+          sudo cp /sing-box/core/sing-box1.12.12-r36 /usr/local/bin/sing-box
+          sudo chmod +x /usr/local/bin/sing-box
 
 #      - name: Install Python dependencies
 #        run: |
@@ -52,12 +62,14 @@ jobs:
           chmod +x sing-box/merge-srs.sh
           bash sing-box/merge-srs.sh
 
-      - name: Upload Artifacts (Logs)
+      - name: Upload artifacts (logs)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: execution-logs
+          name: execution-logs-${{ github.run_number }}
           path: sing-box/logs
+          retention-days: 7
+          if-no-files-found: warn
 
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -66,3 +78,5 @@ jobs:
           file_pattern: "sing-box/srs/*.srs sing-box/json/**/*.json"
           skip_dirty_check: false
           skip_fetch: true
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com

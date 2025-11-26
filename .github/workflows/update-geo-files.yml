@@ -96,3 +96,5 @@ jobs:
         with:
           commit_message: "[auto] chore: update geo files daily"
           file_pattern: "geo/*.txt geo/*.dat"
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com

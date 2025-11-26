@@ -22,11 +22,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Git config
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
       - name: Download custom files
         run: |
           # 下载并重命名文件
@@ -38,3 +33,5 @@ jobs:
         with:
           commit_message: "[auto] chore: update custom files"
           file_pattern: "folder/file.suffix"
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
