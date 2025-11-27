@@ -91,6 +91,7 @@ jobs:
               scan_list+=("$f")
             done < <(find . -type f \
               -not -path "./.git/*" \
+              -not -path "./sing-box/ui/*" \
               -not -path "./node_modules/*" \
               -not -path "./venv/*" -print0)
           fi
