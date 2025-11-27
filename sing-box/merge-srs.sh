@@ -2,11 +2,11 @@
 # ============================================================================
 # merge-srs-unified.sh - Sing-box 规则集合并脚本 (生产级整合版)
 # ============================================================================
-# 版本: 2.0.0
+# 版本: 2.1.0
 # 作者: AI Generated (基于merge-srs.sh + merge_srs_final.sh)
 #
 # 主要改进:
-# - 修复所有已知bug (文件锁、时间戳、数据丢失)
+# - 修复所有已知bug (文件锁、时间戳、数据丢失、sing-box version 命令检测)
 # - 优化并发性能 (分阶段处理、智能锁机制)
 # - 完善错误处理 (详细日志、自动恢复)
 # - 模块化设计 (函数解耦、配置外置)
@@ -239,7 +239,12 @@ check_dependencies() {
     if ! command -v "$cmd" &>/dev/null; then
       missing+=("$cmd")
     else
-      local version=$($cmd --version 2>&1 | head -1 || echo "unknown")
+      local version=""
+      if [[ "$cmd" == "sing-box" ]]; then
+        version=$($cmd version 2>&1 | head -1 || echo "unknown")
+      else
+        version=$($cmd --version 2>&1 | head -1 || echo "unknown")
+      fi
       log_info "  ✓ $cmd: $version"
     fi
   done

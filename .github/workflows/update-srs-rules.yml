@@ -23,32 +23,37 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
 
-      - name: Set up QEMU (for running ARM64 containers)
+      - name: Prepare log directory
+        run: mkdir -p sing-box/logs
+
+      - name: Enable QEMU for ARM64
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
 
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+#     - name: Set up Python 3.12
+#       uses: actions/setup-python@v5
+#       with:
+#         python-version: '3.12'
 #         cache: 'pip'
 #         cache-dependency-path: '**/requirements.txt'
 #         curl -fsSL https://sing-box.app/install.sh | sh
 
-      - name: Run merge inside Alpine ARM64 container
+      - name: Run merge inside Ubuntu ARM64 container
         run: |
           docker run --rm \
             --platform linux/arm64 \
             -v "$PWD":/work \
             -w /work \
-            alpine:latest sh -e -c '
+            ubuntu:22.04 bash -c '
               set -e
+              export DEBIAN_FRONTEND=noninteractive
+              apt-get update
+              apt-get install -y bash coreutils libgcc curl wget jq git python3 python3-pip ca-certificates file tar xz-utils
+              echo "=== 环境检查 ==="
               uname -a
-              apk add --no-cache bash jq python3 curl libgcc coreutils file
+              python3 --version
               install -m 755 sing-box/core/sing-box* /usr/local/bin/sing-box
               file /usr/local/bin/sing-box
               chmod +x /usr/local/bin/sing-box
@@ -59,7 +64,7 @@ jobs:
               echo "=== merge-srs.sh 执行完成 ==="
             '
 
-      - name: Upload artifacts (logs)
+      - name: Upload logs (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -73,7 +78,5 @@ jobs:
         with:
           commit_message: "[auto] chore: update srs rules daily"
           file_pattern: "sing-box/srs/*.srs sing-box/json/**/*.json"
-          skip_dirty_check: false
-          skip_fetch: true
           commit_user_name: github-actions[bot]
           commit_user_email: github-actions[bot]@users.noreply.github.com
