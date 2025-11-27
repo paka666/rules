@@ -48,7 +48,7 @@ jobs:
             alpine:latest sh -e -c '
               set -e
               uname -a
-              apk add --no-cache bash jq python3 curl libgcc coreutils
+              apk add --no-cache bash jq python3 curl libgcc coreutils file
               install -m 755 sing-box/core/sing-box* /usr/local/bin/sing-box
               file /usr/local/bin/sing-box
               chmod +x /usr/local/bin/sing-box
