@@ -38,6 +38,7 @@ jobs:
 #         cache: 'pip'
 #         cache-dependency-path: '**/requirements.txt'
 #         curl -fsSL https://sing-box.app/install.sh | sh
+
       - name: Run merge inside Alpine ARM64 container
         run: |
           docker run --rm \
@@ -45,20 +46,13 @@ jobs:
             -v "$PWD":/work \
             -w /work \
             alpine:latest sh -e -c '
-              echo "=== 进入 Alpine ARM64 容器 ==="
+              set -e
               uname -a
-              echo "============================="
-
-              # 安装必要依赖
               apk add --no-cache bash jq python3 curl libgcc coreutils
-
-              echo "=== 设置 sing-box ==="
               install -m 755 sing-box/core/sing-box* /usr/local/bin/sing-box
               file /usr/local/bin/sing-box
               chmod +x /usr/local/bin/sing-box
-              echo "=== 测试 sing-box ==="
-              sing-box version || { echo "❌ sing-box 运行失败"; exit 1; }
-
+              sing-box version
               echo "=== 执行 merge-srs.sh ==="
               chmod +x sing-box/merge-srs.sh
               bash sing-box/merge-srs.sh
