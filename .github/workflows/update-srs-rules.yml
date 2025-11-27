@@ -50,7 +50,7 @@ jobs:
               set -e
               export DEBIAN_FRONTEND=noninteractive
               apt-get update
-              apt-get install -y --no-install-recommends curl wget ca-certificates jq python3 musl file
+              apt-get install -y --no-install-recommends libgcc-s1 curl wget ca-certificates jq python3 musl file
               echo "=== 环境检查 ==="
               uname -a
               python3 --version
