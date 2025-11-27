@@ -48,7 +48,6 @@ jobs:
             -w /work \
             alpine:latest sh -e -c '
               set -e
-
               apk add --no-cache bash curl wget ca-certificates jq python3 libgcc coreutils file
               uname -a
               python3 --version
