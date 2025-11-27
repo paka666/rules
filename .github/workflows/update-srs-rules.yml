@@ -51,6 +51,8 @@ jobs:
               export DEBIAN_FRONTEND=noninteractive
               apt-get update
               apt-get install -y --no-install-recommends libgcc-s1 curl wget ca-certificates jq python3 musl file
+              mkdir -p /lib/aarch64-linux-musl
+              ln -sf /lib/aarch64-linux-gnu/libgcc_s.so.1 /lib/aarch64-linux-musl/libgcc_s.so.1
               echo "=== 环境检查 ==="
               uname -a
               python3 --version
