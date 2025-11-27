@@ -40,25 +40,20 @@ jobs:
 #         cache-dependency-path: '**/requirements.txt'
 #         curl -fsSL https://sing-box.app/install.sh | sh
 
-      - name: Run merge inside Ubuntu ARM64 container
+      - name: Run merge inside Alpine ARM64 container
         run: |
           docker run --rm \
             --platform linux/arm64 \
             -v "$PWD":/work \
             -w /work \
-            ubuntu:22.04 bash -c '
+            alpine:latest sh -e -c '
               set -e
-              export DEBIAN_FRONTEND=noninteractive
-              apt-get update
-              apt-get install -y --no-install-recommends curl wget ca-certificates file jq python3 musl-tools libgcc-s1
-              echo "=== 环境检查 ==="
+
+              apk add --no-cache bash curl wget ca-certificates jq python3 libgcc coreutils file
               uname -a
               python3 --version
-              mkdir -p /usr/lib/aarch64-linux-musl
-              ln -s /lib/aarch64-linux-gnu/libgcc_s.so.1 /usr/lib/aarch64-linux-musl/libgcc_s.so.1
               install -m 755 sing-box/core/sing-box* /usr/local/bin/sing-box
               file /usr/local/bin/sing-box
-              export LD_LIBRARY_PATH=/usr/lib/aarch64-linux-musl:$LD_LIBRARY_PATH
               sing-box version
               echo "=== 执行 merge-srs.sh ==="
               chmod +x sing-box/merge-srs.sh
