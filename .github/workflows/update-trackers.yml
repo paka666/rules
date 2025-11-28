@@ -4,14 +4,14 @@ on:
   schedule:
     - cron: "0 15 * * *"
   workflow_dispatch:
-#  push:
-#    branches:
-#      - main
-#    paths:
-#      - '.github/workflows/update-trackers.yml'
-#      - 'py/update_trackers.py'
-#      - 'trackers/*.txt'
-#      - 'trackers/*.bak'
+# push:
+#   branches:
+#     - main
+#   paths:
+#     - '.github/workflows/update-trackers.yml'
+#     - 'py/update_trackers.py'
+#     - 'trackers/*.txt'
+#     - 'trackers/*.bak'
 
 jobs:
   update-trackers:
@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Create directory
         run: |
@@ -49,6 +51,12 @@ jobs:
 
       - name: Update trackers
         run: python py/update_trackers.py
+
+      - name: Sync before commit
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          git clean -fd
 
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5

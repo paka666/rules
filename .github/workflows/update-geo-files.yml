@@ -4,32 +4,32 @@ on:
   schedule:
     - cron: '0 19 * * *'
   workflow_dispatch:
-#  push:
-#    branches:
-#      - main
-#    paths:
-#      - '.github/workflows/update-geo-files.yml'
-#      - 'geo/geoip.dat'
-#      - 'geo/geosite.dat'
-#      - 'geo/gfwlist_loyalsoldier.txt'
-#      - 'geo/gfwlist_anonymous.txt'
-#      - 'geo/gfwlist_loukky.txt'
-#      - 'geo/gfwlist_original.txt'
-#      - 'geo/chnroute_clang.txt'
-#      - 'geo/chnroute_gaoyifan.txt'
-#      - 'geo/chnroute_clang_cidr.txt'
-#      - 'geo/chnroute_soffchen.txt'
-#      - 'geo/chnroute_hackl0us.txt'
-#      - 'geo/chnroute_blackmatrix7.txt'
-#      - 'geo/chnroute6_clang_ipv6.txt'
-#      - 'geo/chnroute6_gaoyifan.txt'
-#      - 'geo/chnroute6_blackmatrix7.txt'
-#      - 'geo/chnlist_accelerated_domains.txt'
-#      - 'geo/chnlist_apple_china.txt'
-#      - 'geo/chnlist_loyalsoldier_china.txt'
-#      - 'geo/chnlist_loyalsoldier_apple.txt'
-#      - 'geo/chnlist_loyalsoldier_google.txt'
-#      - 'geo/chnlist_blackmatrix7_domain.txt'
+# push:
+#   branches:
+#     - main
+#   paths:
+#     - '.github/workflows/update-geo-files.yml'
+#     - 'geo/geoip.dat'
+#     - 'geo/geosite.dat'
+#     - 'geo/gfwlist_loyalsoldier.txt'
+#     - 'geo/gfwlist_anonymous.txt'
+#     - 'geo/gfwlist_loukky.txt'
+#     - 'geo/gfwlist_original.txt'
+#     - 'geo/chnroute_clang.txt'
+#     - 'geo/chnroute_gaoyifan.txt'
+#     - 'geo/chnroute_clang_cidr.txt'
+#     - 'geo/chnroute_soffchen.txt'
+#     - 'geo/chnroute_hackl0us.txt'
+#     - 'geo/chnroute_blackmatrix7.txt'
+#     - 'geo/chnroute6_clang_ipv6.txt'
+#     - 'geo/chnroute6_gaoyifan.txt'
+#     - 'geo/chnroute6_blackmatrix7.txt'
+#     - 'geo/chnlist_accelerated_domains.txt'
+#     - 'geo/chnlist_apple_china.txt'
+#     - 'geo/chnlist_loyalsoldier_china.txt'
+#     - 'geo/chnlist_loyalsoldier_apple.txt'
+#     - 'geo/chnlist_loyalsoldier_google.txt'
+#     - 'geo/chnlist_blackmatrix7_domain.txt'
 
 jobs:
   update-geo-files:
@@ -41,13 +41,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: remove old files
         run: |
           rm -rf geo
           mkdir -p geo
 
-      - name: Download and process geo files
+      - name: Download and geo files
         run: |
           # geoip 文件
           curl -s -L -o geo/geoip.dat "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip.dat"
@@ -85,6 +87,12 @@ jobs:
 
           echo "下载完成，文件列表："
           ls -la geo/
+
+      - name: Sync before commit-4
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          git clean -fd
 
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5

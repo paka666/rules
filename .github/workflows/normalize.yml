@@ -222,6 +222,12 @@ jobs:
             echo "✅ No files needed fixing."
           fi
 
+      - name: Sync before commit
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          git clean -fd
+
       - name: Git commit & push
         run: |
           if ! git diff --cached --quiet; then

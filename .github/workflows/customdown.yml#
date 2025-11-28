@@ -21,12 +21,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download custom files
         run: |
           # 下载并重命名文件
           mkdir -p Folder
           curl -s -L -o folder/file.suffix "url"
+
+      - name: Sync before commit
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          git clean -fd
 
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5

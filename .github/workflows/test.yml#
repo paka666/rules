@@ -4,13 +4,13 @@ on:
   schedule:
     - cron: "0 16 * * *"
   workflow_dispatch:
-#  push:
-#    branches:
-#      - main
-#    paths:
-#      - '.github/workflows/test.yml'
-#      - 'srs/script/process_rules.py'
-#      - 'srs/*/*.json'
+# push:
+#   branches:
+#     - main
+#   paths:
+#     - '.github/workflows/test.yml'
+#     - 'srs/script/process_rules.py'
+#     - 'srs/*/*.json'
 
 jobs:
   merge:
@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Create directory
         run: |
@@ -48,6 +50,12 @@ jobs:
 
       - name: Run process script
         run: python srs/script/process_rules.py
+
+      - name: Sync before commit
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          git clean -fd
 
       - name: Commit and push ip if changed
         uses: stefanzweifel/git-auto-commit-action@v5
