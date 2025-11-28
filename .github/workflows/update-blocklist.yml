@@ -70,12 +70,6 @@ jobs:
         run: |
           python py/preprocess.py
 
-      - name: Sync before commit-1
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
-          git clean -fd
-
       - name: Commit and push preprocessed files if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -88,12 +82,6 @@ jobs:
           hostlist-compiler -c adh/tmp/config2.json -o adh/blocklist-merged.txt
           mv adh/blocklist-merged.txt adh/blocklist.txt
           rm -f temp/blocklist.txt
-
-      - name: Sync before commit-2
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
-          git clean -fd
 
       - name: Commit and push blocklist if changed
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -108,12 +96,6 @@ jobs:
           mv adh/domain-blocklist-merged.txt adh/domain-blocklist.txt
           rm -f temp/domain-blocklist.txt
 
-      - name: Sync before commit-3
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
-          git clean -fd
-
       - name: Commit and push domain-blocklist if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -122,12 +104,6 @@ jobs:
 
       - name: Compile ip blocklist
         run: python py/process_ip_blocklist.py
-
-      - name: Sync before commit-4
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
-          git clean -fd
 
       - name: Commit and push ip blocklist if changed
         uses: stefanzweifel/git-auto-commit-action@v5

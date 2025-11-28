@@ -897,7 +897,7 @@ compile_all_srs() {
 # 第十二部分: 备份清理
 # ============================================================================
 
-# 清理旧备份文件
+# 清理旧备份文件和日志
 cleanup_old_backups() {
   log_info "🧹 === 清理旧备份 (保留 $BACKUP_KEEP_COUNT 份) ==="
 
@@ -919,6 +919,25 @@ cleanup_old_backups() {
   done
 
   log_info "✅ === 备份清理完成 ==="
+}
+
+cleanup_execution_logs() {
+  log_info "🧹 === 清理运行日志 (保留 7 份) ==="
+  
+  # 查找 logs 目录下以 merge- 开头的日志，按名称(包含时间戳)逆序排列
+  # 保留前 7 个，删除剩余的
+  local count
+  count=$(find "$LOG_DIR" -name "merge-*.log" -type f | wc -l)
+  
+  if [ "$count" -gt 7 ]; then
+    log_info "🗑️  清理旧日志 (当前: $count, 保留: 7)"
+    find "$LOG_DIR" -name "merge-*.log" -type f | \
+      sort -r | \
+      tail -n +8 | \
+      xargs -r rm -f 2>/dev/null || true
+  else
+    log_info "ℹ️  无需清理日志 (当前: $count)"
+  fi
 }
 
 # ============================================================================
@@ -2220,8 +2239,11 @@ main() {
   compile_common_srs
   log_info ""
 
-  # === 步骤7: 清理备份 ===
+  # === 步骤7: 清理备份和日志 ===
   cleanup_old_backups
+  log_info ""
+
+  cleanup_execution_logs
   log_info ""
 
   # === 完成 ===

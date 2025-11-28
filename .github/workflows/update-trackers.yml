@@ -52,12 +52,6 @@ jobs:
       - name: Update trackers
         run: python py/update_trackers.py
 
-      - name: Sync before commit
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
-          git clean -fd
-
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:

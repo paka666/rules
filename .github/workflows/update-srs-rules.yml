@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: "0 16 * * *"
   workflow_dispatch:
+
+env:
+  LD_LIBRARY_PATH: /lib:/usr/lib
+
 # push:
 #   branches:
 #     - main
@@ -26,13 +30,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Prepare log directory
-        run: mkdir -p sing-box/logs
-
       - name: Enable QEMU for ARM64
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
+          cache-image: false
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -56,11 +58,11 @@ jobs:
       - name: Install ARM64 musl runtime libraries
         run: |
           # 下载并安装 musl (提供 libc.so 和 ld-musl-aarch64.so.1)
-          wget https://dl-cdn.alpinelinux.org/alpine/edge/main/aarch64/musl-1.2.5-r21.apk -O musl.apk
-          7z x musl.apk -so | sudo tar -xf - -C /
+          wget https://dl-cdn.alpinelinux.org/edge/main/aarch64/musl-1.2.5-r21.apk -O musl.apk
+          7z x musl.apk -so | sudo tar -xf - --warning=no-unknown-keyword -C /
           # 下载并安装 libgcc (提供 libgcc_s.so.1)
-          wget https://dl-cdn.alpinelinux.org/alpine/edge/main/aarch64/libgcc-15.2.0-r2.apk -O libgcc.apk
-          7z x libgcc.apk -so | sudo tar -xf - -C /
+          wget https://dl-cdn.alpinelinux.org/edge/main/aarch64/libgcc-15.2.0-r2.apk -O libgcc.apk
+          7z x libgcc.apk -so | sudo tar -xf - --warning=no-unknown-keyword -C /
           # 验证安装
           echo "=== 验证依赖库 ==="
           ls -lh /lib/ld-musl-aarch64.so.1 2>/dev/null || echo "❌ musl 链接器缺失"
@@ -84,11 +86,7 @@ jobs:
       - name: Test sing-box with QEMU
         run: |
           echo "=== 测试 sing-box 运行 ==="
-          qemu-aarch64-static /usr/local/bin/sing-box-arm64 version 2>&1 || {
-            echo "⚠️ 首次测试失败，尝试设置 LD_LIBRARY_PATH..."
-            export LD_LIBRARY_PATH=/lib:/usr/lib
-            qemu-aarch64-static /usr/local/bin/sing-box-arm64 version
-          }
+          qemu-aarch64-static /usr/local/bin/sing-box-arm64 version
 
       - name: Create sing-box wrapper script
         run: |
@@ -105,29 +103,25 @@ jobs:
           sing-box version
 
       - name: Run merge script
+        id: run_script
         run: |
           chmod +x sing-box/merge-srs.sh
           bash sing-box/merge-srs.sh
 
-      - name: Upload logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: execution-logs-${{ github.run_number }}
-          path: sing-box/logs
-          retention-days: 7
-          if-no-files-found: warn
-
-      - name: Sync before commit
-        run: |
-          git fetch origin main
-          git reset --hard origin/main
-          git clean -fd
-
-      - name: Commit and push if changed
+      - name: Commit on Success
+        if: success()
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "[auto] chore: update srs rules daily"
-          file_pattern: "sing-box/srs/*.srs sing-box/json/**/*.json"
+          file_pattern: "sing-box/srs/*.srs sing-box/json/**/*.json sing-box/logs/*.log"
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
+
+      - name: Commit Logs on Failure
+        if: failure()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "[log] update failed, saving logs"
+          file_pattern: "sing-box/logs/*.log"
           commit_user_name: github-actions[bot]
           commit_user_email: github-actions[bot]@users.noreply.github.com
