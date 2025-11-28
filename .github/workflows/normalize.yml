@@ -41,6 +41,8 @@ jobs:
           grep -qxF '*.jar binary' .gitattributes || echo '*.jar binary' >> .gitattributes
           grep -qxF '*.exe binary' .gitattributes || echo '*.exe binary' >> .gitattributes
           grep -qxF '*.dat binary' .gitattributes || echo '*.dat binary' >> .gitattributes
+          grep -qxF '*.srs binary' .gitattributes || echo '*.srs binary' >> .gitattributes
+          grep -qxF 'sing-box* binary' .gitattributes || echo 'sing-box* binary' >> .gitattributes
           grep -qxF '*.12-r36 binary' .gitattributes || echo '*.12-r36 binary' >> .gitattributes
 
       - name: Set up Python 3.12
