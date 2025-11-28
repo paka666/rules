@@ -30,6 +30,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Prepare log directory
+        run: mkdir -p sing-box/logs
+
       - name: Enable QEMU for ARM64
         uses: docker/setup-qemu-action@v3
         with:
@@ -55,15 +58,32 @@ jobs:
           sudo apt-get clean
           sudo rm -rf /var/lib/apt/lists/*
 
-      - name: Install ARM64 musl runtime libraries
+      - name: Install ARM64 musl runtime libraries (dynamic links)
         run: |
-          # 下载并安装 musl (提供 libc.so 和 ld-musl-aarch64.so.1)
-          wget https://dl-cdn.alpinelinux.org/edge/main/aarch64/musl-1.2.5-r21.apk -O musl.apk
+          ARCH="aarch64"
+          ALPINE_URL="https://dl-cdn.alpinelinux.org/edge/main/${ARCH}"
+          echo "⬇️ 正在下载 APK 索引文件..."
+          wget -q "${ALPINE_URL}/APKINDEX.tar.gz" -O - | tar -xzf - APKINDEX 2>/dev/null
+          get_latest_filename() {
+            local package=$1
+            grep -A 1 "^P:$package$" APKINDEX | grep "^V:" | head -1 | \
+              sed -E "s/^V:(.*)/${package}-\\1.apk/"
+          }
+          LATEST_MUSL=$(get_latest_filename musl)
+          LATEST_LIBGCC=$(get_latest_filename libgcc)
+          if [ -z "$LATEST_MUSL" ] || [ -z "$LATEST_LIBGCC" ]; then
+            echo "❌ 错误: 无法从 APK 索引中找到 musl 或 libgcc 的最新版本。"
+            exit 1
+          fi
+          echo "✅ 找到最新 musl: $LATEST_MUSL"
+          echo "✅ 找到最新 libgcc: $LATEST_LIBGCC"
+          echo "⬇️ 下载并安装 musl..."
+          wget "${ALPINE_URL}/${LATEST_MUSL}" -O musl.apk
           7z x musl.apk -so | sudo tar -xf - --warning=no-unknown-keyword -C /
-          # 下载并安装 libgcc (提供 libgcc_s.so.1)
-          wget https://dl-cdn.alpinelinux.org/edge/main/aarch64/libgcc-15.2.0-r2.apk -O libgcc.apk
+          echo "⬇️ 下载并安装 libgcc..."
+          wget "${ALPINE_URL}/${LATEST_LIBGCC}" -O libgcc.apk
           7z x libgcc.apk -so | sudo tar -xf - --warning=no-unknown-keyword -C /
-          # 验证安装
+          rm APKINDEX musl.apk libgcc.apk
           echo "=== 验证依赖库 ==="
           ls -lh /lib/ld-musl-aarch64.so.1 2>/dev/null || echo "❌ musl 链接器缺失"
           ls -lh /lib/libgcc_s.so.1 2>/dev/null || ls -lh /usr/lib/libgcc_s.so.1 2>/dev/null || echo "❌ libgcc_s 缺失"
