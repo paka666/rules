@@ -1,4 +1,6 @@
-# --- 改 Unix(LF) 换行符 ---
+# --- 默认设置 (最低优先级) ---
+* text eol=lf
+# --- 明确的文本格式 ---
 *.sh text eol=lf
 *.yml text eol=lf
 *.yaml text eol=lf
@@ -12,17 +14,18 @@
 *.css text eol=lf
 *.conf text eol=lf
 *.ini text eol=lf
+# 自定义文本匹配
 *.bak text eol=lf
 *.back text eol=lf
 .gitattributes text eol=lf
 AdGuardHome text eol=lf
 singbox text eol=lf
-
-# --- 二进制文件不改换行 ---
+# --- 二进制文件 (最高优先级 - 覆盖上面的 * text) ---
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
+*.pdf binary
 *.zip binary
 *.tar binary
 *.gz binary
@@ -30,9 +33,9 @@ singbox text eol=lf
 *.exe binary
 *.so binary
 *.dll binary
-*.srs binary
-*.pdf binary
 *.jar binary
 *.dat binary
-sing-box* binary
+*.srs binary
+# 自定义二进制匹配
 *.12-r36 binary
+sing-box* binary

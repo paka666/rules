@@ -29,21 +29,53 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Ensure .gitattributes exists (Idempotent)
+      - name: Ensure .gitattributes exists (Idempotent&Safe Order)
         run: |
-          touch .gitattributes
-          grep -qxF '* text eol=lf' .gitattributes || echo '* text eol=lf' >> .gitattributes
-          grep -qxF '*.png binary' .gitattributes || echo '*.png binary' >> .gitattributes
-          grep -qxF '*.jpg binary' .gitattributes || echo '*.jpg binary' >> .gitattributes
-          grep -qxF '*.gif binary' .gitattributes || echo '*.gif binary' >> .gitattributes
-          grep -qxF '*.pdf binary' .gitattributes || echo '*.pdf binary' >> .gitattributes
-          grep -qxF '*.zip binary' .gitattributes || echo '*.zip binary' >> .gitattributes
-          grep -qxF '*.jar binary' .gitattributes || echo '*.jar binary' >> .gitattributes
-          grep -qxF '*.exe binary' .gitattributes || echo '*.exe binary' >> .gitattributes
-          grep -qxF '*.dat binary' .gitattributes || echo '*.dat binary' >> .gitattributes
-          grep -qxF '*.srs binary' .gitattributes || echo '*.srs binary' >> .gitattributes
-          grep -qxF 'sing-box* binary' .gitattributes || echo 'sing-box* binary' >> .gitattributes
-          grep -qxF '*.12-r36 binary' .gitattributes || echo '*.12-r36 binary' >> .gitattributes
+          # 重新生成 .gitattributes 以确保顺序正确：通用 -> 文本 -> 二进制(最高优先级)
+          cat > .gitattributes <<EOF
+          # --- 默认设置 (最低优先级) ---
+          * text eol=lf
+          # --- 明确的文本格式 ---
+          *.sh text eol=lf
+          *.yml text eol=lf
+          *.yaml text eol=lf
+          *.json text eol=lf
+          *.txt text eol=lf
+          *.md text eol=lf
+          *.py text eol=lf
+          *.js text eol=lf
+          *.ts text eol=lf
+          *.html text eol=lf
+          *.css text eol=lf
+          *.conf text eol=lf
+          *.ini text eol=lf
+          # 自定义文本匹配
+          *.bak text eol=lf
+          *.back text eol=lf
+          .gitattributes text eol=lf
+          AdGuardHome text eol=lf
+          singbox text eol=lf
+          # --- 二进制文件 (最高优先级 - 覆盖上面的 * text) ---
+          *.png binary
+          *.jpg binary
+          *.jpeg binary
+          *.gif binary
+          *.pdf binary
+          *.zip binary
+          *.tar binary
+          *.gz binary
+          *.7z binary
+          *.exe binary
+          *.so binary
+          *.dll binary
+          *.jar binary
+          *.dat binary
+          *.srs binary
+          # 自定义二进制匹配
+          *.12-r36 binary
+          sing-box* binary
+          EOF
+          echo "✅ .gitattributes generated."
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -62,25 +94,29 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r py/requirements.txt
+          if [ -f "py/requirements.txt" ]; then
+            pip install -r py/requirements.txt
+          else
+            pip install chardet
+          fi
 
       - name: Normalize text files to UTF-8 + LF
         shell: bash
         run: |
-          echo "🔍 Determining scan scope based on trigger..."
+          # --- 1. 确定扫描范围 ---
+          echo "🔍 Determining scan scope based on trigger..." >&2
           files=()
           fixed_files=()
           scan_list=()
           trigger="${{ github.event_name }}"
+
           if [ "$trigger" = "push" ]; then
-            echo "📥 Push detected: Scanning only changed files in this push."
-            git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > changed_files.txt 2>/dev/null || {
-              echo "⚠️ Could not get push diff (e.g., force push?), falling back to last commit diff."
-              git diff --name-only HEAD~1 HEAD > changed_files.txt 2>/dev/null || {
-                echo "⚠️ Could not get last commit diff, falling back to full scan."
-                git ls-files > changed_files.txt
-              }
-            }
+            echo "📥 Push detected: Scanning only changed files." >&2
+            # 获取差异文件列表
+            git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > changed_files.txt 2>/dev/null || \
+            git diff --name-only HEAD~1 HEAD > changed_files.txt 2>/dev/null || \
+            git ls-files > changed_files.txt
+
             while IFS= read -r f; do
               if [ -f "$f" ]; then
                 scan_list+=("$f")
@@ -88,8 +124,7 @@ jobs:
             done < changed_files.txt
             rm -f changed_files.txt
           else
-            echo "🛠️ Manual/scheduled run: Scanning entire repository."
-            # 使用 find -print0 和 read -d $'\0' 来安全处理包含空格或特殊字符的文件名
+            echo "🛠️ Manual/scheduled run: Scanning entire repository." >&2
             while IFS= read -r -d $'\0' f; do
               scan_list+=("$f")
             done < <(find . -type f \
@@ -98,21 +133,27 @@ jobs:
               -not -path "./node_modules/*" \
               -not -path "./venv/*" -print0)
           fi
-          echo "📂 Files to scan: ${#scan_list[@]}"
+          echo "📂 Files to scan: ${#scan_list[@]}" >&2
 
-          # 定义处理单个文件的函数(支持并行)
+          # --- 2. 定义并行处理函数 ---
           process_file() {
             local f="$1"
+            if git check-attr diff "$f" | grep -q ": unset" || \
+               git check-attr binary "$f" | grep -q ": set"; then
+               return
+            fi
+            if [[ "$(basename "$f")" == sing-box* ]]; then
+               return
+            fi
             local mime=$(file -bi "$f" 2>/dev/null || true)
-
-            # 跳过非文本文件和可执行文件
-            if [ -z "$mime" ] || ! echo "$mime" | grep -q "text/" || file "$f" | grep -q "executable"; then
+            # 如果不是 text/ 且包含 executable 或 ELF，或者是压缩包，跳过
+            if [ -z "$mime" ] || ! echo "$mime" | grep -q "text/" || file "$f" | grep -qE "executable|ELF|archive|compressed"; then
               return
             fi
 
             # 综合检测编码：uchardet 主，fallback enca&chardet带置信度
+            # 1. uchardet
             local encoding=$(uchardet "$f" 2>/dev/null | tr -d ' ' | tr '[:upper:]' '[:lower:]')
-
             # 清理和标准化编码名称
             if [ -n "$encoding" ]; then
               case "$encoding" in
@@ -122,7 +163,7 @@ jobs:
               esac
             fi
 
-            # Fallback 到 enca
+            # 2. enca (fallback)
             if [ -z "$encoding" ]; then
               encoding=$(enca -L none "$f" 2>/dev/null | grep -oP '(?<=Encoding: ).*' | tr '[:upper:]' '[:lower:]')
               if [ -n "$encoding" ] && echo "$encoding" | grep -qi "unrecognized"; then
@@ -130,14 +171,14 @@ jobs:
               fi
             fi
 
-            # Fallback 到 chardet (Python) - 使用单行形式避免 YAML 问题
+            # 3. chardet (python fallback) - 使用单行形式避免 YAML 问题
             if [ -z "$encoding" ]; then
               encoding=$(python3 -c 'import chardet, sys; raw = open(sys.argv[1], "rb").read(); result = chardet.detect(raw); print(result["encoding"].lower() if result["confidence"] > 0.7 and result["encoding"] else "")' "$f" 2>/dev/null || echo "")
             fi
 
             # 如果仍未知，尝试常见编码列表
             if [ -z "$encoding" ]; then
-              local possible_encodings=("utf-8" "iso-8859-1" "windows-1252" "cp1252" "windows-1254" "utf-16le" "utf-16be")
+              local possible_encodings=("utf-8" "gbk" "gb2312" "big5" "iso-8859-1" "windows-1252" "cp1252" "windows-1254" "utf-16le" "utf-16be" "utf-16le")
               for enc in "${possible_encodings[@]}"; do
                 if iconv -f "$enc" -t utf-8//IGNORE "$f" -o /dev/null 2>/dev/null; then
                   encoding="$enc"
@@ -147,10 +188,12 @@ jobs:
             fi
 
             # 最终检查：如果还是无法确定编码，安全跳过
-            if [ -z "$encoding" ] || [ "$encoding" = "unknown" ] || [ "$encoding" = "unknown-8bit" ]; then
-              echo "⚠️ Skipping $f: Unable to determine encoding reliably." >&2
-              return
-            fi
+            case "$encoding" in
+              ""|unknown*)
+                echo "⚠️ Skipping $f: Unknown encoding" >&2
+                return
+                ;;
+            esac
 
             # 如果已经是 UTF-8 或 ASCII，只需规范化行尾
             if [ "$encoding" = "utf-8" ] || [ "$encoding" = "us-ascii" ]; then
@@ -161,10 +204,13 @@ jobs:
               return
             fi
 
-            # 验证编码是否被 iconv 支持(安全检查)
-            if ! iconv -l 2>/dev/null | grep -qi "$encoding"; then
-              echo "⚠️ Skipping $f: Encoding '$encoding' not supported by iconv." >&2
-              return
+            # 检查 iconv 是否支持该编码
+            if ! iconv -l 2>/dev/null | grep -qiE "^$encoding//?$"; then
+               # 尝试模糊匹配或者跳过
+               if ! iconv -f "$encoding" -t utf-8//IGNORE "$f" -o /dev/null 2>/dev/null; then
+                 echo "⚠️ Skipping $f: Encoding '$encoding' not supported by iconv." >&2
+                 return
+               fi
             fi
 
             # 转换编码到 UTF-8
@@ -174,7 +220,6 @@ jobs:
               rm -f "$f.tmp"
               return
             fi
-
             mv "$f.tmp" "$f" || {
               echo "⚠️ Failed to replace $f after conversion" >&2
               return
@@ -187,7 +232,7 @@ jobs:
             local post_mime=$(file -bi "$f")
             if ! echo "$post_mime" | grep -qE "utf-8|us-ascii"; then
               echo "⚠️ Potential garbled content in $f after conversion (reverting changes)" >&2
-              git checkout -- "$f" 2>/dev/null || true
+              git checkout -- "$f" 2>/dev/null
               return
             fi
 
@@ -198,12 +243,12 @@ jobs:
               local percentage=$((replacement_count * 100 / total_chars))
               if [ "$percentage" -gt 5 ]; then
                 echo "⚠️ High replacement chars ($percentage%) in $f (reverting)" >&2
-                git checkout -- "$f" 2>/dev/null || true
+                git checkout -- "$f" 2>/dev/null
                 return
               fi
             fi
 
-            # 如果有变化，标记为 fixed
+            # 成功且有变化，输出文件名
             if ! git diff --quiet "$f"; then
               echo "$f"
             fi
@@ -211,18 +256,28 @@ jobs:
 
           export -f process_file
 
-          # 并行处理文件(使用 parallel，限制 jobs 避免 OOM)
-          echo "🚀 Processing files in parallel..."
-          fixed_files=($(parallel -j4 --halt never process_file ::: "${scan_list[@]}" 2>&1 | grep -v '^⚠️' | grep -v '^🧩' || true))
+          # --- 3. 并行处理文件(使用 parallel，限制 jobs 避免 OOM) ---
+          echo "🚀 Processing files in parallel..." >&2
+          mapfile -t fixed_files < <(parallel -j4 --halt never process_file ::: "${scan_list[@]}" 2> >(grep -v "uchardet" >&2))
 
+          # --- 4. 提交更改 ---
           if [ ${#fixed_files[@]} -gt 0 ]; then
-            echo "✅ Fixed files:"
+            echo "✅ Fixed files count: ${#fixed_files[@]}" >&2
+            # 再次过滤，确保文件存在且不为空
+            valid_files=()
             for file in "${fixed_files[@]}"; do
-              echo "- $file"
+              if [ -n "$file" ] && [ -f "$file" ]; then
+                echo "- $file" >&2
+                valid_files+=("$file")
+              fi
             done
-            git add "${fixed_files[@]}"
+            if [ ${#valid_files[@]} -gt 0 ]; then
+              git add "${valid_files[@]}"
+            else
+              echo "✅ No valid files to add." >&2
+            fi
           else
-            echo "✅ No files needed fixing."
+            echo "✅ No files needed fixing." >&2
           fi
 
       - name: Git commit & push
