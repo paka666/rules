@@ -142,7 +142,7 @@ def main():
     os.makedirs('temp', exist_ok=True)
     os.makedirs('adh/tmp', exist_ok=True)
 
-    download("https://sysctl.org/cameleon/hosts", "temp/sysctl-hosts.txt")
+#   download("https://sysctl.org/cameleon/hosts", "temp/sysctl-hosts.txt")
     download("https://www.spamhaus.org/drop/asndrop.json", "temp/asndrop.json")
     download("http://list.iblocklist.com/?list=qlprgwgdkojunfdlzsiv&fileformat=hosts&archiveformat=gz", "temp/iblocklist-hosts.gz")
     download("http://list.iblocklist.com/?list=xshktygkujudfnjfioro&fileformat=p2p&archiveformat=gz", "temp/microsoft-p2p.gz")
@@ -156,7 +156,7 @@ def main():
     unzip_gz("temp/proxy-p2p.gz", "temp/proxy-p2p.txt")
     unzip_gz("temp/proxy-cidr.gz", "temp/proxy-cidr.txt")
 
-    merge_hosts("temp/sysctl-hosts.txt", "adh/tmp/sysctl-hosts.txt")
+#   merge_hosts("temp/sysctl-hosts.txt", "adh/tmp/sysctl-hosts.txt")
     merge_hosts("temp/iblocklist-hosts.txt", "adh/tmp/iblocklist-hosts.txt")
 
     domains = process_asndrop('temp/asndrop.json')
@@ -169,7 +169,7 @@ def main():
     merge_with_existing(proxy_cidrs, "adh/tmp/iblocklist-proxyip.txt")
 
     temp_files = [
-        "temp/sysctl-hosts.txt", "temp/iblocklist-hosts.txt", "temp/iblocklist-hosts.gz",
+#       "temp/sysctl-hosts.txt", "temp/iblocklist-hosts.txt", "temp/iblocklist-hosts.gz",
         "temp/microsoft-p2p.txt", "temp/microsoft-cidr.txt",
         "temp/proxy-p2p.txt", "temp/proxy-cidr.txt",
         "temp/microsoft-p2p.gz", "temp/microsoft-cidr.gz",
