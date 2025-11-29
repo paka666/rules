@@ -169,11 +169,9 @@ def main():
     merge_with_existing(proxy_cidrs, "adh/tmp/iblocklist-proxyip.txt")
 
     temp_files = [
-#       "temp/sysctl-hosts.txt", "temp/iblocklist-hosts.txt", "temp/iblocklist-hosts.gz",
-        "temp/microsoft-p2p.txt", "temp/microsoft-cidr.txt",
-        "temp/proxy-p2p.txt", "temp/proxy-cidr.txt",
-        "temp/microsoft-p2p.gz", "temp/microsoft-cidr.gz",
-        "temp/proxy-p2p.gz", "temp/proxy-cidr.gz",
+#       "temp/sysctl-hosts.txt",
+        "temp/iblocklist-hosts.txt", "temp/microsoft-p2p.txt", "temp/microsoft-cidr.txt", "temp/proxy-p2p.txt", "temp/proxy-cidr.txt",
+        "temp/iblocklist-hosts.gz", "temp/microsoft-p2p.gz", "temp/microsoft-cidr.gz", "temp/proxy-p2p.gz", "temp/proxy-cidr.gz",
         "temp/asndrop.json"
     ]
     for temp_file in temp_files:
