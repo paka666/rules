@@ -1,0 +1,60 @@
+name: Update srs rules daily
+
+on:
+  schedule:
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Prepare log directory
+        run: mkdir -p sing-box/logs
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y jq
+
+      - name: Install amd64 sing-box
+        run: |
+          curl -fsSL https://sing-box.app/install.sh | sh
+
+      - name: Run merge script
+        id: run_script
+        run: |
+          chmod +x sing-box/merge-srs.sh
+          bash sing-box/merge-srs.sh
+
+      - name: Commit on Success
+        if: success()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "[auto] chore: update srs rules daily"
+          file_pattern: "sing-box/srs/*.srs sing-box/json/**/*.json sing-box/logs/*.log"
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
+
+      - name: Commit Logs on Failure
+        if: failure()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "[log] update failed, saving logs"
+          file_pattern: "sing-box/logs/*.log"
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
