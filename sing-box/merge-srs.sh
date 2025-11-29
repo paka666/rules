@@ -1482,7 +1482,7 @@ init_url_configs() {
 
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-platforms-download.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-platforms-download@cn.json"
-    "${SUBSET_DIR}/game-platforms-download@!cn.json"
+    "${SUBSET_DIR}/geosite-category-game-platforms-download@!cn.json"
 
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames@cn.json"
@@ -1495,11 +1495,11 @@ init_url_configs() {
 
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-doubao.json"
     "${SUBSET_DIR}/tmp/geosite-doubao@!cn.json"
-    "${SUBSET_DIR}/doubao@cn.json"
+    "${SUBSET_DIR}/geosite-doubao@cn.json"
 
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-jetbrains.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-jetbrains@cn.json"
-    "${SUBSET_DIR}/jetbrains@!cn.json"
+    "${SUBSET_DIR}/geosite-jetbrains@!cn.json"
 
     # === 网络服务 ===
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn.json"
@@ -1562,6 +1562,7 @@ init_url_configs() {
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-baidu-ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-baidu-ads@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-baidu@ads.json"
+    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-bing@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-bytedance-ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-bytedance-ads@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-bytedance@ads.json"
@@ -1584,6 +1585,8 @@ init_url_configs() {
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-!cn@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-social-media-cn@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-speedtest@ads.json"
+    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-clearbit-ads.json"
+    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-clearbit-ads@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-disney@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-dmm-ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-dmm-ads@ads.json"
@@ -1689,6 +1692,7 @@ init_url_configs() {
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-tencent-ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-tencent-ads@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-tencent@ads.json"
+    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-twitter@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-uberads-ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-uberads-ads@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-umeng-ads.json"
@@ -1702,6 +1706,7 @@ init_url_configs() {
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-whatsapp-ads@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-whatsapp@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-win-spy.json"
+    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-x@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-xhamster-ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-xhamster-ads@ads.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-xhamster@ads.json"
@@ -1724,6 +1729,8 @@ init_url_configs() {
     "${SUBSET_DIR}/tmp/geosite-bilibili-game@cn.json"
     "${SUBSET_DIR}/tmp/geosite-bluepoch-games@cn.json"
     "${SUBSET_DIR}/tmp/geosite-tencent-games@cn.json"
+    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-bilibili-game.json"
+    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-bluepoch-games.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-accelerator-cn.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-game-platforms-download@cn.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-games-!cn@cn.json"
@@ -1732,13 +1739,15 @@ init_url_configs() {
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-epicgames@cn.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-gamersky.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-herogame.json"
+    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-kurogames.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-kurogames@cn.json"
+    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-tencent-games.json"
   )
 
   # 游戏 NonCN
   games_noncn_urls=(
     "${SOURCE_DIR}/games-noncn.json"
-    "${SUBSET_DIR}/game-platforms-download@!cn.json"
+    "${SUBSET_DIR}/geosite-category-game-platforms-download@!cn.json"
     "${SUBSET_DIR}/geosite-category-games-!cn@!cn.json"
     "${SUBSET_DIR}/geosite-epicgames@!cn.json"
     "${SUBSET_DIR}/tmp/geosite-tencent-games@!cn.json"
@@ -1753,7 +1762,7 @@ init_url_configs() {
   # AI CN
   ai_cn_urls=(
     "${SOURCE_DIR}/ai-cn.json"
-    "${SUBSET_DIR}/doubao@cn.json"
+    "${SUBSET_DIR}/geosite-doubao@cn.json"
     "${SUBSET_DIR}/geosite-category-ai-cn@cn.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-aixcoder.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-apple-intelligence.json"
@@ -1764,7 +1773,7 @@ init_url_configs() {
   # AI NonCN
   ai_noncn_urls=(
     "${SOURCE_DIR}/ai-noncn.json"
-    "${SUBSET_DIR}/jetbrains@!cn.json"
+    "${SUBSET_DIR}/geosite-jetbrains@!cn.json"
     "${SUBSET_DIR}/tmp/geosite-category-ai-cn@!cn.json"
     "${SUBSET_DIR}/tmp/geosite-doubao@!cn.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-anthropic.json"
