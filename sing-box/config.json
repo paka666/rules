@@ -1,0 +1,1810 @@
+{
+  "log": {
+    "disabled": true,
+    "level": "debug",
+    "output": "/usr/bin/singbox/singbox.log",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "default-dns",
+        "type": "udp",
+        "server": "202.102.213.68"
+      },
+      {
+        "tag": "system-dns",
+        "type": "local"
+      },
+      {
+        "tag": "smartdns-dns",
+        "type": "udp",
+        "server": "127.0.0.1",
+        "server_port": 6053
+      }
+    ],
+    "final": "smartdns-dns",
+    "strategy": "prefer_ipv4",
+    "disable_cache": true,
+    "disable_expire": false,
+    "independent_cache": false,
+    "cache_capacity": 0
+  },
+  "ntp": {
+    "enabled": true,
+    "interval": "30m0s",
+    "server": "ntp.ntsc.ac.cn",
+    "server_port": 123
+  },
+  "inbounds": [
+    {
+      "type": "direct",
+      "tag": "dns-in",
+      "listen": "::",
+      "listen_port": 5333
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "::",
+      "listen_port": 2080,
+      "set_system_proxy": false
+    },
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "singtun0",
+      "mtu": 9000,
+      "address": [
+        "172.19.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "auto_route": true,
+      "auto_redirect": true,
+      "strict_route": true,
+      "stack": "system",
+      "endpoint_independent_nat": false
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+#      "routing_mark": 255,
+      "tag": "direct-out"
+    },
+    {
+      "type": "selector",
+      "tag": "area-select",
+      "outbounds": [
+        "港台节点",
+        "新加坡节点",
+        "美国节点",
+        "日本节点",
+        "其他节点"
+      ]
+    },
+    {
+      "type": "urltest",
+      "tag": "auto-urltest",
+      "outbounds": [
+        "HK 01",
+        "HK 02",
+        "HK 03",
+        "HK 04",
+        "HK 05",
+        "HK 06",
+        "JP 01",
+        "JP 02",
+        "JP 03",
+        "JP 04",
+        "JP 05",
+        "JP 06",
+        "SG 01",
+        "SG 02",
+        "SG 03",
+        "SG 04",
+        "SG 05",
+        "SG 06",
+        "US 01",
+        "US 02",
+        "US 03",
+        "US 04",
+        "US 05",
+        "US 06",
+        "AE 01",
+        "DE 01",
+        "ES 01",
+        "FR 01",
+        "GB 01",
+        "IE 01",
+        "IN 01",
+        "IT 01",
+        "KR 01",
+        "NL 01",
+        "RU 01",
+        "TR 01",
+        "TW 01",
+        "UA 01",
+        "HK 09 HKT",
+        "HK 10 HKT",
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "US 07 x0.2",
+        "US 08 x0.2",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号",
+        "韩国-1号",
+        "新加坡",
+        "新加坡 | 解锁流媒体",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "manual-select",
+      "default": "auto-urltest",
+      "outbounds": [
+        "auto-urltest",
+        "HK 01",
+        "HK 02",
+        "HK 03",
+        "HK 04",
+        "HK 05",
+        "HK 06",
+        "JP 01",
+        "JP 02",
+        "JP 03",
+        "JP 04",
+        "JP 05",
+        "JP 06",
+        "SG 01",
+        "SG 02",
+        "SG 03",
+        "SG 04",
+        "SG 05",
+        "SG 06",
+        "US 01",
+        "US 02",
+        "US 03",
+        "US 04",
+        "US 05",
+        "US 06",
+        "AE 01",
+        "DE 01",
+        "ES 01",
+        "FR 01",
+        "GB 01",
+        "IE 01",
+        "IN 01",
+        "IT 01",
+        "KR 01",
+        "NL 01",
+        "RU 01",
+        "TR 01",
+        "TW 01",
+        "UA 01",
+        "HK 09 HKT",
+        "HK 10 HKT",
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "US 07 x0.2",
+        "US 08 x0.2",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号",
+        "韩国-1号",
+        "新加坡",
+        "新加坡 | 解锁流媒体",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless"
+      ]
+    },
+    {
+      "type": "urltest",
+      "tag": "港台节点",
+      "outbounds": [
+        "HK 01",
+        "HK 02",
+        "HK 03",
+        "HK 04",
+        "HK 05",
+        "HK 06",
+        "TW 01",
+        "HK 09 HKT",
+        "HK 10 HKT",
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体"
+      ]
+    },
+    {
+      "type": "urltest",
+      "tag": "新加坡节点",
+      "outbounds": [
+        "SG 01",
+        "SG 02",
+        "SG 03",
+        "SG 04",
+        "SG 05",
+        "SG 06",
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "新加坡",
+        "新加坡 | 解锁流媒体"
+      ]
+    },
+    {
+      "type": "urltest",
+      "tag": "美国节点",
+      "outbounds": [
+        "US 01",
+        "US 02",
+        "US 03",
+        "US 04",
+        "US 05",
+        "US 06",
+        "US 07 x0.2",
+        "US 08 x0.2"
+      ]
+    },
+    {
+      "type": "urltest",
+      "tag": "日本节点",
+      "outbounds": [
+        "JP 01",
+        "JP 02",
+        "JP 03",
+        "JP 04",
+        "JP 05",
+        "JP 06",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号"
+      ]
+    },
+    {
+      "type": "urltest",
+      "tag": "其他节点",
+      "outbounds": [
+        "AE 01",
+        "DE 01",
+        "ES 01",
+        "FR 01",
+        "GB 01",
+        "IE 01",
+        "IN 01",
+        "IT 01",
+        "KR 01",
+        "NL 01",
+        "RU 01",
+        "TR 01",
+        "UA 01",
+        "韩国-1号",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "游戏",
+      "outbounds": [
+        "direct-out",
+        "area-select",
+        "auto-urltest",
+        "manual-select",
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "US 07 x0.2",
+        "US 08 x0.2",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "AIGC",
+      "outbounds": [
+        "direct-out",
+        "area-select",
+        "auto-urltest",
+        "manual-select",
+        "AE 01",
+        "DE 01",
+        "ES 01",
+        "FR 01",
+        "GB 01",
+        "IE 01",
+        "IN 01",
+        "IT 01",
+        "KR 01",
+        "NL 01",
+        "RU 01",
+        "TR 01",
+        "TW 01",
+        "UA 01",
+        "HK 07 x0.2",
+        "HK 08 x0.2",
+        "JP 07 x0.2",
+        "JP 08 x0.2",
+        "SG 07 x0.2",
+        "SG 08 x0.2",
+        "US 07 x0.2",
+        "US 08 x0.2",
+        "日本-1号",
+        "日本-3号",
+        "日本-4号",
+        "韩国-1号",
+        "新加坡",
+        "新加坡 | 解锁流媒体",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "流媒体",
+      "outbounds": [
+        "direct-out",
+        "area-select",
+        "auto-urltest",
+        "manual-select",
+        "香港HKT | 解锁流媒体",
+        "香港HKT2 | 解锁流媒体",
+        "台湾Hinet | 解锁流媒体",
+        "台湾Hinet-1号线路 | 解锁流媒体",
+        "新加坡 | 解锁流媒体",
+        "德国 | 解锁流媒体",
+        "德国 | 解锁流媒体-vless",
+        "法国 | 解锁流媒体",
+        "法国 | 解锁流媒体-vless"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "proxy",
+      "outbounds": [
+        "direct-out",
+        "area-select",
+        "auto-urltest",
+        "manual-select"
+      ]
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 01",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13001,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 02",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13002,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 03",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13003,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 04",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13004,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 05",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13005,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 06",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13006,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 07 x0.2",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13007,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 08 x0.2",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13008,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 09 HKT",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13009,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "HK 10 HKT",
+      "tcp_fast_open": true,
+      "server": "naiu-hk.kunlun05dns.com",
+      "server_port": 13010,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "香港HKT | 解锁流媒体",
+      "tcp_fast_open": true,
+      "server": "hkt.g.hk.download.windowsupdatea.com",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-hkt1.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "香港HKT2 | 解锁流媒体",
+      "tcp_fast_open": true,
+      "server": "hkt.g.hk2.download.windowsupdatea.com",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-hkt2.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "TW 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13035,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "台湾Hinet | 解锁流媒体",
+      "tcp_fast_open": true,
+      "server": "glc.g.tw.download.windowsupdatea.com",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-tw1.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "台湾Hinet-1号线路 | 解锁流媒体",
+      "tcp_fast_open": true,
+      "server": "77.75.199.33",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-hinet.glccf.top",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/guolicheng/hinet",
+        "headers": {
+          "Host": "glc-hinet.glccf.top"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "JP 01",
+      "tcp_fast_open": true,
+      "server": "naiu-jp.kunlun05dns.com",
+      "server_port": 13011,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "JP 02",
+      "tcp_fast_open": true,
+      "server": "naiu-jp.kunlun05dns.com",
+      "server_port": 13012,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "JP 03",
+      "tcp_fast_open": true,
+      "server": "naiu-jp.kunlun05dns.com",
+      "server_port": 13013,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "JP 04",
+      "tcp_fast_open": true,
+      "server": "naiu-jp.kunlun05dns.com",
+      "server_port": 13014,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "JP 05",
+      "tcp_fast_open": true,
+      "server": "naiu-jp.kunlun05dns.com",
+      "server_port": 13015,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "JP 06",
+      "tcp_fast_open": true,
+      "server": "naiu-jp.kunlun05dns.com",
+      "server_port": 13016,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "JP 07 x0.2",
+      "tcp_fast_open": true,
+      "server": "naiu-jp.kunlun05dns.com",
+      "server_port": 13017,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "JP 08 x0.2",
+      "tcp_fast_open": true,
+      "server": "naiu-jp.kunlun05dns.com",
+      "server_port": 13018,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "日本-1号",
+      "tcp_fast_open": true,
+      "server": "133.167.38.153",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-jp1.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "日本-3号",
+      "tcp_fast_open": true,
+      "server": "219.94.248.177",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-jp3.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "日本-4号",
+      "tcp_fast_open": true,
+      "server": "219.94.252.114",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-jp4.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "SG 01",
+      "tcp_fast_open": true,
+      "server": "naiu-sg.kunlun05dns.com",
+      "server_port": 13027,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "SG 02",
+      "tcp_fast_open": true,
+      "server": "naiu-sg.kunlun05dns.com",
+      "server_port": 13028,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "SG 03",
+      "tcp_fast_open": true,
+      "server": "naiu-sg.kunlun05dns.com",
+      "server_port": 13029,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "SG 04",
+      "tcp_fast_open": true,
+      "server": "naiu-sg.kunlun05dns.com",
+      "server_port": 13030,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "SG 05",
+      "tcp_fast_open": true,
+      "server": "naiu-sg.kunlun05dns.com",
+      "server_port": 13031,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "SG 06",
+      "tcp_fast_open": true,
+      "server": "naiu-sg.kunlun05dns.com",
+      "server_port": 13032,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "SG 07 x0.2",
+      "tcp_fast_open": true,
+      "server": "naiu-sg.kunlun05dns.com",
+      "server_port": 13033,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "SG 08 x0.2",
+      "tcp_fast_open": true,
+      "server": "naiu-sg.kunlun05dns.com",
+      "server_port": 13034,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "新加坡",
+      "tcp_fast_open": true,
+      "server": "140.245.33.165",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-sg1.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "新加坡 | 解锁流媒体",
+      "tcp_fast_open": true,
+      "server": "77.75.199.33",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-sg1.glccf.top",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/guolicheng/sg1",
+        "headers": {
+          "Host": "glc-sg1.glccf.top"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "US 01",
+      "tcp_fast_open": true,
+      "server": "naiu-us.kunlun05dns.com",
+      "server_port": 13019,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "US 02",
+      "tcp_fast_open": true,
+      "server": "naiu-us.kunlun05dns.com",
+      "server_port": 13020,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "US 03",
+      "tcp_fast_open": true,
+      "server": "naiu-us.kunlun05dns.com",
+      "server_port": 13021,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "US 04",
+      "tcp_fast_open": true,
+      "server": "naiu-us.kunlun05dns.com",
+      "server_port": 13022,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "US 05",
+      "tcp_fast_open": true,
+      "server": "naiu-us.kunlun05dns.com",
+      "server_port": 13023,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "US 06",
+      "tcp_fast_open": true,
+      "server": "naiu-us.kunlun05dns.com",
+      "server_port": 13024,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "US 07 x0.2",
+      "tcp_fast_open": true,
+      "server": "naiu-us.kunlun05dns.com",
+      "server_port": 13025,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "US 08 x0.2",
+      "tcp_fast_open": true,
+      "server": "naiu-us.kunlun05dns.com",
+      "server_port": 13026,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "KR 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13036,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "韩国-1号",
+      "tcp_fast_open": true,
+      "server": "152.70.95.69",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-kr1.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "DE 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13039,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "德国 | 解锁流媒体",
+      "tcp_fast_open": true,
+      "server": "77.75.199.233",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-de.glccf.top",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/guolicheng/de",
+        "headers": {
+          "Host": "glc-de.glccf.top"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "德国 | 解锁流媒体-vless",
+      "tcp_fast_open": true,
+      "server": "132.226.207.189",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-de1.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "FR 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13038,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "法国 | 解锁流媒体",
+      "tcp_fast_open": true,
+      "server": "77.75.199.33",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "fr1.glccf.top",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/guolicheng/fr",
+        "headers": {
+          "Host": "fr1.glccf.top"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "法国 | 解锁流媒体-vless",
+      "tcp_fast_open": true,
+      "server": "141.145.197.62",
+      "server_port": 443,
+      "uuid": "19018b8a-7a94-4545-a831-728caa2194a2",
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "glc-fr1.windowsupdatea.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "AE 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13041,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "ES 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13047,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "GB 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13037,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "IE 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13050,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "IN 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13040,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "IT 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13049,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "NL 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13048,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "RU 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13044,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "TR 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13046,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "trojan",
+      "tag": "UA 01",
+      "tcp_fast_open": true,
+      "server": "naiu-other.kunlun05dns.com",
+      "server_port": 13045,
+      "password": "5c995b6d-769c-414d-88ae-bc5bc445a8a3",
+      "tls": {
+        "enabled": true,
+        "insecure": false,
+        "server_name": "openssl.nodesni.com",
+        "disable_sni": false,
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      }
+    }
+  ],
+  "route": {
+    "auto_detect_interface": false,
+    "default_interface": "pppoe-wan",
+    "default_domain_resolver": {
+      "action": "resolve",
+      "server": "smartdns-dns",
+      "strategy": "prefer_ipv4",
+      "disable_cache": true
+    },
+    "rules": [
+      {
+        "action": "sniff",
+        "timeout": "300ms"
+      },
+      {
+        "inbound": "dns-in",
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "action": "resolve",
+        "strategy": "prefer_ipv4",
+        "disable_cache": true
+      },
+      {
+        "domain": [
+          "example.com",
+          "example.net",
+          "example.org",
+          "glc.g.tw.download.windowsupdatea.com",
+          "hkt.g.hk.download.windowsupdatea.com",
+          "hkt.g.hk2.download.windowsupdatea.com",
+          "naiu-hk.kunlun05dns.com",
+          "naiu-jp.kunlun05dns.com",
+          "naiu-other.kunlun05dns.com",
+          "naiu-sg.kunlun05dns.com",
+          "naiu-us.kunlun05dns.com",
+          "cm.steampowered.com",
+          "steamserver.net",
+          "steampipe.steamcontent.tnkjmec.com",
+          "st.dl.eccdnx.com",
+          "st.dl.bscstorage.net",
+          "st.dl.pinyuncloud.com",
+          "dl.steam.clngaa.com",
+          "cdn.mileweb.cs.steampowered.com.8686c.com",
+          "apple.com",
+          "microsoft.com",
+          "dyndns.com",
+          "steamcontent.com",
+          "vivox.com",
+          "bgithub.xyz"
+        ],
+        "domain_suffix": [
+          ".example.com",
+          ".example.net",
+          ".example.org",
+          ".ip6-localhost",
+          ".onion",
+          ".glc.g.tw.download.windowsupdatea.com",
+          ".hkt.g.hk.download.windowsupdatea.com",
+          ".hkt.g.hk2.download.windowsupdatea.com",
+          ".naiu-hk.kunlun05dns.com",
+          ".naiu-jp.kunlun05dns.com",
+          ".naiu-other.kunlun05dns.com",
+          ".naiu-sg.kunlun05dns.com",
+          ".naiu-us.kunlun05dns.com",
+          ".cm.steampowered.com",
+          ".steamserver.net",
+          ".steampipe.steamcontent.tnkjmec.com",
+          ".st.dl.eccdnx.com",
+          ".st.dl.bscstorage.net",
+          ".st.dl.pinyuncloud.com",
+          ".dl.steam.clngaa.com",
+          ".cdn.mileweb.cs.steampowered.com.8686c.com",
+          ".apple.com",
+          ".microsoft.com",
+          ".dyndns.com",
+          ".steamcontent.com",
+          ".vivox.com",
+          ".bgithub.xyz"
+        ],
+        "ip_cidr": [
+          "103.181.165.242/32",
+          "103.181.165.193/32",
+          "36.230.14.45/32",
+          "77.75.199.33/32",
+          "77.75.199.233/32",
+          "112.120.48.72/32",
+          "112.120.48.136/32",
+          "132.226.207.189/32",
+          "133.167.38.153/32",
+          "140.245.33.165/32",
+          "141.145.197.62/32",
+          "152.70.95.69/32",
+          "219.94.248.177/32",
+          "219.94.252.114/32",
+          "45.121.184.0/24",
+          "103.10.124.0/23",
+          "103.28.54.0/24",
+          "146.66.152.0/24",
+          "146.66.155.0/24",
+          "153.254.86.0/24",
+          "155.133.224.0/22",
+          "155.133.230.0/24",
+          "155.133.232.0/23",
+          "155.133.234.0/24",
+          "155.133.236.0/22",
+          "155.133.240.0/23",
+          "155.133.244.0/23",
+          "155.133.246.0/24",
+          "155.133.248.0/21",
+          "162.254.192.0/21",
+          "185.25.182.0/23",
+          "190.217.32.0/22",
+          "192.69.96.0/22",
+          "205.196.6.0/24",
+          "208.64.200.0/22",
+          "208.78.164.0/22",
+          "205.185.194.0/24",
+          "223.5.5.5/32",
+          "223.6.6.6/32",
+          "119.29.29.29/32",
+          "180.76.76.76/32",
+          "114.114.114.114/32",
+          "114.114.115.115/32",
+          "1.12.12.12/32",
+          "120.53.53.53/32",
+          "61.132.163.68/32",
+          "101.226.4.6/32",
+          "180.184.1.1/32",
+          "180.184.2.2/32",
+          "202.102.213.68/32",
+          "2400:3200::1/128",
+          "2400:3200:baba::1/128",
+          "240e:46:4088::4088/128",
+          "240e:46:4888::4888/128",
+          "0.0.0.0/8",
+          "10.0.0.0/8",
+          "100.64.0.0/10",
+          "127.0.0.0/8",
+          "169.254.0.0/16",
+          "172.16.0.0/12",
+          "192.0.0.0/24",
+          "192.0.2.0/24",
+          "192.31.196.0/24",
+          "192.52.193.0/24",
+          "192.88.99.0/24",
+          "192.168.0.0/16",
+          "192.175.48.0/24",
+          "198.18.0.0/15",
+          "198.51.100.0/24",
+          "203.0.113.0/24",
+          "224.0.0.0/3",
+          "::/127",
+          "::ffff:0:0/96",
+          "::ffff:0:0:0/96",
+          "64:ff9b::/96",
+          "64:ff9b:1::/48",
+          "100::/64",
+          "2001::/23",
+          "2001:db8::/32",
+          "2002::/16",
+          "2620:4f:8000::/48",
+          "3fff::/20",
+          "5f00::/16",
+          "fc00::/7",
+          "fe80::/10",
+          "ff00::/8"
+        ],
+        "rule_set": [
+          "geoip_cn",
+          "geosite_private",
+          "geosite_cn1",
+          "geosite_cn2"
+        ],
+        "action": "route",
+        "outbound": "direct-out"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "geosite_cn1",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/refs/heads/rule-set/geosite-cn.srs",
+        "download_detour": "direct-out"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite_cn2",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-cn.srs",
+        "download_detour": "direct-out"
+      },
+      {
+        "type": "remote",
+        "tag": "geoip_cn",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/geoip-cn.srs",
+        "download_detour": "direct-out"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite_private",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-private.srs",
+        "download_detour": "direct-out"
+      }
+    ],
+    "final": "proxy"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "/usr/bin/singbox/cache.db",
+      "cache_id": "cache_db",
+      "store_fakeip": false
+    },
+    "clash_api": {
+      "external_controller": "[::]:9090",
+      "external_ui": "/usr/bin/singbox/ui/metacubexd",
+      "default_mode": "rule",
+      "secret": ""
+    }
+  }
+}
