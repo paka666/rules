@@ -101,6 +101,7 @@ http://187.57.14.62:6969/announce
 http://188.165.253.109:1337/announce
 http://189.0.196.51:6969/announce
 http://189.110.233.96:6969/announce
+http://189.18.164.36:6969/announce
 http://189.18.97.201:6969/announce
 http://189.69.169.237:6969/announce
 http://189.69.169.89:6969/announce
@@ -141,6 +142,7 @@ http://211.75.205.189:6969/announce
 http://211.75.210.221/announce
 http://211.75.210.221:6969/announce
 http://211.75.29.254:6969/announce
+http://211.97.119.76:2710/announce
 http://212.6.3.67/announce
 http://213.159.215.198:6970/announce
 http://213.163.67.56:1337/announce
@@ -479,6 +481,7 @@ http://p4p.arenabg.ch:1337/announce
 http://p4p.arenabg.com:1337/announce
 http://parag.rs:6969/announce
 http://peersteers.org/announce
+http://play.aimisayo.com:6969/announce
 http://pow7.com/announce
 http://prestige.minimafia.nl/announce
 http://private.minimafia.nl/announce
@@ -1089,6 +1092,7 @@ udp://211.75.205.189:6969/announce
 udp://211.75.210.221/announce
 udp://211.75.210.221:6969/announce
 udp://211.75.29.254:6969/announce
+udp://211.97.119.76:6969/announce
 udp://213.163.67.56:1337/announce
 udp://217.30.10.77:6969/announce
 udp://220.200.35.40:2710/announce
