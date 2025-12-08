@@ -75,12 +75,14 @@ http://171.104.226.31:6969/announce
 http://171.104.226.87:6969/announce
 http://173.254.204.71:1096/announce
 http://177.112.215.99:6969/announce
+http://177.172.61.33:6969/announce
 http://177.215.65.176:6969/announce
 http://177.215.67.115:6969/announce
 http://177.215.67.185:6969/announce
 http://178.175.143.27/announce
 http://178.33.73.26:2710/announce
 http://179.100.24.134:6969/announce
+http://179.98.254.138:6969/announce
 http://180.97.219.76:8070/announce
 http://182.176.139.129:6969/announce
 http://185.130.47.2:6969/announce
@@ -99,6 +101,7 @@ http://187.57.14.62:6969/announce
 http://188.165.253.109:1337/announce
 http://189.0.196.51:6969/announce
 http://189.110.233.96:6969/announce
+http://189.18.164.36:6969/announce
 http://189.18.97.201:6969/announce
 http://189.69.169.237:6969/announce
 http://189.69.169.89:6969/announce
@@ -139,6 +142,7 @@ http://211.75.205.189:6969/announce
 http://211.75.210.221/announce
 http://211.75.210.221:6969/announce
 http://211.75.29.254:6969/announce
+http://211.97.119.76:2710/announce
 http://212.6.3.67/announce
 http://213.159.215.198:6970/announce
 http://213.163.67.56:1337/announce
@@ -185,6 +189,7 @@ http://37.235.174.46:2710/announce
 http://38.145.197.79:6961/announce
 http://43.139.20.56:6969/announce
 http://44.30.4.4:6969/announce
+http://44.30.4.70:6969/announce
 http://45.13.119.213:6969/announce
 http://45.146.254.59/announce
 http://45.154.253.10/announce
@@ -476,6 +481,7 @@ http://p4p.arenabg.ch:1337/announce
 http://p4p.arenabg.com:1337/announce
 http://parag.rs:6969/announce
 http://peersteers.org/announce
+http://play.aimisayo.com:6969/announce
 http://pow7.com/announce
 http://prestige.minimafia.nl/announce
 http://private.minimafia.nl/announce
@@ -1027,11 +1033,13 @@ udp://173.249.201.201:6969/announce
 udp://176.31.250.174:6969/announce
 udp://176.99.7.59:6969/announce
 udp://177.112.215.99:6969/announce
+udp://177.172.61.33:6969/announce
 udp://177.215.65.176:6969/announce
 udp://177.215.67.115:6969/announce
 udp://178.128.94.74:6969/announce
 udp://178.170.48.154:1337/announce
 udp://178.33.73.26:2710/announce
+udp://179.98.254.138:6969/announce
 udp://182.176.139.129:6969/announce
 udp://185.102.219.163:6969/announce
 udp://185.121.168.96:1337/announce
@@ -1084,6 +1092,7 @@ udp://211.75.205.189:6969/announce
 udp://211.75.210.221/announce
 udp://211.75.210.221:6969/announce
 udp://211.75.29.254:6969/announce
+udp://211.97.119.76:6969/announce
 udp://213.163.67.56:1337/announce
 udp://217.30.10.77:6969/announce
 udp://220.200.35.40:2710/announce
