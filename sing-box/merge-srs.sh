@@ -1064,7 +1064,7 @@ def normalize_domains(items, is_domain=False):
 
 
 def process_json_file(file_path: Path):
-    """处理单个 JSON 文件: 去重、排序、规范化"""
+    """处理单个 JSON 文件: 去重、排序、规范化、双向同步"""
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -1102,8 +1102,16 @@ def process_json_file(file_path: Path):
         ips.update(rule.get('ip_cidr', []))
 
     # 规范化处理
-    final_domains = normalize_domains(domains, is_domain=True)
-    final_suffixes = sorted([f".{d}" for d in normalize_domains(suffixes, is_domain=True)])
+    raw_domains = normalize_domains(domains, is_domain=True)
+    raw_suffixes = sorted([f".{d}" for d in normalize_domains(suffixes, is_domain=True)])
+    working_suffixes = {'.' + s.lstrip('.') for s in raw_suffixes}
+    working_domains = {d.lstrip('.') for d in raw_domains}
+    for d in working_domains:
+        working_suffixes.add('.' + d)
+    for s in working_suffixes:
+        working_domains.add(s.lstrip('.'))
+    final_domains = sorted([d for d in working_domains if '.' in d])
+    final_suffixes = sorted(list(working_suffixes))
     final_keywords = normalize_domains(keywords, is_domain=False)
     final_regexs = normalize_domains(regexs, is_domain=False)
     final_ips = merge_cidrs(ips)
@@ -1111,23 +1119,22 @@ def process_json_file(file_path: Path):
     # 构建新规则
     new_rules = []
 
-    # 域名规则对象
-    domain_obj = {}
+    # 域名规则对象（创建一个包含所有字段的单一字典）
+    combined_rule = {}
     if final_domains:
-        domain_obj['domain'] = final_domains
+        combined_rule['domain'] = final_domains
     if final_suffixes:
-        domain_obj['domain_suffix'] = final_suffixes
+        combined_rule['domain_suffix'] = final_suffixes
     if final_keywords:
-        domain_obj['domain_keyword'] = final_keywords
+        combined_rule['domain_keyword'] = final_keywords
     if final_regexs:
-        domain_obj['domain_regex'] = final_regexs
-
-    if domain_obj:
-        new_rules.append(domain_obj)
-
+        combined_rule['domain_regex'] = final_regexs
     # IP 规则对象
     if final_ips:
-        new_rules.append({'ip_cidr': final_ips})
+        combined_rule['ip_cidr'] = final_ips
+    # 只有当字典不为空时才添加到 rules 数组
+    if combined_rule:
+        new_rules.append(combined_rule)
 
     # 写入文件
     try:
@@ -1214,7 +1221,7 @@ def find_and_remove_duplicates(cn_file: Path, noncn_file: Path, common_file: Pat
 
     # 保存函数
     def save_rules(path: Path, data_dict):
-        """保存规则到JSON文件"""
+        """保存规则到JSON文件 (合并对象版)"""
         if not data_dict:
             # 如果数据为空,写入空规则集
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -1225,17 +1232,17 @@ def find_and_remove_duplicates(cn_file: Path, noncn_file: Path, common_file: Pat
         rules = []
 
         # 域名规则
-        domain_obj = {}
+        combined_rule = {}
         for key in ['domain', 'domain_suffix', 'domain_keyword', 'domain_regex']:
             if key in data_dict and data_dict[key]:
-                domain_obj[key] = sorted(data_dict[key])
-
-        if domain_obj:
-            rules.append(domain_obj)
+                combined_rule[key] = sorted(data_dict[key])
 
         # IP 规则
         if 'ip_cidr' in data_dict and data_dict['ip_cidr']:
-            rules.append({'ip_cidr': merge_cidrs(data_dict['ip_cidr'])})
+            combined_rule['ip_cidr'] = merge_cidrs(data_dict['ip_cidr'])
+
+        if combined_rule:
+            rules.append(combined_rule)
 
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
