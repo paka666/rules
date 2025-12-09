@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain": [
+        "ntp.ntsc.ac.cn"
+      ]
+    }
+  ]
+}

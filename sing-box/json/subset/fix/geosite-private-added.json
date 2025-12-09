@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain": [
+        "example.com",
+        "example.net",
+        "example.org"
+      ],
+      "domain_suffix": [
+        ".example.com",
+        ".example.net",
+        ".example.org",
+        ".ip6-localhost",
+        ".onion"
+      ]
+    }
+  ]
+}

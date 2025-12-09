@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain": [
+        "glc.g.tw.download.windowsupdatea.com",
+        "hkt.g.hk.download.windowsupdatea.com",
+        "hkt.g.hk2.download.windowsupdatea.com",
+        "naiu-hk.kunlun05dns.com",
+        "naiu-jp.kunlun05dns.com",
+        "naiu-other.kunlun05dns.com",
+        "naiu-sg.kunlun05dns.com",
+        "naiu-us.kunlun05dns.com"
+      ],
+      "domain_suffix": [
+        ".glc.g.tw.download.windowsupdatea.com",
+        ".hkt.g.hk.download.windowsupdatea.com",
+        ".hkt.g.hk2.download.windowsupdatea.com",
+        ".naiu-hk.kunlun05dns.com",
+        ".naiu-jp.kunlun05dns.com",
+        ".naiu-other.kunlun05dns.com",
+        ".naiu-sg.kunlun05dns.com",
+        ".naiu-us.kunlun05dns.com"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain": [
+        "cm.steampowered.com",
+        "steamserver.net",
+        "steampipe.steamcontent.tnkjmec.com",
+        "st.dl.eccdnx.com",
+        "st.dl.bscstorage.net",
+        "st.dl.pinyuncloud.com",
+        "dl.steam.clngaa.com",
+        "cdn.mileweb.cs.steampowered.com.8686c.com",
+        "apple.com",
+        "microsoft.com",
+        "dyndns.com",
+        "steamcontent.com",
+        "vivox.com",
+        "williamchan.me",
+        "bgithub.xyz"
+      ],
+      "domain_suffix": [
+        ".cm.steampowered.com",
+        ".steamserver.net",
+        ".steampipe.steamcontent.tnkjmec.com",
+        ".st.dl.eccdnx.com",
+        ".st.dl.bscstorage.net",
+        ".st.dl.pinyuncloud.com",
+        ".dl.steam.clngaa.com",
+        ".cdn.mileweb.cs.steampowered.com.8686c.com",
+        ".apple.com",
+        ".microsoft.com",
+        ".dyndns.com",
+        ".steamcontent.com",
+        ".vivox.com",
+        ".williamchan.me",
+        ".bgithub.xyz"
+      ]
+    }
+  ]
+}
