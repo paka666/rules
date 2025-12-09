@@ -1996,6 +1996,7 @@ init_url_configs() {
     "${SUBSET_DIR}/geoip-noncn.json"
     "${SUBSET_DIR}/geosite-category-social-media-!cn@!cn.json"
     "${SUBSET_DIR}/tmp/geosite-trae@!cn.json"
+    "${SUBSET_DIR}/tmp/geosite-zte@!cn.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/geoip-facebook.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/geoip-telegram.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/geoip-twitter.json"
@@ -2051,7 +2052,6 @@ init_url_configs() {
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-win-extra.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-win-update.json"
     "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-xiaomi@!cn.json"
-    "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-zte@!cn.json"
   )
 
   # CDN
