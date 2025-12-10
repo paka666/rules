@@ -64,6 +64,7 @@
         "zhipuai.cn"
       ],
       "domain_suffix": [
+        ".ai.zhaomi.cn",
         ".baichuan-ai.com",
         ".bigmodel.cn",
         ".botvip.cn",
@@ -75,6 +76,7 @@
         ".cozebaas.cn",
         ".cozefn.cn",
         ".cozeide.cn",
+        ".cueme-api.quark.cn",
         ".cueme.cn",
         ".deepseek.com",
         ".doubao.com",

@@ -231,6 +231,7 @@
         ".disney.io",
         ".disney.it",
         ".disney.my",
+        ".disney.my.sentry.io",
         ".disney.nl",
         ".disney.no",
         ".disney.ph",
@@ -291,10 +292,13 @@
         ".dtci.co",
         ".dtci.technology",
         ".edgedatg.com",
+        ".espn.api.edge.bamgrid.com",
         ".espn.co.uk",
         ".espn.com",
+        ".espn.hb.omtrdc.net",
         ".espn.net",
         ".espncdn.com",
+        ".espndotcom.tt.omtrdc.net",
         ".espnqa.com",
         ".fast.com",
         ".go-disneyworldgo.com",
@@ -320,6 +324,7 @@
         ".nationalgeographicpartners.com",
         ".netflix.ca",
         ".netflix.com",
+        ".netflix.com.edgesuite.net",
         ".netflix.net",
         ".netflixdnstest0.com",
         ".netflixdnstest1.com",
@@ -371,9 +376,7 @@
         "(^|\\.)apiproxy-website-nlb-prod-.+\\.amazonaws\\.com$",
         "(^|\\.)dualstack\\.apiproxy-.+\\.amazonaws\\.com$",
         "(^|\\.)dualstack\\.ichnaea-web-.+\\.amazonaws\\.com$"
-      ]
-    },
-    {
+      ],
       "ip_cidr": [
         "8.41.4.0/24",
         "23.246.0.0/18",
