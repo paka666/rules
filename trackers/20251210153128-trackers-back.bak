@@ -82,6 +82,7 @@ http://177.215.67.185:6969/announce
 http://178.175.143.27/announce
 http://178.33.73.26:2710/announce
 http://179.100.24.134:6969/announce
+http://179.118.129.194:6969/announce
 http://179.98.254.138:6969/announce
 http://180.97.219.76:8070/announce
 http://182.176.139.129:6969/announce
@@ -101,6 +102,7 @@ http://187.57.14.62:6969/announce
 http://188.165.253.109:1337/announce
 http://189.0.196.51:6969/announce
 http://189.110.233.96:6969/announce
+http://189.18.164.36:6969/announce
 http://189.18.97.201:6969/announce
 http://189.69.169.237:6969/announce
 http://189.69.169.89:6969/announce
@@ -141,6 +143,7 @@ http://211.75.205.189:6969/announce
 http://211.75.210.221/announce
 http://211.75.210.221:6969/announce
 http://211.75.29.254:6969/announce
+http://211.97.119.76:2710/announce
 http://212.6.3.67/announce
 http://213.159.215.198:6970/announce
 http://213.163.67.56:1337/announce
@@ -479,6 +482,7 @@ http://p4p.arenabg.ch:1337/announce
 http://p4p.arenabg.com:1337/announce
 http://parag.rs:6969/announce
 http://peersteers.org/announce
+http://play.aimisayo.com:6969/announce
 http://pow7.com/announce
 http://prestige.minimafia.nl/announce
 http://private.minimafia.nl/announce
@@ -1036,6 +1040,7 @@ udp://177.215.67.115:6969/announce
 udp://178.128.94.74:6969/announce
 udp://178.170.48.154:1337/announce
 udp://178.33.73.26:2710/announce
+udp://179.118.129.194:6969/announce
 udp://179.98.254.138:6969/announce
 udp://182.176.139.129:6969/announce
 udp://185.102.219.163:6969/announce
@@ -1089,6 +1094,7 @@ udp://211.75.205.189:6969/announce
 udp://211.75.210.221/announce
 udp://211.75.210.221:6969/announce
 udp://211.75.29.254:6969/announce
+udp://211.97.119.76:6969/announce
 udp://213.163.67.56:1337/announce
 udp://217.30.10.77:6969/announce
 udp://220.200.35.40:2710/announce
@@ -1277,6 +1283,7 @@ udp://johnrosen1.com:6969/announce
 udp://jutone.com:6969/announce
 udp://keke.re:6969/announce
 udp://kokodayo.site:6969/announce
+udp://laestrygonian.ooguy.com:9001/announce
 udp://laze.cc:6969/announce
 udp://leefafa.tk:6969/announce
 udp://leet-tracker.moe:1337/announce
@@ -1508,6 +1515,7 @@ udp://tracker.valete.tf:9999/announce
 udp://tracker.vds.nz:6969/announce
 udp://tracker.waaa.moe:6969/announce
 udp://tracker.wepzone.net:6969/announce
+udp://tracker.x6c.co:6969/announce
 udp://tracker.xor.st:6969/announce
 udp://tracker.yangxiaoguozi.cn:6969/announce
 udp://tracker.yoshi210.com:6969/announce
