@@ -2,8 +2,8 @@
 # ============================================================================
 # merge-srs-unified.sh - Sing-box 规则集合并脚本 (生产级整合版)
 # ============================================================================
-# 版本: 2.1.0
-# 作者: AI Generated (基于merge-srs.sh + merge_srs_final.sh)
+# 版本: 2.3.0
+# 作者: AI Generated&Gemini (基于merge-srs.sh + merge_srs_final.sh)
 #
 # 主要改进:
 # - 修复所有已知bug (文件锁、时间戳、数据丢失、sing-box version 命令检测)
@@ -56,6 +56,9 @@ readonly PYTHON_SCRIPT_PATH="${TEMP_DIR}/process_rules.py"
 declare -g HAS_FLOCK=false
 declare -g DOWNLOAD_TOOL=""
 declare -g LOG_FILE=""
+# [修改] 移除硬编码路径，直接使用命令名，依赖系统 PATH 查找
+# install.sh 通常安装到 /usr/bin/sing-box，硬编码 /usr/local/bin 可能会找不到
+declare -g SINGBOX_BIN="sing-box"
 
 # 临时文件追踪 (用于清理)
 declare -ga TEMP_FILES_TO_CLEAN=()
@@ -923,12 +926,12 @@ cleanup_old_backups() {
 
 cleanup_execution_logs() {
   log_info "🧹 === 清理运行日志 (保留 7 份) ==="
-  
+
   # 查找 logs 目录下以 merge- 开头的日志，按名称(包含时间戳)逆序排列
   # 保留前 7 个，删除剩余的
   local count
   count=$(find "$LOG_DIR" -name "merge-*.log" -type f | wc -l)
-  
+
   if [ "$count" -gt 7 ]; then
     log_info "🗑️  清理旧日志 (当前: $count, 保留: 7)"
     find "$LOG_DIR" -name "merge-*.log" -type f | \
@@ -1030,8 +1033,8 @@ def normalize_domains(items, is_domain=False):
     for item in items:
         if not item: continue
 
-        # 清理空白
-        s = re.sub(r'\s+', '', item.strip())
+        # 清理空白并转小写
+        s = re.sub(r'\s+', '', item.strip()).lower()
         if not s: continue
 
         # ===【新增】过滤无效条目 ===
@@ -1049,7 +1052,8 @@ def normalize_domains(items, is_domain=False):
             # 移除 www 前缀
             s = re.sub(r'^(?:\.www\.|www\.)', '', s, flags=re.IGNORECASE)
             s = s.lstrip('.').lower()
-
+            if len(s) < 2:
+                continue
             # 过滤无效域名：必须包含字母或数字
             if not re.search(r'[a-z0-9]', s): continue
 
@@ -1060,6 +1064,30 @@ def normalize_domains(items, is_domain=False):
         if len(s) >= 2:
             result.add(s)
 
+    return sorted(list(result))
+
+
+def normalize_regex(items):
+    global error_counts
+    MAX_REGEX_LENGTH = 4096
+
+    result = set()
+    for item in items:
+        if not item: continue
+        s = item.strip()
+        if not s: continue
+
+        if len(s) > MAX_REGEX_LENGTH:
+            print(f"[WARN] 丢弃正则(超长): '{s[:60]}...' - 超过 {MAX_REGEX_LENGTH} 字符", file=sys.stderr)
+            error_counts['invalid_regex'] += 1
+            continue
+
+        try:
+            re.compile(s)
+            result.add(s)
+        except re.error as e:
+            print(f"[WARN] 丢弃无效正则: '{s}' - 原因: {e}", file=sys.stderr)
+            error_counts['invalid_regex'] += 1
     return sorted(list(result))
 
 
@@ -1113,7 +1141,7 @@ def process_json_file(file_path: Path):
     final_domains = sorted([d for d in working_domains if '.' in d])
     final_suffixes = sorted(list(working_suffixes))
     final_keywords = normalize_domains(keywords, is_domain=False)
-    final_regexs = normalize_domains(regexs, is_domain=False)
+    final_regexs = normalize_regex(regexs)
     final_ips = merge_cidrs(ips)
 
     # 构建新规则
@@ -1475,6 +1503,52 @@ PYTHON_EOF
 # 初始化 URL 配置
 init_url_configs() {
   log_info "📋 初始化 URL 配置..."
+
+  # ============================================================
+  # SagerNet SRS 源配置 (srs 数组)
+  # 逻辑: 下载 SRS -> 反编译为 JSON -> 注入到下方对应的 JSON 数组中
+  # ============================================================
+
+  # 1. 广告
+  ads_srs_urls=()
+
+  # 2. 游戏 CN
+  games_cn_srs_urls=()
+
+  # 3. 游戏 NonCN
+  games_noncn_srs_urls=()
+
+  # 4. AI CN
+  ai_cn_srs_urls=()
+
+  # 5. AI NonCN
+  ai_noncn_srs_urls=()
+
+  # 6. 媒体
+  media_srs_urls=()
+
+  # 7. 网络 CN
+  network_cn_srs_urls=(
+    "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs"
+  )
+
+  # 8. 网络 NonCN
+  network_noncn_srs_urls=(
+    "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-geolocation-!cn.srs"
+  )
+
+  # 9. CDN
+  cdn_srs_urls=()
+
+  # 10. 港澳台
+  hkmotw_srs_urls=()
+
+  # 11. 私有网络
+  private_srs_urls=()
+
+  # ============================================================
+  # JSON 源配置
+  # ============================================================
 
   # 预处理配置 (subset 文件生成)
   preprocess_configs=(
@@ -2100,12 +2174,90 @@ init_url_configs() {
 }
 
 # ============================================================================
+# [新增] 第十四点五部分: SRS 转换与注入处理
+# ============================================================================
+
+process_and_inject_srs() {
+  log_info "🛠️  === 处理 SRS 源 (下载 -> 反编译 -> 注入) ==="
+
+  # 定义所有需要检查的分组名称 (对应变量名后缀)
+  # 注意: 变量名格式为 {name}_srs_urls 和 {name}_urls (下划线)
+  local groups=("ads" "games_cn" "games_noncn" "ai_cn" "ai_noncn" "media" "network_cn" "network_noncn" "cdn" "hkmotw" "private")
+  local processed_total=0
+
+  for name in "${groups[@]}"; do
+    local srs_var="${name}_srs_urls"
+    local json_var="${name}_urls"
+
+    # 检查 SRS 数组是否存在且非空
+    if declare -p "$srs_var" &>/dev/null; then
+      local -n srs_array="$srs_var"
+
+      if [ ${#srs_array[@]} -gt 0 ]; then
+        log_info "  Processing Group: $name (${#srs_array[@]} SRS files)"
+
+        # 引用目标 JSON 数组
+        if declare -p "$json_var" &>/dev/null; then
+          local -n target_array="$json_var"
+
+          for url in "${srs_array[@]}"; do
+            [ -z "$url" ] && continue
+
+            # 生成文件名标识
+            local filename=$(basename "$url" .srs)
+            local srs_temp="${TEMP_DIR}/${name}-${filename}.srs"
+            local json_out="${TEMP_DIR}/${name}-${filename}.json"
+            register_temp_file "$srs_temp"
+            register_temp_file "$json_out"
+
+            # 1. 下载
+            log_info "    ↓ 下载: $(basename "$url")"
+            if ! download_file "$url" "$srs_temp"; then
+              log_error "    ❌ 下载失败: $url"
+              continue
+            fi
+
+            # 2. 反编译 (使用全局变量 SINGBOX_BIN)
+            log_info "    🔨 反编译 SRS -> JSON..."
+            if ! "$SINGBOX_BIN" rule-set decompile --output "$json_out" "$srs_temp" >/dev/null 2>&1; then
+              log_error "    ❌ 反编译失败 (请检查 sing-box 是否安装及版本): $url"
+              continue
+            fi
+
+            # 3. 简单验证
+            if [ ! -s "$json_out" ]; then
+              log_error "    ❌ 反编译产物为空"
+              continue
+            fi
+
+            # 4. 注入到 JSON 数组
+            target_array+=("$json_out")
+            log_info "    ✅ 已注入到 $json_var"
+            ((processed_total++))
+          done
+        else
+          log_warn "    ⚠️  目标数组 $json_var 不存在，跳过注入"
+        fi
+      else
+        # [新增] 空集合跳过日志
+        log_info "  ⏭️  跳过 Group: $name (未配置 SRS 源)"
+      fi
+    else
+        log_warn "  ⚠️  变量未定义: $srs_var"
+    fi
+  done
+
+  log_info "✅ SRS 处理结束: 共转换并注入 $processed_total 个文件"
+  log_info ""
+}
+
+# ============================================================================
 # 第十五部分: 主流程
 # ============================================================================
 
 main() {
   log_info "=========================================="
-  log_info "🚀 Sing-box 规则集合并脚本 v2.0.0"
+  log_info "🚀 Sing-box 规则集合并脚本 v2.3.0"
   log_info "=========================================="
   log_info "开始时间: $(date '+%Y-%m-%d %H:%M:%S')"
   log_info ""
@@ -2126,6 +2278,9 @@ main() {
 
   # 初始化 URL 配置
   init_url_configs
+
+  # === [新增] 在所有处理之前，先转换 SRS 并注入 JSON 列表 ===
+  process_and_inject_srs
 
   log_info ""
 
