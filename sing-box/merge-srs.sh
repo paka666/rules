@@ -2235,6 +2235,7 @@ process_and_inject_srs() {
             log_info "    ✅ 已注入到 $json_var"
             ((processed_total++))
           done
+          unset -n target_array
         else
           log_warn "    ⚠️  目标数组 $json_var 不存在，跳过注入"
         fi
@@ -2242,6 +2243,7 @@ process_and_inject_srs() {
         # [新增] 空集合跳过日志
         log_info "  ⏭️  跳过 Group: $name (未配置 SRS 源)"
       fi
+      unset -n srs_array
     else
         log_warn "  ⚠️  变量未定义: $srs_var"
     fi
