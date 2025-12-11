@@ -2174,82 +2174,252 @@ init_url_configs() {
 }
 
 # ============================================================================
-# [新增] 第十四点五部分: SRS 转换与注入处理
+# [新增] 第十四点五部分: SRS 转换与注入处理 (最终融合修复版 v4.0)
 # ============================================================================
 
-process_and_inject_srs() {
-  log_info "🛠️  === 处理 SRS 源 (下载 -> 反编译 -> 注入) ==="
+# 处理单个分组的 SRS (核心函数)
+# 参数: $1 - 分组名称 (如 ads)
+# 参数: $2 - [引用] 用于返回成功计数的变量名 (避免使用 echo 返回导致日志被吞)
+process_single_srs_group() {
+  local name="$1"
+  local return_count_var="$2"
 
-  # 定义所有需要检查的分组名称 (对应变量名后缀)
-  # 注意: 变量名格式为 {name}_srs_urls 和 {name}_urls (下划线)
-  local groups=("ads" "games_cn" "games_noncn" "ai_cn" "ai_noncn" "media" "network_cn" "network_noncn" "cdn" "hkmotw" "private")
-  local processed_total=0
+  local srs_var="${name}_srs_urls"
+  local json_var="${name}_urls"
+  local processed=0
 
-  for name in "${groups[@]}"; do
-    local srs_var="${name}_srs_urls"
-    local json_var="${name}_urls"
+  # === 1. 变量与环境检查 ===
+  if ! declare -p "$srs_var" &>/dev/null; then
+    log_warn "  ⚠️  变量未定义: $srs_var"
+    eval "$return_count_var=0"
+    return 0
+  fi
 
-    # 检查 SRS 数组是否存在且非空
-    if declare -p "$srs_var" &>/dev/null; then
-      local -n srs_array="$srs_var"
+  # 引用数组 (Bash 4.3+ 特性，脚本头部已检查版本)
+  local -n srs_array="$srs_var"
 
-      if [ ${#srs_array[@]} -gt 0 ]; then
-        log_info "  Processing Group: $name (${#srs_array[@]} SRS files)"
+  # 空数组检查
+  if [ ${#srs_array[@]} -eq 0 ]; then
+    log_info "  ⏭️  跳过 Group: $name (未配置 SRS 源)"
+    eval "$return_count_var=0"
+    return 0
+  fi
 
-        # 引用目标 JSON 数组
-        if declare -p "$json_var" &>/dev/null; then
-          local -n target_array="$json_var"
+  log_info "  📦 Processing Group: $name (${#srs_array[@]} SRS 文件)"
 
-          for url in "${srs_array[@]}"; do
-            [ -z "$url" ] && continue
+  # 检查目标数组
+  if ! declare -p "$json_var" &>/dev/null; then
+    log_warn "  ⚠️  目标数组 $json_var 不存在，跳过注入"
+    eval "$return_count_var=0"
+    return 0
+  fi
+  local -n target_array="$json_var"
 
-            # 生成文件名标识
-            local filename=$(basename "$url" .srs)
-            local srs_temp="${TEMP_DIR}/${name}-${filename}.srs"
-            local json_out="${TEMP_DIR}/${name}-${filename}.json"
-            register_temp_file "$srs_temp"
-            register_temp_file "$json_out"
+  # === 2. 准备临时文件与锁 ===
+  # 使用纳秒级时间戳避免文件名冲突
+  local timestamp
+  timestamp=$(date +%s%N 2>/dev/null || echo $$)
+  local list_file="${TEMP_DIR}/srs-inject-${name}-${timestamp}.list"
+  local lock_dir="${TEMP_DIR}/srs-inject-${name}-${timestamp}.lock"
 
-            # 1. 下载
-            log_info "    ↓ 下载: $(basename "$url")"
-            if ! download_file "$url" "$srs_temp"; then
-              log_error "    ❌ 下载失败: $url"
-              continue
-            fi
+  # 确保清理
+  local cleanup_done=false
+  _cleanup_srs_group() {
+    [ "$cleanup_done" = true ] && return
+    cleanup_done=true
+    rm -f "$list_file" 2>/dev/null || true
+    rmdir "$lock_dir" 2>/dev/null || true
+  }
+  trap _cleanup_srs_group RETURN
 
-            # 2. 反编译 (使用全局变量 SINGBOX_BIN)
-            log_info "    🔨 反编译 SRS -> JSON..."
-            if ! "$SINGBOX_BIN" rule-set decompile --output "$json_out" "$srs_temp" >/dev/null 2>&1; then
-              log_error "    ❌ 反编译失败 (请检查 sing-box 是否安装及版本): $url"
-              continue
-            fi
+  # 初始化列表文件
+  : > "$list_file" || {
+    log_error "  ❌ 无法创建列表文件: $list_file"
+    eval "$return_count_var=0"
+    return 1
+  }
 
-            # 3. 简单验证
-            if [ ! -s "$json_out" ]; then
-              log_error "    ❌ 反编译产物为空"
-              continue
-            fi
+  # 检测 timeout 命令可用性
+  local cmd_timeout=""
+  if command -v timeout &>/dev/null; then
+    cmd_timeout="timeout ${DOWNLOAD_TIMEOUT:-120}s"
+  fi
 
-            # 4. 注入到 JSON 数组
-            target_array+=("$json_out")
-            log_info "    ✅ 已注入到 $json_var"
-            ((processed_total++))
-          done
-          unset -n target_array
-        else
-          log_warn "    ⚠️  目标数组 $json_var 不存在，跳过注入"
-        fi
-      else
-        # 空集合跳过日志
-        log_info "  ⏭️  跳过 Group: $name (未配置 SRS 源)"
-      fi
-      unset -n srs_array
-    else
-        log_warn "  ⚠️  变量未定义: $srs_var"
+  # === 3. 并发处理循环 ===
+  local -a pids=()
+  local download_progress=0
+  local failed_count=0
+
+  for url in "${srs_array[@]}"; do
+    [ -z "$url" ] && continue
+
+    # 并发控制
+    if [ ${#pids[@]} -ge "$MAX_CONCURRENT_DOWNLOADS" ]; then
+      log_info "    ⏳ 等待当前批次完成 (${#pids[@]} 个任务)..."
+      local wait_failed=0
+      for pid in "${pids[@]}"; do
+        wait "$pid" || ((wait_failed++))
+      done
+      [ $wait_failed -gt 0 ] && ((failed_count += wait_failed))
+      pids=()
     fi
+
+    # 路径准备
+    local filename
+    filename=$(basename "$url" .srs)
+    local srs_temp="${TEMP_DIR}/srs-${name}-${filename}-${timestamp}.srs"
+    local json_out="${TEMP_DIR}/srs-${name}-${filename}-${timestamp}.json"
+
+    # 注册到全局清理列表 (双重保险)
+    register_temp_file "$srs_temp"
+    register_temp_file "$json_out"
+
+    # 后台子任务
+    (
+      set -e # 遇到错误立即退出子shell
+      local current_progress=$((++download_progress))
+
+      # A. 下载
+      log_info "    ↓ [$current_progress/${#srs_array[@]}] 下载: $(basename "$url")"
+      if ! download_file "$url" "$srs_temp"; then
+        log_error "    ❌ 下载失败: $url"
+        exit 1
+      fi
+      [ ! -s "$srs_temp" ] && { log_error "    ❌ 下载为空: $url"; exit 1; }
+
+      # B. 反编译 (带超时保护)
+      log_info "    🔨 反编译: $(basename "$srs_temp")"
+      # 使用全局变量 SINGBOX_BIN，如果未定义则默认为 sing-box
+      local bin="${SINGBOX_BIN:-sing-box}"
+
+      # 执行命令 (如果 cmd_timeout 为空则直接执行，否则带 timeout)
+      if ! $cmd_timeout "$bin" rule-set decompile --output "$json_out" "$srs_temp" >/dev/null 2>&1; then
+        log_error "    ❌ 反编译失败/超时: $url"
+        exit 1
+      fi
+      [ ! -s "$json_out" ] && { log_error "    ❌ 产物为空: $url"; exit 1; }
+
+      # C. 验证 (复用全局函数)
+      if declare -f validate_and_fix_json &>/dev/null; then
+        if ! validate_and_fix_json "$json_out" "$name" "false"; then
+          log_error "    ❌ JSON 验证失败: $url"
+          exit 1
+        fi
+      elif ! jq empty "$json_out" >/dev/null 2>&1; then
+        log_error "    ❌ JSON 格式无效: $url"
+        exit 1
+      fi
+
+      # D. 原子写入列表
+      # 策略: 优先用 flock，无 flock 用 mkdir 原子锁，再不行直接追加
+      if [ "${HAS_FLOCK:-false}" = true ]; then
+        (
+          flock -x 200 || exit 1
+          echo "$json_out" >> "$list_file"
+        ) 200>"$list_file.lock"
+      else
+        # Fallback: mkdir spin-lock (POSIX 原子性)
+        local i=0
+        while ! mkdir "$lock_dir" 2>/dev/null; do
+          sleep 0.1
+          ((i++))
+          [ "$i" -ge 100 ] && break # 10秒超时
+        done
+        echo "$json_out" >> "$list_file"
+        rmdir "$lock_dir" 2>/dev/null || true
+      fi
+
+      log_info "    ✅ 就绪: $(basename "$url")"
+    ) &
+
+    pids+=($!)
   done
 
-  log_info "✅ SRS 处理结束: 共转换并注入 $processed_total 个文件"
+  # === 4. 等待剩余任务 ===
+  if [ ${#pids[@]} -gt 0 ]; then
+    log_info "    ⏳ 等待最后批次完成..."
+    local wait_failed=0
+    for pid in "${pids[@]}"; do
+      wait "$pid" || ((wait_failed++))
+    done
+    [ $wait_failed -gt 0 ] && ((failed_count += wait_failed))
+  fi
+
+  # === 5. 注入结果 (主线程执行，绝对安全) ===
+  if [ -f "$list_file" ]; then
+    while IFS= read -r json_path; do
+      if [ -n "$json_path" ] && [ -f "$json_path" ]; then
+        target_array+=("$json_path")
+        ((processed++))
+      fi
+    done < "$list_file"
+  fi
+
+  # === 6. 统计 ===
+  local total=${#srs_array[@]}
+  if [ $failed_count -gt 0 ]; then
+    log_warn "  ⚠️  组 $name 完成: 成功 $processed/$total, 失败 $failed_count"
+  else
+    log_info "  ✅ 组 $name 完成: 成功 $processed/$total"
+  fi
+
+  # 清理引用
+  unset -n target_array
+  unset -n srs_array
+
+  # 信号清理 (清理当前组可能残留的 pids)
+  trap 'kill ${pids[*]} 2>/dev/null' INT TERM
+
+  # 回传计数
+  eval "$return_count_var=$processed"
+  return 0
+}
+
+# SRS 处理主入口
+process_and_inject_srs() {
+  log_info "🛠️  === 处理 SRS 源 (下载 -> 反编译 -> 注入) ==="
+  log_info ""
+
+  # 依赖检查
+  local bin="${SINGBOX_BIN:-sing-box}"
+  if ! command -v "$bin" &>/dev/null; then
+    log_fatal "无法找到 sing-box 命令 ($bin)。SRS 转换无法进行，请检查安装。"
+  fi
+
+  local groups=("ads" "games_cn" "games_noncn" "ai_cn" "ai_noncn" "media" "network_cn" "network_noncn" "cdn" "hkmotw" "private")
+  local processed_total=0
+  local groups_processed=0
+  local groups_failed=0
+
+  for name in "${groups[@]}"; do
+    log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+    local group_count=0
+    # 核心：传入变量名 "group_count" 接收返回值，不使用 $() 捕获
+    # 这样函数内的日志可以直接打印到屏幕，不会被缓冲区吞掉
+    if process_single_srs_group "$name" "group_count"; then
+      if [ "$group_count" -gt 0 ]; then
+        ((processed_total += group_count))
+        ((groups_processed++))
+      fi
+    else
+      log_error "  ❌ 组 $name 处理异常"
+      ((groups_failed++))
+    fi
+
+    log_info ""
+  done
+
+  log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  log_info "📊 SRS 处理统计:"
+  log_info "  • 成功处理组: $groups_processed"
+  [ $groups_failed -gt 0 ] && log_error "  • 失败组: $groups_failed"
+
+  if [ $processed_total -gt 0 ]; then
+    log_info "✅ SRS 阶段结束: 共注入 $processed_total 个文件"
+  else
+    log_info "ℹ️  SRS 阶段结束: 无新增文件"
+  fi
   log_info ""
 }
 
