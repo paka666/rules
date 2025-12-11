@@ -82,6 +82,7 @@ http://177.215.67.185:6969/announce
 http://178.175.143.27/announce
 http://178.33.73.26:2710/announce
 http://179.100.24.134:6969/announce
+http://179.118.129.194:6969/announce
 http://179.98.254.138:6969/announce
 http://180.97.219.76:8070/announce
 http://182.176.139.129:6969/announce
@@ -106,6 +107,7 @@ http://189.18.97.201:6969/announce
 http://189.69.169.237:6969/announce
 http://189.69.169.89:6969/announce
 http://189.69.171.248:6969/announce
+http://189.79.12.91:6969/announce
 http://189.79.13.107:6969/announce
 http://191.23.71.22:6969/announce
 http://192.3.165.191:6969/announce
@@ -1039,6 +1041,7 @@ udp://177.215.67.115:6969/announce
 udp://178.128.94.74:6969/announce
 udp://178.170.48.154:1337/announce
 udp://178.33.73.26:2710/announce
+udp://179.118.129.194:6969/announce
 udp://179.98.254.138:6969/announce
 udp://182.176.139.129:6969/announce
 udp://185.102.219.163:6969/announce
@@ -1060,6 +1063,7 @@ udp://188.165.253.109:1337/announce
 udp://189.18.97.201:6969/announce
 udp://189.69.169.237:6969/announce
 udp://189.69.169.89:6969/announce
+udp://189.79.12.91:6969/announce
 udp://191.101.229.236:1337/announce
 udp://191.23.71.22:6969/announce
 udp://192.95.46.115:6969/announce
@@ -1281,6 +1285,7 @@ udp://johnrosen1.com:6969/announce
 udp://jutone.com:6969/announce
 udp://keke.re:6969/announce
 udp://kokodayo.site:6969/announce
+udp://laestrygonian.ooguy.com:9001/announce
 udp://laze.cc:6969/announce
 udp://leefafa.tk:6969/announce
 udp://leet-tracker.moe:1337/announce
@@ -1512,6 +1517,7 @@ udp://tracker.valete.tf:9999/announce
 udp://tracker.vds.nz:6969/announce
 udp://tracker.waaa.moe:6969/announce
 udp://tracker.wepzone.net:6969/announce
+udp://tracker.x6c.co:6969/announce
 udp://tracker.xor.st:6969/announce
 udp://tracker.yangxiaoguozi.cn:6969/announce
 udp://tracker.yoshi210.com:6969/announce
