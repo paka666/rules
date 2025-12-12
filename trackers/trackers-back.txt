@@ -1475,6 +1475,7 @@ udp://tracker.ololosh.space:6969/announce
 udp://tracker.open-data.network:8888/announce
 udp://tracker.openbittorrent.com/announce
 udp://tracker.openbtba.com:6969/announce
+udp://tracker.opentorrent.top:6969/announce
 udp://tracker.opentrackr.org:1337/announce
 udp://tracker.picotorrent.one:6969/announce
 udp://tracker.piratepublic.com:1337/announce
