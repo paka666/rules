@@ -1076,6 +1076,7 @@ udp://194.38.21.77:6969/announce
 udp://194.62.248.73:15480/announce
 udp://195.123.209.37:1337/announce
 udp://195.123.209.40/announce
+udp://195.234.62.166:6969/announce
 udp://198.100.149.66:6969/announce
 udp://1c.premierzal.ru:6969/announce
 udp://200.161.254.131:6969/announce
@@ -1475,6 +1476,7 @@ udp://tracker.ololosh.space:6969/announce
 udp://tracker.open-data.network:8888/announce
 udp://tracker.openbittorrent.com/announce
 udp://tracker.openbtba.com:6969/announce
+udp://tracker.opentorrent.top:6969/announce
 udp://tracker.opentrackr.org:1337/announce
 udp://tracker.picotorrent.one:6969/announce
 udp://tracker.piratepublic.com:1337/announce
