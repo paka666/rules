@@ -105,6 +105,7 @@ http://186.10.170.56:1337/announce
 http://186.10.172.248:1337/announce
 http://187.34.25.113:6969/announce
 http://187.57.130.109:6969/announce
+http://187.57.132.246:6969/announce
 http://187.57.14.62:6969/announce
 http://188.165.253.109:1337/announce
 http://189.0.196.51:6969/announce
@@ -1088,6 +1089,7 @@ udp://186.10.170.56:1337/announce
 udp://186.10.172.248:1337/announce
 udp://187.34.25.113:6969/announce
 udp://187.57.130.109:6969/announce
+udp://187.57.132.246:6969/announce
 udp://188.165.253.109:1337/announce
 udp://189.0.78.245:6969/announce
 udp://189.18.163.167:6969/announce
@@ -1099,6 +1101,7 @@ udp://189.79.12.91:6969/announce
 udp://191.101.229.236:1337/announce
 udp://191.23.71.22:6969/announce
 udp://192.95.46.115:6969/announce
+udp://193.148.251.93:6969/announce
 udp://193.233.161.213:6969/announce
 udp://193.37.214.12:6969/announce
 udp://193.42.111.57:9337/announce
@@ -1465,6 +1468,7 @@ udp://tracker.bitcoinindia.space:6969/announce
 udp://tracker.bitsearch.to:1337/announce
 udp://tracker.bittor.pw:1337/announce
 udp://tracker.blacksparrowmedia.net:6969/announce
+udp://tracker.bluefrog.pw:2710/announce
 udp://tracker.bontal.net:6969/announce
 udp://tracker.breizh.pm:6969/announce
 udp://tracker.btsync.gq:233/announce
