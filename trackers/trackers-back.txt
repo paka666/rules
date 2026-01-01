@@ -990,6 +990,7 @@ https://tracker.sakurato.art:23334/announce
 https://tracker.shittyurl.org/announce
 https://tracker.skynetcloud.site:8443/announce
 https://tracker.sloppyta.co/announce
+https://tracker.soshifanclub.com/announce
 https://tracker.srv00.com/announce
 https://tracker.tamersunion.org/announce
 https://tracker.torrentsnows.com/announce
