@@ -79,6 +79,7 @@ http://173.254.204.71:1096/announce
 http://177.112.215.99:6969/announce
 http://177.139.44.78:6969/announce
 http://177.139.47.105:6969/announce
+http://177.139.47.18:6969/announce
 http://177.172.61.33:6969/announce
 http://177.172.65.168:6969/announce
 http://177.215.65.176:6969/announce
@@ -1064,6 +1065,7 @@ udp://176.31.250.174:6969/announce
 udp://176.99.7.59:6969/announce
 udp://177.112.215.99:6969/announce
 udp://177.139.47.105:6969/announce
+udp://177.139.47.18:6969/announce
 udp://177.172.61.33:6969/announce
 udp://177.172.65.168:6969/announce
 udp://177.215.65.176:6969/announce
@@ -1102,6 +1104,7 @@ udp://189.18.163.167:6969/announce
 udp://189.18.97.201:6969/announce
 udp://189.69.169.237:6969/announce
 udp://189.69.169.89:6969/announce
+udp://189.69.170.69:6969/announce
 udp://189.69.172.166:6969/announce
 udp://189.79.12.91:6969/announce
 udp://191.101.229.236:1337/announce
@@ -1288,6 +1291,7 @@ udp://carr.codes:6969/announce
 udp://cdn-1.gamecoast.org:6969/announce
 udp://chouchou.top:8080/announce
 udp://code2chicken.nl:6969/announce
+udp://colivioo.com:6969/announce
 udp://concen.org:6969/announce
 udp://coppersurfer.tk:6969/announce
 udp://cpe-104-34-3-152.socal.res.rr.com:6969/announce
