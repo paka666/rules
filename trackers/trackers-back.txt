@@ -82,6 +82,7 @@ http://177.139.47.105:6969/announce
 http://177.139.47.18:6969/announce
 http://177.172.61.33:6969/announce
 http://177.172.65.168:6969/announce
+http://177.173.31.33:6969/announce
 http://177.215.65.176:6969/announce
 http://177.215.65.40:6969/announce
 http://177.215.67.115:6969/announce
@@ -1070,6 +1071,7 @@ udp://177.139.47.105:6969/announce
 udp://177.139.47.18:6969/announce
 udp://177.172.61.33:6969/announce
 udp://177.172.65.168:6969/announce
+udp://177.173.31.33:6969/announce
 udp://177.215.65.176:6969/announce
 udp://177.215.65.40:6969/announce
 udp://177.215.67.115:6969/announce
@@ -1525,6 +1527,7 @@ udp://tracker.ilibr.org/announce
 udp://tracker.internetwarriors.net:1337/announce
 udp://tracker.iperson.xyz:6969/announce
 udp://tracker.istole.it/announce
+udp://tracker.ixuexi.click:6969/announce
 udp://tracker.jamesthebard.net:6969/announce
 udp://tracker.kicks-ass.net/announce
 udp://tracker.kmzs123.cn:17272/announce
