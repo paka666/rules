@@ -171,6 +171,7 @@ http://211.75.210.221/announce
 http://211.75.210.221:6969/announce
 http://211.75.29.254:6969/announce
 http://211.97.119.76:2710/announce
+http://211.97.119.88:2710/announce
 http://212.6.3.67/announce
 http://213.159.215.198:6970/announce
 http://213.163.67.56:1337/announce
@@ -1057,6 +1058,7 @@ udp://135.125.202.143:6969/announce
 udp://135.125.236.64:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
+udp://147.45.77.75:6969/announce
 udp://148.251.53.72:6969/announce
 udp://151.243.109.110:6969/announce
 udp://151.243.109.163:6969/announce
@@ -1163,6 +1165,7 @@ udp://211.75.210.221/announce
 udp://211.75.210.221:6969/announce
 udp://211.75.29.254:6969/announce
 udp://211.97.119.76:6969/announce
+udp://211.97.119.88:6969/announce
 udp://212.42.38.197:6969/announce
 udp://212.8.249.30:6969/announce
 udp://213.163.67.56:1337/announce
