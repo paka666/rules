@@ -84,6 +84,7 @@ http://177.139.47.18:6969/announce
 http://177.139.47.92:6969/announce
 http://177.172.61.33:6969/announce
 http://177.172.65.168:6969/announce
+http://177.172.67.13:6969/announce
 http://177.173.31.33:6969/announce
 http://177.215.65.176:6969/announce
 http://177.215.65.40:6969/announce
@@ -170,6 +171,7 @@ http://211.75.210.221/announce
 http://211.75.210.221:6969/announce
 http://211.75.29.254:6969/announce
 http://211.97.119.76:2710/announce
+http://211.97.119.88:2710/announce
 http://212.6.3.67/announce
 http://213.159.215.198:6970/announce
 http://213.163.67.56:1337/announce
@@ -1056,6 +1058,7 @@ udp://135.125.202.143:6969/announce
 udp://135.125.236.64:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
+udp://147.45.77.75:6969/announce
 udp://148.251.53.72:6969/announce
 udp://151.243.109.110:6969/announce
 udp://151.243.109.163:6969/announce
@@ -1080,6 +1083,7 @@ udp://177.139.47.18:6969/announce
 udp://177.139.47.92:6969/announce
 udp://177.172.61.33:6969/announce
 udp://177.172.65.168:6969/announce
+udp://177.172.67.13:6969/announce
 udp://177.173.31.33:6969/announce
 udp://177.215.65.176:6969/announce
 udp://177.215.65.40:6969/announce
@@ -1161,6 +1165,7 @@ udp://211.75.210.221/announce
 udp://211.75.210.221:6969/announce
 udp://211.75.29.254:6969/announce
 udp://211.97.119.76:6969/announce
+udp://211.97.119.88:6969/announce
 udp://212.42.38.197:6969/announce
 udp://212.8.249.30:6969/announce
 udp://213.163.67.56:1337/announce
@@ -1408,6 +1413,7 @@ udp://opentracker.i2p.rocks:6969/announce
 udp://opentracker.io:6969/announce
 udp://opentracker.simp.i2p:6969/a
 udp://opentracker.skank.i2p:6969/a
+udp://opentracker.xyz/announce
 udp://opentrackr.org:1337/announce
 udp://p2p.publictracker.xyz:6969/announce
 udp://p4p.arenabg.ch:1337/announce
@@ -1506,6 +1512,7 @@ udp://tracker.ccp.ovh:6969/announce
 udp://tracker.cloaka.xyz:1337/announce
 udp://tracker.cloudbase.store:1333/announce
 udp://tracker.coppersurfer.tk:6969/announce
+udp://tracker.corpscorp.online/announce
 udp://tracker.cubonegro.xyz:6969/announce
 udp://tracker.cyberia.is:6969/announce
 udp://tracker.darkness.services:6969/announce
@@ -1557,6 +1564,7 @@ udp://tracker.openbittorrent.com/announce
 udp://tracker.openbtba.com:6969/announce
 udp://tracker.opentorrent.top:6969/announce
 udp://tracker.opentrackr.org:1337/announce
+udp://tracker.orsvarn.com:6969/announce
 udp://tracker.picotorrent.one:6969/announce
 udp://tracker.piratepublic.com:1337/announce
 udp://tracker.playground.ru:6969/announce
