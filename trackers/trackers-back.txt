@@ -1228,6 +1228,7 @@ udp://60.249.37.20:6969/announce
 udp://62.138.0.158:6969/announce
 udp://62.212.85.66:2710/announce
 udp://62.60.157.92:6969/announce
+udp://69.30.233.234:6969/announce
 udp://6ahddutb1ucc3cp.ru:6969/announce
 udp://6rt.tace.ru/announce
 udp://74.82.52.209:6969/announce
