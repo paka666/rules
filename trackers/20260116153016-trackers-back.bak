@@ -46,6 +46,7 @@ http://144.202.33.210:6961/announce
 http://144.76.118.107:6969/announce
 http://147job.com:6969/announce
 http://151.115.49.115:1337/announce
+http://152.231.114.51:1337/announce
 http://152.249.214.198:6969/announce
 http://155.248.200.105/announce
 http://156.234.201.18/announce
@@ -1227,6 +1228,7 @@ udp://60.249.37.20:6969/announce
 udp://62.138.0.158:6969/announce
 udp://62.212.85.66:2710/announce
 udp://62.60.157.92:6969/announce
+udp://69.30.233.234:6969/announce
 udp://6ahddutb1ucc3cp.ru:6969/announce
 udp://6rt.tace.ru/announce
 udp://74.82.52.209:6969/announce
