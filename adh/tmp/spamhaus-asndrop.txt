@@ -124,6 +124,7 @@ jetcloud.vn.
 kaopuyun.com.
 khalidgroup.co.
 kontrast.md.
+lhwebtech.com.
 link-host.com.
 liptel.net.ua.
 livecomm.
@@ -151,6 +152,7 @@ niutelecom.com.
 nodonorte.net.ar.
 noobtech.in.
 notbad.cloud.
+ntel.com.ng.
 nts.center.
 ntup.net.
 nuxt.cloud.
