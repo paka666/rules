@@ -45,6 +45,7 @@ http://142.171.85.76:6969/announce
 http://144.202.33.210:6961/announce
 http://144.76.118.107:6969/announce
 http://147job.com:6969/announce
+http://15.204.239.175:6969/announce
 http://151.115.49.115:1337/announce
 http://152.231.114.51:1337/announce
 http://152.249.214.198:6969/announce
@@ -99,6 +100,7 @@ http://179.118.129.194:6969/announce
 http://179.175.247.70:6969/announce
 http://179.98.254.109:6969/announce
 http://179.98.254.138:6969/announce
+http://179.98.51.66:6969/announce
 http://180.97.219.76:8070/announce
 http://182.176.139.129:6969/announce
 http://185.130.47.2:6969/announce
@@ -1075,6 +1077,7 @@ udp://152.231.114.51:1337/announce
 udp://152.249.214.198:6969/announce
 udp://152.53.152.105:1984/announce
 udp://152.53.152.105:54123/announce
+udp://154.40.43.165:6969/announce
 udp://156.234.201.18/announce
 udp://158.101.161.60:3131/announce
 udp://161.97.67.210:6969/announce
@@ -1105,6 +1108,7 @@ udp://179.118.129.194:6969/announce
 udp://179.175.247.70:6969/announce
 udp://179.98.254.109:6969/announce
 udp://179.98.254.138:6969/announce
+udp://179.98.51.66:6969/announce
 udp://182.176.139.129:6969/announce
 udp://184.105.226.26:6969/announce
 udp://185.102.219.163:6969/announce
@@ -1385,6 +1389,7 @@ udp://laze.cc:6969/announce
 udp://leefafa.tk:6969/announce
 udp://leet-tracker.moe:1337/announce
 udp://line-net.ru:6969/announce
+udp://litter.fluffykitten.moe:1337/announce
 udp://ln.mtahost.co:6969/announce
 udp://lotus-eater.mywire.org:9001/announce
 udp://lulz.vpndb.org:3000/announce
