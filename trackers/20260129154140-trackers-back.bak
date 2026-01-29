@@ -115,6 +115,7 @@ http://185.5.97.139:8089/announce
 http://185.70.187.79:6969/announce
 http://186.10.170.186:1337/announce
 http://186.10.170.56:1337/announce
+http://186.10.170.58:1337/announce
 http://186.10.172.248:1337/announce
 http://187.11.75.60:6969/announce
 http://187.34.25.113:6969/announce
@@ -148,9 +149,11 @@ http://194.106.216.222/announce
 http://195.123.209.37:1337/announce
 http://198.251.84.144/announce
 http://200.111.152.54:1337/announce
+http://200.148.11.156:6969/announce
 http://200.148.11.61:6969/announce
 http://200.161.254.131:6969/announce
 http://200.161.254.20:6969/announce
+http://200.168.116.107:6969/announce
 http://200.168.116.200:6969/announce
 http://200.170.109.125:6969/announce
 http://200.170.109.148:6969/announce
@@ -1158,9 +1161,11 @@ udp://195.123.209.40/announce
 udp://195.234.62.166:6969/announce
 udp://198.100.149.66:6969/announce
 udp://1c.premierzal.ru:6969/announce
+udp://200.148.11.156:6969/announce
 udp://200.148.11.61:6969/announce
 udp://200.161.254.131:6969/announce
 udp://200.161.254.20:6969/announce
+udp://200.168.116.107:6969/announce
 udp://200.168.116.200:6969/announce
 udp://200.170.109.125:6969/announce
 udp://200.170.109.148:6969/announce
@@ -1653,6 +1658,7 @@ udp://tracker3.t-1.org:6969/announce
 udp://tracker4.itzmx.com:2710/announce
 udp://tracker4.leechshield.link:6969/announce
 udp://tracker4.piratux.com:6969/announce
+udp://trl-zhuqiy.dgj055.icu/announce
 udp://trl-zhuqiy.dgj055.icu:6969/announce
 udp://ts.populargamers.co.za:6969/announce
 udp://tsundere.pw:6969/announce
