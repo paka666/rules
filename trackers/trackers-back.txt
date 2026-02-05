@@ -121,6 +121,7 @@ http://186.10.170.56:1337/announce
 http://186.10.170.58:1337/announce
 http://186.10.172.248:1337/announce
 http://187.11.72.168:6969/announce
+http://187.11.75.160:6969/announce
 http://187.11.75.60:6969/announce
 http://187.34.25.113:6969/announce
 http://187.57.130.109:6969/announce
@@ -154,6 +155,7 @@ http://193.37.214.12:6969/announce
 http://194.106.216.222/announce
 http://195.123.209.37:1337/announce
 http://198.251.84.144/announce
+http://200.111.152.53:1337/announce
 http://200.111.152.54:1337/announce
 http://200.148.11.156:6969/announce
 http://200.148.11.61:6969/announce
