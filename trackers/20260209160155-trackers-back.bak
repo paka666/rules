@@ -104,6 +104,7 @@ http://179.98.254.109:6969/announce
 http://179.98.254.138:6969/announce
 http://179.98.51.66:6969/announce
 http://180.112.57.159:6969/announce
+http://180.114.103.80:6969/announce
 http://180.97.219.76:8070/announce
 http://182.176.139.129:6969/announce
 http://185.130.47.2:6969/announce
@@ -138,6 +139,7 @@ http://189.18.164.36:6969/announce
 http://189.18.96.199:6969/announce
 http://189.18.96.9:6969/announce
 http://189.18.97.201:6969/announce
+http://189.18.97.57:6969/announce
 http://189.69.167.105:6969/announce
 http://189.69.169.237:6969/announce
 http://189.69.169.89:6969/announce
@@ -147,6 +149,7 @@ http://189.79.12.91:6969/announce
 http://189.79.13.107:6969/announce
 http://191.23.71.193:6969/announce
 http://191.23.71.22:6969/announce
+http://191.255.193.158:6969/announce
 http://192.3.165.191:6969/announce
 http://192.9.228.30:6699/announce
 http://193.107.16.156:2710/announce
@@ -164,6 +167,7 @@ http://200.161.254.20:6969/announce
 http://200.168.116.107:6969/announce
 http://200.168.116.200:6969/announce
 http://200.168.116.61:6969/announce
+http://200.168.117.124:6969/announce
 http://200.170.109.125:6969/announce
 http://200.170.109.148:6969/announce
 http://200.232.254.1:6969/announce
@@ -773,6 +777,7 @@ http://tracker.trancetraffic.com/announce.php
 http://tracker.tricitytorrents.com:2710/announce
 http://tracker.tritan.gg:8080/announce
 http://tracker.tvunderground.org.ru:3218/announce
+http://tracker.umunu.ru:6969/announce
 http://tracker.valete.tf:9999/announce
 http://tracker.vanitycore.co:6969/announce
 http://tracker.vraphim.com:6969/announce
@@ -1160,6 +1165,7 @@ udp://189.0.78.245:6969/announce
 udp://189.18.163.167:6969/announce
 udp://189.18.96.9:6969/announce
 udp://189.18.97.201:6969/announce
+udp://189.18.97.57:6969/announce
 udp://189.69.167.105:6969/announce
 udp://189.69.169.237:6969/announce
 udp://189.69.169.89:6969/announce
@@ -1169,6 +1175,7 @@ udp://189.79.12.91:6969/announce
 udp://191.101.229.236:1337/announce
 udp://191.23.71.193:6969/announce
 udp://191.23.71.22:6969/announce
+udp://191.255.193.158:6969/announce
 udp://192.95.46.115:6969/announce
 udp://193.148.251.93:6969/announce
 udp://193.233.161.213:6969/announce
@@ -1182,6 +1189,7 @@ udp://195.123.209.40/announce
 udp://195.234.62.166:6969/announce
 udp://198.100.149.66:6969/announce
 udp://1c.premierzal.ru:6969/announce
+udp://200.111.152.53:1337/announce
 udp://200.148.11.156:6969/announce
 udp://200.148.11.61:6969/announce
 udp://200.161.254.131:6969/announce
@@ -1189,6 +1197,7 @@ udp://200.161.254.20:6969/announce
 udp://200.168.116.107:6969/announce
 udp://200.168.116.200:6969/announce
 udp://200.168.116.61:6969/announce
+udp://200.168.117.124:6969/announce
 udp://200.170.109.125:6969/announce
 udp://200.170.109.148:6969/announce
 udp://207.241.226.111:6969/announce
