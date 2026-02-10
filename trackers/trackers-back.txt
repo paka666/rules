@@ -173,6 +173,7 @@ http://200.168.117.124:6969/announce
 http://200.170.109.125:6969/announce
 http://200.170.109.148:6969/announce
 http://200.232.254.1:6969/announce
+http://201.13.50.75:6969/announce
 http://201.42.214.55:6969/announce
 http://201.43.209.254:6969/announce
 http://207.211.184.229:6969/announce
@@ -1205,6 +1206,7 @@ udp://200.168.116.61:6969/announce
 udp://200.168.117.124:6969/announce
 udp://200.170.109.125:6969/announce
 udp://200.170.109.148:6969/announce
+udp://201.13.50.75:6969/announce
 udp://207.241.226.111:6969/announce
 udp://207.241.231.226:6969/announce
 udp://208.67.16.113:8000/announce
