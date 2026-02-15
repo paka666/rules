@@ -90,6 +90,7 @@ http://177.172.61.33:6969/announce
 http://177.172.62.154:6969/announce
 http://177.172.62.240:6969/announce
 http://177.172.65.168:6969/announce
+http://177.172.66.2:6969/announce
 http://177.172.67.13:6969/announce
 http://177.173.31.33:6969/announce
 http://177.215.65.176:6969/announce
@@ -151,6 +152,7 @@ http://189.69.172.166:6969/announce
 http://189.79.12.91:6969/announce
 http://189.79.13.107:6969/announce
 http://191.23.62.111:6969/announce
+http://191.23.71.131:6969/announce
 http://191.23.71.193:6969/announce
 http://191.23.71.22:6969/announce
 http://191.255.193.158:6969/announce
@@ -1015,6 +1017,7 @@ https://tracker.loli.co.nz/announce
 https://tracker.loligirl.cn/announce
 https://tracker.m-team.cc/announce
 https://tracker.m-team.cc/announce.php
+https://tracker.manager.v6.navy/announce
 https://tracker.maya.no.eu.org/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
@@ -1129,6 +1132,7 @@ udp://177.172.61.33:6969/announce
 udp://177.172.62.154:6969/announce
 udp://177.172.62.240:6969/announce
 udp://177.172.65.168:6969/announce
+udp://177.172.66.2:6969/announce
 udp://177.172.67.13:6969/announce
 udp://177.173.31.33:6969/announce
 udp://177.215.65.176:6969/announce
@@ -1182,6 +1186,7 @@ udp://189.69.172.166:6969/announce
 udp://189.79.12.91:6969/announce
 udp://191.101.229.236:1337/announce
 udp://191.23.62.111:6969/announce
+udp://191.23.71.131:6969/announce
 udp://191.23.71.193:6969/announce
 udp://191.23.71.22:6969/announce
 udp://191.255.193.158:6969/announce
