@@ -730,6 +730,7 @@ http://tracker.linkomanija.org:2710/announce
 http://tracker.lintk.me:2710/announce
 http://tracker.loadbt.com:6969/announce
 http://tracker.lyretain.site:2710/announce
+http://tracker.memelords.xyz/announce
 http://tracker.merded.xyz/announce
 http://tracker.mg64.net:6881/announce
 http://tracker.minglong.org/announce
@@ -1030,6 +1031,7 @@ https://tracker.moxing.party:6969/announce
 https://tracker.nanoha.org/announce
 https://tracker.netmap.top:8443/announce
 https://tracker.nitrix.me/announce
+https://tracker.novy.vip/announce
 https://tracker.nyaa.tk/announce
 https://tracker.opentracker.se/announce
 https://tracker.parrotlinux.org/announce
@@ -1037,7 +1039,9 @@ https://tracker.parrotsec.org/announce
 https://tracker.pmman.tech/announce
 https://tracker.pterclub.com/announce
 https://tracker.publictorrent.net/announce
+https://tracker.puvvadi.net/announce
 https://tracker.qingwa.pro/announce
+https://tracker.qingwapt.org/announce
 https://tracker.quix.cf/announce
 https://tracker.renfei.net/announce
 https://tracker.sakurato.art:23334/announce
@@ -1273,6 +1277,7 @@ udp://38.175.99.50:6969/announce
 udp://43.154.112.29:17272/announce
 udp://43.250.54.137:6969/announce
 udp://44.30.4.4:6969/announce
+udp://44.30.4.70:6969/announce
 udp://45.13.119.213:6969/announce
 udp://45.134.88.121:6969/announce
 udp://45.154.96.35:6969/announce
@@ -1560,6 +1565,7 @@ udp://torrent.i.ng:6969/announce
 udp://torrentclub.online:54123/announce
 udp://torrentclub.space:6969/announce
 udp://torrents.artixlinux.org:6969/announce
+udp://torrentvpn.club:6990/announce
 udp://tr.bangumi.moe:6969/announce
 udp://tr.cili001.com:8070/announce
 udp://tr3.ysagin.top:2715/announce
@@ -1628,6 +1634,7 @@ udp://tracker.healthcareindia.store:1337/announce
 udp://tracker.hifimarket.in:2710/announce
 udp://tracker.hifitechindia.com:6969/announce
 udp://tracker.home.kmzs123.cn:17272/announce
+udp://tracker.huadongblower.xyz:8080/announce
 udp://tracker.ilibr.org/announce
 udp://tracker.internetwarriors.net:1337/announce
 udp://tracker.iperson.xyz:6969/announce
@@ -1662,6 +1669,7 @@ udp://tracker.publicbt.com/announce
 udp://tracker.publictracker.xyz:6969/announce
 udp://tracker.qu.ax:6969/announce
 udp://tracker.rescuecrew7.com:1337/announce
+udp://tracker.riverarmy.xyz:6969/announce
 udp://tracker.sharebro.in:6969/announce
 udp://tracker.shkinev.me:6969/announce
 udp://tracker.sigterm.xyz:6969/announce
