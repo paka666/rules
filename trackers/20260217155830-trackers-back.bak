@@ -90,6 +90,7 @@ http://177.172.61.33:6969/announce
 http://177.172.62.154:6969/announce
 http://177.172.62.240:6969/announce
 http://177.172.65.168:6969/announce
+http://177.172.66.2:6969/announce
 http://177.172.67.13:6969/announce
 http://177.173.31.33:6969/announce
 http://177.215.65.176:6969/announce
@@ -175,6 +176,7 @@ http://200.168.116.61:6969/announce
 http://200.168.117.124:6969/announce
 http://200.170.109.125:6969/announce
 http://200.170.109.148:6969/announce
+http://200.170.110.170:6969/announce
 http://200.232.254.1:6969/announce
 http://201.13.50.75:6969/announce
 http://201.42.214.55:6969/announce
@@ -710,6 +712,7 @@ http://tracker.grepler.com:6969/announce
 http://tracker.guguan.000.pe/announce
 http://tracker.h0me.cc:8880/announce
 http://tracker.hiyj.cn/announce
+http://tracker.imgdump.lol:6969/announce
 http://tracker.internetwarriors.net:1337/announce
 http://tracker.ipv6tracker.org/announce
 http://tracker.ipv6tracker.ru/announce
@@ -727,6 +730,7 @@ http://tracker.linkomanija.org:2710/announce
 http://tracker.lintk.me:2710/announce
 http://tracker.loadbt.com:6969/announce
 http://tracker.lyretain.site:2710/announce
+http://tracker.memelords.xyz/announce
 http://tracker.merded.xyz/announce
 http://tracker.mg64.net:6881/announce
 http://tracker.minglong.org/announce
@@ -1027,6 +1031,7 @@ https://tracker.moxing.party:6969/announce
 https://tracker.nanoha.org/announce
 https://tracker.netmap.top:8443/announce
 https://tracker.nitrix.me/announce
+https://tracker.novy.vip/announce
 https://tracker.nyaa.tk/announce
 https://tracker.opentracker.se/announce
 https://tracker.parrotlinux.org/announce
@@ -1034,7 +1039,9 @@ https://tracker.parrotsec.org/announce
 https://tracker.pmman.tech/announce
 https://tracker.pterclub.com/announce
 https://tracker.publictorrent.net/announce
+https://tracker.puvvadi.net/announce
 https://tracker.qingwa.pro/announce
+https://tracker.qingwapt.org/announce
 https://tracker.quix.cf/announce
 https://tracker.renfei.net/announce
 https://tracker.sakurato.art:23334/announce
@@ -1099,6 +1106,7 @@ udp://135.125.236.64:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
 udp://147.45.77.75:6969/announce
+udp://148.135.112.164:6969/announce
 udp://148.251.53.72:6969/announce
 udp://151.243.109.110:6969/announce
 udp://151.243.109.163:6969/announce
@@ -1131,6 +1139,7 @@ udp://177.172.61.33:6969/announce
 udp://177.172.62.154:6969/announce
 udp://177.172.62.240:6969/announce
 udp://177.172.65.168:6969/announce
+udp://177.172.66.2:6969/announce
 udp://177.172.67.13:6969/announce
 udp://177.173.31.33:6969/announce
 udp://177.215.65.176:6969/announce
@@ -1212,6 +1221,7 @@ udp://200.168.116.61:6969/announce
 udp://200.168.117.124:6969/announce
 udp://200.170.109.125:6969/announce
 udp://200.170.109.148:6969/announce
+udp://200.170.110.170:6969/announce
 udp://201.13.50.75:6969/announce
 udp://207.241.226.111:6969/announce
 udp://207.241.231.226:6969/announce
@@ -1267,6 +1277,7 @@ udp://38.175.99.50:6969/announce
 udp://43.154.112.29:17272/announce
 udp://43.250.54.137:6969/announce
 udp://44.30.4.4:6969/announce
+udp://44.30.4.70:6969/announce
 udp://45.13.119.213:6969/announce
 udp://45.134.88.121:6969/announce
 udp://45.154.96.35:6969/announce
@@ -1465,6 +1476,7 @@ udp://movies.zsw.ca:6969/announce
 udp://mserver.link:6969/announce
 udp://mts.tvbit.co:6969/announce
 udp://nagios.tks.sumy.ua/announce
+udp://navegador.click:6969/announce
 udp://new-line.net:6969/announce
 udp://node01.torrentonline.cc:42069/announce
 udp://node01.trackerstatus.live:42069/announce
@@ -1553,6 +1565,7 @@ udp://torrent.i.ng:6969/announce
 udp://torrentclub.online:54123/announce
 udp://torrentclub.space:6969/announce
 udp://torrents.artixlinux.org:6969/announce
+udp://torrentvpn.club:6990/announce
 udp://tr.bangumi.moe:6969/announce
 udp://tr.cili001.com:8070/announce
 udp://tr3.ysagin.top:2715/announce
@@ -1621,6 +1634,7 @@ udp://tracker.healthcareindia.store:1337/announce
 udp://tracker.hifimarket.in:2710/announce
 udp://tracker.hifitechindia.com:6969/announce
 udp://tracker.home.kmzs123.cn:17272/announce
+udp://tracker.huadongblower.xyz:8080/announce
 udp://tracker.ilibr.org/announce
 udp://tracker.internetwarriors.net:1337/announce
 udp://tracker.iperson.xyz:6969/announce
@@ -1655,6 +1669,7 @@ udp://tracker.publicbt.com/announce
 udp://tracker.publictracker.xyz:6969/announce
 udp://tracker.qu.ax:6969/announce
 udp://tracker.rescuecrew7.com:1337/announce
+udp://tracker.riverarmy.xyz:6969/announce
 udp://tracker.sharebro.in:6969/announce
 udp://tracker.shkinev.me:6969/announce
 udp://tracker.sigterm.xyz:6969/announce

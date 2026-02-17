@@ -49,6 +49,7 @@ http://15.204.239.175:6969/announce
 http://151.115.49.115:1337/announce
 http://152.231.114.51:1337/announce
 http://152.249.214.198:6969/announce
+http://152.249.214.23:6969/announce
 http://155.248.200.105/announce
 http://156.234.201.18/announce
 http://157.7.202.64:8080/announce
@@ -1113,6 +1114,7 @@ udp://151.243.109.163:6969/announce
 udp://151.80.120.114:2710/announce
 udp://152.231.114.51:1337/announce
 udp://152.249.214.198:6969/announce
+udp://152.249.214.23:6969/announce
 udp://152.53.152.105:15480/announce
 udp://152.53.152.105:1984/announce
 udp://152.53.152.105:54123/announce
@@ -1736,6 +1738,7 @@ udp://tsundere.pw:6969/announce
 udp://ttk2.nbaonlineservice.com:6969/announce
 udp://u4.trakx.crim.ist:1337/announce
 udp://u6.trakx.crim.ist:1337/announce
+udp://uabits.today:6990/announce
 udp://udp.tracker.projectk.org:23333/announce
 udp://uploads.gamecoast.net:6969/announce
 udp://us-tracker.publictracker.xyz:6969/announce
