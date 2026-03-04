@@ -248,12 +248,14 @@ archiveofourown.org
 archives.gov
 arctosia.com
 areca-backup.org
+arena.ai
 arena.taipei
 arethusa.su
 arlingtoncemetery.mil
 arte.tv
 artstation.com
 arvanstorage.ir
+arweave.org
 asacp.org
 asiaharvest.org
 asianage.com
@@ -757,6 +759,7 @@ cixiaoya.club
 ck101.com
 classicalguitarblog.net
 claude.ai
+claude.com
 cldr.unicode.org
 clearsurance.com
 clementine-player.org
@@ -2261,6 +2264,7 @@ mangafox.com
 mangafox.me
 mangmang.run
 manta.com
+manus.im
 manyvoices.news
 marc.info
 martau.com
@@ -3924,6 +3928,7 @@ wiredbytes.com
 wiredpen.com
 wireguard.com
 wisevid.com
+wispbyte.com
 withgoogle.com
 withyoutube.com
 witopia.net
@@ -3977,7 +3982,6 @@ www.gmiddle.net
 www.hoyolab.com
 www.hustlercash.com
 www.idlcoyote.com
-www.imdb.com
 www.kindleren.com
 www.lorenzetti.com.br
 www.m-sport.co.uk
