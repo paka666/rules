@@ -96,6 +96,7 @@ http://177.172.65.168:6969/announce
 http://177.172.66.2:6969/announce
 http://177.172.67.13:6969/announce
 http://177.173.31.33:6969/announce
+http://177.188.141.28:6969/announce
 http://177.215.65.176:6969/announce
 http://177.215.65.40:6969/announce
 http://177.215.67.115:6969/announce
@@ -697,6 +698,7 @@ http://tracker.encrypted-data.xyz:1337/announce
 http://tracker.enitin.xyz/announce
 http://tracker.etree.org:6969/announce
 http://tracker.ex.ua/announce
+http://tracker.exe.in.th:6969/announce
 http://tracker.fansub.id/announce
 http://tracker.fdn.fr:6969/announce
 http://tracker.file09.com/announce
@@ -911,6 +913,7 @@ https://evening-badlands-6215.herokuapp.com/announce
 https://grifon.info/announce
 https://gwp2-v19.rinet.ru/announce
 https://hcbt.pp.ua/announce
+https://http1.torrust-tracker-demo.com/announce
 https://inferno.demonoid.is/announce
 https://k.avc.cx/announce
 https://k.avc.cx/announce.php
@@ -1033,6 +1036,7 @@ https://tracker.monikadesign.uk/announce/63ea34cb9815cd28d63fc75b2f2c5a56
 https://tracker.monikadesign.uk/announce/a46be21ab845cc0d534d06fea801f95a
 https://tracker.moxing.party:6969/announce
 https://tracker.nanoha.org/announce
+https://tracker.nekomi.cn/announce
 https://tracker.netmap.top:8443/announce
 https://tracker.nitrix.me/announce
 https://tracker.novy.vip/announce
@@ -1060,6 +1064,7 @@ https://tracker.tvgc.win/announce
 https://tracker.uraniumhexafluori.de/announce
 https://tracker.vectahosting.eu/announce
 https://tracker.yemekyedim.com/announce
+https://tracker.yggleak.top/announce
 https://tracker.zhuqiy.com/announce
 https://tracker.zhuqiy.top/announce
 https://tracker1.520.jp/announce
@@ -1084,6 +1089,7 @@ https://yolo.liberbear.com/announce
 https://yuki.bt.bontal.net/announce
 https://zer0day.000webhostapp.com/announce
 udp://10.rarbg.com/announce
+udp://101.99.91.160:6969/announce
 udp://101.99.94.187:6969/announce
 udp://103.122.21.50:6969/announce
 udp://103.251.166.126:6969/announce
@@ -1147,6 +1153,7 @@ udp://177.172.65.168:6969/announce
 udp://177.172.66.2:6969/announce
 udp://177.172.67.13:6969/announce
 udp://177.173.31.33:6969/announce
+udp://177.188.141.28:6969/announce
 udp://177.215.65.176:6969/announce
 udp://177.215.65.40:6969/announce
 udp://177.215.67.115:6969/announce
@@ -1550,6 +1557,7 @@ udp://shadowshq.yi.org:6969/announce
 udp://shizzle.hammetjus.nl:6969/announce
 udp://slicie.icon256.com:8000/announce
 udp://smtp-relay.odysseylabel.com.au:6969/announce
+udp://speedtest.iperson.xyz:6969/announce
 udp://srv5.digiboy.ir:6969/announce
 udp://ssb14.nohost.me:6969/announce
 udp://stargrave.org:6969/announce
@@ -1747,6 +1755,7 @@ udp://u4.trakx.crim.ist:1337/announce
 udp://u6.trakx.crim.ist:1337/announce
 udp://uabits.today:6990/announce
 udp://udp.tracker.projectk.org:23333/announce
+udp://udp1.torrust-tracker-demo.com:6969/announce
 udp://uploads.gamecoast.net:6969/announce
 udp://us-tracker.publictracker.xyz:6969/announce
 udp://utracker.ghostchu-services.top:6969/announce
