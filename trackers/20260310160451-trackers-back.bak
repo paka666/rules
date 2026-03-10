@@ -96,6 +96,7 @@ http://177.172.65.168:6969/announce
 http://177.172.66.2:6969/announce
 http://177.172.67.13:6969/announce
 http://177.173.31.33:6969/announce
+http://177.188.141.28:6969/announce
 http://177.215.65.176:6969/announce
 http://177.215.65.40:6969/announce
 http://177.215.67.115:6969/announce
@@ -180,6 +181,7 @@ http://200.168.116.61:6969/announce
 http://200.168.117.124:6969/announce
 http://200.170.109.125:6969/announce
 http://200.170.109.148:6969/announce
+http://200.170.110.114:6969/announce
 http://200.170.110.170:6969/announce
 http://200.232.254.1:6969/announce
 http://201.13.50.75:6969/announce
@@ -582,6 +584,7 @@ http://rfc5746.mywaifu.best:6969/announce
 http://rotracker.ohys.net/announce
 http://rstracker.ohys.net/announce
 http://rt.tace.ru/announce
+http://s1124554.ha012.t.mydomain.zone/announce
 http://s926723.ha016.t.mydomain.zone/announce
 http://saltwood.top:6969/announce
 http://secure.pow7.com/announce
@@ -697,6 +700,7 @@ http://tracker.encrypted-data.xyz:1337/announce
 http://tracker.enitin.xyz/announce
 http://tracker.etree.org:6969/announce
 http://tracker.ex.ua/announce
+http://tracker.exe.in.th:6969/announce
 http://tracker.fansub.id/announce
 http://tracker.fdn.fr:6969/announce
 http://tracker.file09.com/announce
@@ -1034,6 +1038,7 @@ https://tracker.monikadesign.uk/announce/63ea34cb9815cd28d63fc75b2f2c5a56
 https://tracker.monikadesign.uk/announce/a46be21ab845cc0d534d06fea801f95a
 https://tracker.moxing.party:6969/announce
 https://tracker.nanoha.org/announce
+https://tracker.nekomi.cn/announce
 https://tracker.netmap.top:8443/announce
 https://tracker.nitrix.me/announce
 https://tracker.novy.vip/announce
@@ -1150,6 +1155,7 @@ udp://177.172.65.168:6969/announce
 udp://177.172.66.2:6969/announce
 udp://177.172.67.13:6969/announce
 udp://177.173.31.33:6969/announce
+udp://177.188.141.28:6969/announce
 udp://177.215.65.176:6969/announce
 udp://177.215.65.40:6969/announce
 udp://177.215.67.115:6969/announce
@@ -1231,6 +1237,7 @@ udp://200.168.116.61:6969/announce
 udp://200.168.117.124:6969/announce
 udp://200.170.109.125:6969/announce
 udp://200.170.109.148:6969/announce
+udp://200.170.110.114:6969/announce
 udp://200.170.110.170:6969/announce
 udp://201.13.50.75:6969/announce
 udp://207.241.226.111:6969/announce
