@@ -181,6 +181,7 @@ http://200.168.116.61:6969/announce
 http://200.168.117.124:6969/announce
 http://200.170.109.125:6969/announce
 http://200.170.109.148:6969/announce
+http://200.170.110.114:6969/announce
 http://200.170.110.170:6969/announce
 http://200.232.254.1:6969/announce
 http://201.13.50.75:6969/announce
@@ -583,6 +584,7 @@ http://rfc5746.mywaifu.best:6969/announce
 http://rotracker.ohys.net/announce
 http://rstracker.ohys.net/announce
 http://rt.tace.ru/announce
+http://s1124554.ha012.t.mydomain.zone/announce
 http://s926723.ha016.t.mydomain.zone/announce
 http://saltwood.top:6969/announce
 http://secure.pow7.com/announce
@@ -1235,6 +1237,7 @@ udp://200.168.116.61:6969/announce
 udp://200.168.117.124:6969/announce
 udp://200.170.109.125:6969/announce
 udp://200.170.109.148:6969/announce
+udp://200.170.110.114:6969/announce
 udp://200.170.110.170:6969/announce
 udp://201.13.50.75:6969/announce
 udp://207.241.226.111:6969/announce
