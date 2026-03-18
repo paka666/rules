@@ -28,6 +28,7 @@ http://119.28.71.45:8080/announce
 http://123.245.62.100:6969/announce
 http://123.245.62.104:6969/announce
 http://123.245.62.21:6969/announce
+http://123.245.62.39:6969/announce
 http://123.245.62.79:6969/announce
 http://123.245.62.83:6969/announce
 http://123.245.62.84:6969/announce
@@ -135,6 +136,7 @@ http://187.11.75.60:6969/announce
 http://187.34.25.113:6969/announce
 http://187.56.163.25:6969/announce
 http://187.57.130.109:6969/announce
+http://187.57.131.78:6969/announce
 http://187.57.132.20:6969/announce
 http://187.57.132.246:6969/announce
 http://187.57.132.65:6969/announce
@@ -544,6 +546,7 @@ http://open.tracker.cl:1337/announce
 http://open.tracker.ink:6969/announce
 http://open.trackerlist.xyz/announce
 http://openbittorrent.com/announce
+http://opentracker.91kf.top:16969/announce
 http://opentracker.acgnx.com:6869/announce
 http://opentracker.acgnx.se/announce
 http://opentracker.dg2.i2p/a
@@ -913,6 +916,7 @@ https://carbon-bonsai-621.appspot.com/announce
 https://cernet-tracker.appspot.com/announce
 https://chihaya-heroku.120181311.xyz/announce
 https://cny.fan/announce
+https://colibri.parrot.run/announce
 https://dev.tracker.cf-identity-wallet.metadata.dev.cf-deployments.org/announce
 https://docker-tracker-production.up.railway.app/announce
 https://evening-badlands-6215.herokuapp.com/announce
@@ -1087,6 +1091,7 @@ https://ttk.pp.ua/announce
 https://ttracker.just-h.party/announce
 https://voxhost.fr/announce
 https://w.wwwww.wtf/announce
+https://wolf.parrot.run/announce
 https://wsad.run.place/announce
 https://www.peckservers.com:9443/announce
 https://www.wareztorrent.com/announce
@@ -1120,6 +1125,7 @@ udp://132.226.6.145:6969/announce
 udp://135.125.106.92:6969/announce
 udp://135.125.202.143:6969/announce
 udp://135.125.236.64:6969/announce
+udp://138.124.183.78:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
 udp://147.45.77.75:6969/announce
@@ -1197,6 +1203,7 @@ udp://187.11.75.60:6969/announce
 udp://187.34.25.113:6969/announce
 udp://187.56.163.25:6969/announce
 udp://187.57.130.109:6969/announce
+udp://187.57.131.78:6969/announce
 udp://187.57.132.20:6969/announce
 udp://187.57.132.246:6969/announce
 udp://187.57.132.65:6969/announce
