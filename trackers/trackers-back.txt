@@ -1343,6 +1343,7 @@ udp://62.60.157.92:6969/announce
 udp://69.30.233.234:6969/announce
 udp://6ahddutb1ucc3cp.ru:6969/announce
 udp://6rt.tace.ru/announce
+udp://74.119.149.136:6969/announce
 udp://74.119.150.221:6969/announce
 udp://74.82.52.209:6969/announce
 udp://77.91.85.95:6969/announce
