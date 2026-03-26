@@ -84,6 +84,7 @@ http://171.104.226.221:6969/announce
 http://171.104.226.25:6969/announce
 http://171.104.226.31:6969/announce
 http://171.104.226.87:6969/announce
+http://172.245.168.134/announce
 http://173.254.204.71:1096/announce
 http://177.112.215.99:6969/announce
 http://177.139.44.78:6969/announce
@@ -153,6 +154,7 @@ http://189.18.96.9:6969/announce
 http://189.18.97.201:6969/announce
 http://189.18.97.57:6969/announce
 http://189.69.167.105:6969/announce
+http://189.69.168.147:6969/announce
 http://189.69.169.237:6969/announce
 http://189.69.169.89:6969/announce
 http://189.69.171.248:6969/announce
@@ -445,6 +447,7 @@ http://btracker.top:11451/announce
 http://bttracker.crunchbanglinux.org:6969/announce
 http://bttracker.debian.org:6969/announce
 http://btx.anifilm.tv/announce.php
+http://bughome.de:2832/announce
 http://buny.uk:6969/announce
 http://bvarf.tracker.sh:2086/announce
 http://bz.tracker.bz/announce
@@ -856,6 +859,7 @@ http://uatracker.net/announce.php
 http://unknownsite.de:6969/announce
 http://uraniumhexafluori.de:1919/announce
 http://v6-tracker.0g.cx:6969/announce
+http://vps-c1adea63.vps.ovh.net:6969/announce
 http://vps-dd0a0715.vps.ovh.net:6969/announce
 http://vps02.net.orel.ru/announce
 http://web.open-tracker.cf:6969/announce
@@ -986,6 +990,7 @@ https://track3r.site/announce
 https://tracker-zhuqiy.xn--1r3au8b.space/announce
 https://tracker.3moredays.com/announce
 https://tracker.4.babico.name.tr/announce
+https://tracker.7471.top/announce
 https://tracker.aburaya.live/announce
 https://tracker.alaskantf.com/announce
 https://tracker.amelia.fun/announce
@@ -1219,6 +1224,7 @@ udp://189.18.96.9:6969/announce
 udp://189.18.97.201:6969/announce
 udp://189.18.97.57:6969/announce
 udp://189.69.167.105:6969/announce
+udp://189.69.168.147:6969/announce
 udp://189.69.169.237:6969/announce
 udp://189.69.169.89:6969/announce
 udp://189.69.170.69:6969/announce
