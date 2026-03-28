@@ -100,6 +100,7 @@ http://177.172.66.2:6969/announce
 http://177.172.67.13:6969/announce
 http://177.173.31.33:6969/announce
 http://177.188.141.28:6969/announce
+http://177.215.65.114:6969/announce
 http://177.215.65.176:6969/announce
 http://177.215.65.40:6969/announce
 http://177.215.67.115:6969/announce
@@ -154,6 +155,7 @@ http://189.18.96.9:6969/announce
 http://189.18.97.201:6969/announce
 http://189.18.97.57:6969/announce
 http://189.69.167.105:6969/announce
+http://189.69.168.147:6969/announce
 http://189.69.169.237:6969/announce
 http://189.69.169.89:6969/announce
 http://189.69.171.248:6969/announce
@@ -327,6 +329,7 @@ http://62.60.157.92:6969/announce
 http://65.108.2.176:2710/announce
 http://65.130.205.148:9000/announce
 http://66.154.105.124:6969/announce
+http://66691337.xyz:6969/announce
 http://74.82.52.209:6969/announce
 http://75.127.14.224:2710/announce
 http://79.137.198.96:6969/announce
@@ -989,6 +992,7 @@ https://track3r.site/announce
 https://tracker-zhuqiy.xn--1r3au8b.space/announce
 https://tracker.3moredays.com/announce
 https://tracker.4.babico.name.tr/announce
+https://tracker.7471.top/announce
 https://tracker.aburaya.live/announce
 https://tracker.alaskantf.com/announce
 https://tracker.amelia.fun/announce
@@ -1176,6 +1180,7 @@ udp://177.172.66.2:6969/announce
 udp://177.172.67.13:6969/announce
 udp://177.173.31.33:6969/announce
 udp://177.188.141.28:6969/announce
+udp://177.215.65.114:6969/announce
 udp://177.215.65.176:6969/announce
 udp://177.215.65.40:6969/announce
 udp://177.215.67.115:6969/announce
@@ -1193,6 +1198,7 @@ udp://184.105.226.26:6969/announce
 udp://185.102.219.163:6969/announce
 udp://185.121.168.96:1337/announce
 udp://185.121.168.96:6969/announce
+udp://185.146.233.150:6969/announce
 udp://185.181.60.155/announce
 udp://185.181.60.67/announce
 udp://185.189.13.108:6969/announce
@@ -1222,6 +1228,7 @@ udp://189.18.96.9:6969/announce
 udp://189.18.97.201:6969/announce
 udp://189.18.97.57:6969/announce
 udp://189.69.167.105:6969/announce
+udp://189.69.168.147:6969/announce
 udp://189.69.169.237:6969/announce
 udp://189.69.169.89:6969/announce
 udp://189.69.170.69:6969/announce
