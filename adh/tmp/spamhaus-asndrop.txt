@@ -86,6 +86,7 @@ fibacloud.com.
 fiberlinkcc.com.
 fineproxy.org.
 fly-group.ru.
+frostyhosting.
 fulltimehosting.net.
 g-w.bz.
 galeonllc.ru.
@@ -155,6 +156,7 @@ netiface.co.uk.
 netinnovation.net.
 netip.com.ua.
 networldtron.net.
+nexon.co.kr.
 niutelecom.com.
 nodonorte.net.ar.
 noobtech.in.
