@@ -167,6 +167,7 @@ http://191.23.62.111:6969/announce
 http://191.23.71.131:6969/announce
 http://191.23.71.193:6969/announce
 http://191.23.71.22:6969/announce
+http://191.254.171.209:6969/announce
 http://191.255.193.158:6969/announce
 http://192.3.165.191:6969/announce
 http://192.9.228.30:6699/announce
@@ -1242,6 +1243,7 @@ udp://191.23.62.111:6969/announce
 udp://191.23.71.131:6969/announce
 udp://191.23.71.193:6969/announce
 udp://191.23.71.22:6969/announce
+udp://191.254.171.209:6969/announce
 udp://191.255.193.158:6969/announce
 udp://192.95.46.115:6969/announce
 udp://193.148.251.93:6969/announce
@@ -1708,6 +1710,7 @@ udp://tracker.mg64.net:6969/announce
 udp://tracker.mirrorbay.org:6969/announce
 udp://tracker.moeking.me:6969/announce
 udp://tracker.monitorit4.me:6969/announce
+udp://tracker.nyaa.vc:6969/announce
 udp://tracker.ololosh.space:6969/announce
 udp://tracker.open-data.network:8888/announce
 udp://tracker.openbittorrent.com/announce
@@ -1761,6 +1764,7 @@ udp://tracker.valete.tf:9999/announce
 udp://tracker.vds.nz:6969/announce
 udp://tracker.waaa.moe:6969/announce
 udp://tracker.wepzone.net:6969/announce
+udp://tracker.wildkat.net:6969/announce
 udp://tracker.x6c.co:6969/announce
 udp://tracker.xor.st:6969/announce
 udp://tracker.yangxiaoguozi.cn:6969/announce
