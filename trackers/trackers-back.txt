@@ -1457,6 +1457,7 @@ udp://carr.codes:6969/announce
 udp://cdn-1.gamecoast.org:6969/announce
 udp://chouchou.top:8080/announce
 udp://code2chicken.nl:6969/announce
+udp://coeus.torrentonline.cc:42069/announce
 udp://colivioo.com:6969/announce
 udp://concen.org:6969/announce
 udp://coppersurfer.tk:6969/announce
