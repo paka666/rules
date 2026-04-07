@@ -432,6 +432,7 @@ http://bt.ktkj.com:8080/announce
 http://bt.nnm-club.info:2710/announce
 http://bt.okmp3.ru:2710/announce
 http://bt.poletracker.org:2710/announce
+http://bt.publicvm.com:8080/announce
 http://bt.pusacg.org:8080/announce
 http://bt.rer.lol:2710/announce
 http://bt.rghost.net/announce
@@ -968,6 +969,7 @@ https://torrent.tracker.durukanbal.com/announce
 https://torrent.ubuntu.com/announce
 https://torrents.linuxmint.com/announce
 https://torrents.linuxmint.com/announce.php
+https://torrents.tmtime.dev/announce
 https://torrust.canofsocks.com/announce
 https://tp.m-team.cc/announce
 https://tp.m-team.cc/announce.php
@@ -1247,6 +1249,7 @@ udp://191.23.71.193:6969/announce
 udp://191.23.71.22:6969/announce
 udp://191.254.171.209:6969/announce
 udp://191.255.193.158:6969/announce
+udp://192.3.130.53:1337/announce
 udp://192.95.46.115:6969/announce
 udp://193.148.251.93:6969/announce
 udp://193.187.90.12:6969/announce
@@ -1456,6 +1459,7 @@ udp://carr.codes:6969/announce
 udp://cdn-1.gamecoast.org:6969/announce
 udp://chouchou.top:8080/announce
 udp://code2chicken.nl:6969/announce
+udp://coeus.torrentonline.cc:42069/announce
 udp://colivioo.com:6969/announce
 udp://concen.org:6969/announce
 udp://coppersurfer.tk:6969/announce
@@ -1693,6 +1697,7 @@ udp://tracker.grepler.com:6969/announce
 udp://tracker.healthcareindia.store:1337/announce
 udp://tracker.hifimarket.in:2710/announce
 udp://tracker.hifitechindia.com:6969/announce
+udp://tracker.hismz.cn:6969/announce
 udp://tracker.home.kmzs123.cn:17272/announce
 udp://tracker.huadongblower.xyz:8080/announce
 udp://tracker.ilibr.org/announce
@@ -1822,6 +1827,7 @@ udp://yahor.ftp.sh:6969/announce
 udp://yahor.of.by:6969/announce
 udp://yann5.hexanyn.fr:6969/announce
 udp://yuki.bt.bontal.net:6969/announce
+udp://yuptracker-eu.gaijinent.com:27022/announce
 udp://z.mercax.com:53/announce
 udp://zecircle.xyz:6969/announce
 udp://zer0day.ch:1337/announce
