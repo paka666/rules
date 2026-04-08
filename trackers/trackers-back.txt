@@ -1731,6 +1731,7 @@ udp://tracker.playground.ru:6969/announce
 udp://tracker.plx.im:6969/announce
 udp://tracker.pomf.se/announce
 udp://tracker.prq.to/announce
+udp://tracker.ptrmc.net:6969/announce
 udp://tracker.publicbt.com/announce
 udp://tracker.publictracker.xyz:6969/announce
 udp://tracker.qu.ax:6969/announce
