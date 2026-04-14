@@ -17,6 +17,8 @@ http://107.189.2.131:1337/announce
 http://107.189.31.134:6969/announce
 http://107.189.7.143:6969/announce
 http://109.121.134.121:1337/announce
+http://113.13.6.40:6969/announce
+http://113.17.152.163:6969/announce
 http://114.55.113.60:6969/announce
 http://116.252.176.125:6969/announce
 http://116.9.207.121:6969/announce
@@ -191,6 +193,7 @@ http://200.168.116.61:6969/announce
 http://200.168.117.124:6969/announce
 http://200.170.109.125:6969/announce
 http://200.170.109.148:6969/announce
+http://200.170.109.194:6969/announce
 http://200.170.110.114:6969/announce
 http://200.170.110.170:6969/announce
 http://200.232.254.1:6969/announce
@@ -1278,6 +1281,7 @@ udp://200.168.116.61:6969/announce
 udp://200.168.117.124:6969/announce
 udp://200.170.109.125:6969/announce
 udp://200.170.109.148:6969/announce
+udp://200.170.109.194:6969/announce
 udp://200.170.110.114:6969/announce
 udp://200.170.110.170:6969/announce
 udp://201.13.50.75:6969/announce
@@ -1799,6 +1803,7 @@ udp://tracker3.t-1.org:6969/announce
 udp://tracker4.itzmx.com:2710/announce
 udp://tracker4.leechshield.link:6969/announce
 udp://tracker4.piratux.com:6969/announce
+udp://trackthis.cyber.pz.it:1337/announce
 udp://trl-zhuqiy.dgj055.icu/announce
 udp://trl-zhuqiy.dgj055.icu:6969/announce
 udp://ts.populargamers.co.za:6969/announce
@@ -1818,6 +1823,7 @@ udp://v74853.hosted-by-vdsina.com:6969/announce
 udp://valakas.rollo.dnsabr.com:2710/announce
 udp://vibe.community:6969/announce
 udp://vibe.sleepyinternetfun.xyz:1738/announce
+udp://vito-tracker.duckdns.org:6969/announce
 udp://vps-dd0a0715.vps.ovh.net:6969/announce
 udp://wepzone.net:6969/announce
 udp://www.2600.com:6969/announce
