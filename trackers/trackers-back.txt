@@ -1564,6 +1564,7 @@ udp://open.demonii.si/announce
 udp://open.demonoid.ch:6969/announce
 udp://open.dstud.io:6969/announce
 udp://open.free-tracker.ga:6969/announce
+udp://open.ftorrent.com/announce
 udp://open.publictracker.xyz:6969/announce
 udp://open.stealth.si/announce
 udp://open.tracker.cl:1337/announce
