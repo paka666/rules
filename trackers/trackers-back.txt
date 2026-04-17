@@ -96,6 +96,7 @@ http://177.139.46.160:6969/announce
 http://177.139.47.105:6969/announce
 http://177.139.47.18:6969/announce
 http://177.139.47.92:6969/announce
+http://177.16.198.58:6969/announce
 http://177.172.61.33:6969/announce
 http://177.172.62.154:6969/announce
 http://177.172.62.240:6969/announce
@@ -1184,6 +1185,7 @@ udp://177.139.46.160:6969/announce
 udp://177.139.47.105:6969/announce
 udp://177.139.47.18:6969/announce
 udp://177.139.47.92:6969/announce
+udp://177.16.198.58:6969/announce
 udp://177.172.61.33:6969/announce
 udp://177.172.62.154:6969/announce
 udp://177.172.62.240:6969/announce
@@ -1633,6 +1635,7 @@ udp://thouvenin.cloud:6969/announce
 udp://tk1.trackerservers.com:8080/announce
 udp://tk2.trackerservers.com:8080/announce
 udp://tk4.leechshield.link:6969/announce
+udp://torrent.bowed.net:8081/announce
 udp://torrent.gresille.org/announce
 udp://torrent.i.ng:6969/announce
 udp://torrentclub.online:54123/announce
