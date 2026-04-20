@@ -18,6 +18,7 @@ http://107.189.31.134:6969/announce
 http://107.189.7.143:6969/announce
 http://109.121.134.121:1337/announce
 http://113.13.6.40:6969/announce
+http://113.16.153.249:6969/announce
 http://113.16.155.111:6969/announce
 http://113.16.155.116:6969/announce
 http://113.16.155.146:6969/announce
