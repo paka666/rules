@@ -18,10 +18,12 @@ http://107.189.31.134:6969/announce
 http://107.189.7.143:6969/announce
 http://109.121.134.121:1337/announce
 http://113.13.6.40:6969/announce
+http://113.16.153.249:6969/announce
 http://113.16.155.111:6969/announce
 http://113.16.155.116:6969/announce
 http://113.16.155.146:6969/announce
 http://113.17.152.163:6969/announce
+http://113.17.152.249:6969/announce
 http://114.55.113.60:6969/announce
 http://116.252.176.125:6969/announce
 http://116.9.207.121:6969/announce
@@ -624,6 +626,7 @@ http://shubt.net:2710/announce
 http://siambit.com/announce.php
 http://siambit.org/announce.php
 http://sigmatracker.i2p/a
+http://siwserver.duckdns.org:9900/announce
 http://smurfsoft.com:6969/announce
 http://speedtest.iperson.xyz:6969/announce
 http://sukebei.tracker.wf:8888/announce
