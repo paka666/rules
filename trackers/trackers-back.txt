@@ -965,6 +965,7 @@ https://k3tracker.cc/announce/0b0b5b2bb71770aa0df56f80a4863f07
 https://mathkangaroo.jp/announce
 https://nyaa.tracker.wf:7777/announce
 https://o-unkusrx.cloud.okteto.net/announce
+https://open.ftorrent.com/announce
 https://open.kickasstracker.com/announce
 https://opentracker.8880085.xyz/announce
 https://opentracker.cc/announce
@@ -1499,6 +1500,7 @@ udp://burmese.app:6969/announce
 udp://camera.lei001.com:6969/announce
 udp://carr.codes:6969/announce
 udp://cdn-1.gamecoast.org:6969/announce
+udp://cerf.cs.umd.edu:8000/announce
 udp://chouchou.top:8080/announce
 udp://code2chicken.nl:6969/announce
 udp://coeus.torrentonline.cc:42069/announce
