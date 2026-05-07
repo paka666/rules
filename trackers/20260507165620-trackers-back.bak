@@ -965,6 +965,7 @@ https://k3tracker.cc/announce/0b0b5b2bb71770aa0df56f80a4863f07
 https://mathkangaroo.jp/announce
 https://nyaa.tracker.wf:7777/announce
 https://o-unkusrx.cloud.okteto.net/announce
+https://open.ftorrent.com/announce
 https://open.kickasstracker.com/announce
 https://opentracker.8880085.xyz/announce
 https://opentracker.cc/announce
@@ -1065,6 +1066,7 @@ https://tracker.kitaujisub.site/announce.php?authkey=215|10003|j46n2q
 https://tracker.kuroy.me/announce
 https://tracker.leechshield.link/announce
 https://tracker.lelux.fi/announce
+https://tracker.lenition.de/announce
 https://tracker.lilithraws.cf/announce
 https://tracker.lilithraws.org/announce
 https://tracker.linvk.com/announce
@@ -1100,6 +1102,7 @@ https://tracker.qingwapt.org/announce
 https://tracker.quix.cf/announce
 https://tracker.renfei.net/announce
 https://tracker.sakurato.art:23334/announce
+https://tracker.samcze.pl/announce
 https://tracker.shittyurl.org/announce
 https://tracker.skynetcloud.site:8443/announce
 https://tracker.sloppyta.co/announce
@@ -1156,7 +1159,10 @@ udp://109.201.134.183/announce
 udp://11.rarbg.com/announce
 udp://111.90.151.241:6969/announce
 udp://114.55.113.60:6969/announce
+udp://116.202.177.184:6969/announce
+udp://118.196.100.63:6969/announce
 udp://119.28.71.45:8080/announce
+udp://120.78.150.131:6969/announce
 udp://128.199.70.66:5944/announce
 udp://132.226.6.145:6969/announce
 udp://132.243.174.78:6969/announce
@@ -1186,6 +1192,8 @@ udp://159.195.43.181/announce
 udp://159.195.43.181:6969/announce
 udp://161.97.67.210:6969/announce
 udp://163.172.29.130/announce
+udp://163.5.63.253:6990/announce
+udp://164.152.110.70:6969/announce
 udp://167.99.185.219:6969/announce
 udp://168.235.67.63:6969/announce
 udp://172.105.235.127:6969/announce
@@ -1212,6 +1220,7 @@ udp://177.215.65.114:6969/announce
 udp://177.215.65.176:6969/announce
 udp://177.215.65.40:6969/announce
 udp://177.215.67.115:6969/announce
+udp://177.32.238.49:6969/announce
 udp://178.128.94.74:6969/announce
 udp://178.170.48.154:1337/announce
 udp://178.33.73.26:2710/announce
@@ -1364,6 +1373,7 @@ udp://44.30.4.4:6969/announce
 udp://44.30.4.70:6969/announce
 udp://45.13.119.213:6969/announce
 udp://45.134.88.121:6969/announce
+udp://45.137.199.107:6969/announce
 udp://45.154.96.35:6969/announce
 udp://45.7.231.102/announce
 udp://45.9.60.30:6969/announce
@@ -1386,6 +1396,7 @@ udp://51.222.82.36:6969/announce
 udp://51.254.244.161:6969/announce
 udp://51.68.174.87:6969/announce
 udp://51.81.222.188:6969/announce
+udp://52.211.139.85:27022/announce
 udp://52.58.128.163:6969/announce
 udp://54.36.179.216:6969/announce
 udp://54.39.48.3:6969/announce
@@ -1414,6 +1425,7 @@ udp://83.102.180.21/announce
 udp://83.31.31.143:6969/announce
 udp://84.54.51.78:6969/announce
 udp://85.17.19.180/announce
+udp://87.106.210.134:6969/announce
 udp://88.80.22.67:2710/announce
 udp://88.80.28.7:6969/announce
 udp://88.99.2.212:6969/announce
@@ -1429,6 +1441,7 @@ udp://91.186.213.204:6969/announce
 udp://91.211.5.21:6969/announce
 udp://91.216.110.53:451/announce
 udp://91.218.230.81:6969/announce
+udp://91.98.161.68:6969/announce
 udp://93.104.214.40:6969/announce
 udp://93.158.213.92:1337/announce
 udp://94-227-232-84.access.telenet.be:6969/announce
@@ -1487,6 +1500,7 @@ udp://burmese.app:6969/announce
 udp://camera.lei001.com:6969/announce
 udp://carr.codes:6969/announce
 udp://cdn-1.gamecoast.org:6969/announce
+udp://cerf.cs.umd.edu:8000/announce
 udp://chouchou.top:8080/announce
 udp://code2chicken.nl:6969/announce
 udp://coeus.torrentonline.cc:42069/announce
@@ -1792,6 +1806,7 @@ udp://tracker.therarbg.to:6969/announce
 udp://tracker.tiny-vps.com:6969/announce
 udp://tracker.tnl.one:8000/announce
 udp://tracker.torrent.eu.org:451/announce
+udp://tracker.torrentclaw.com:1337/announce
 udp://tracker.torrust-demo.com:6969/announce
 udp://tracker.trackarr.org:6969/announce
 udp://tracker.trackerfix.com/announce
