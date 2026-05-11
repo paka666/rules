@@ -24,6 +24,7 @@ auproxies.com.
 avtotrans.
 bakrietelecom.com.
 berch.co.uk.
+berdiev-ruslan-mukhabatovich.
 bhagwatsoft.in.
 bignet.ua.
 biil.ru.
@@ -263,6 +264,7 @@ vip-net.net.
 virtualine.org.
 volumedrive.com.
 vonie.net.
+vpsdedicated.net.
 vpsvault.host.
 webwiresolutions.com.
 whitelabel.sh.
