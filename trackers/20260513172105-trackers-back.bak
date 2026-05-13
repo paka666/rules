@@ -137,6 +137,7 @@ http://182.176.139.129:6969/announce
 http://185.121.24.141:6969/announce
 http://185.130.47.2:6969/announce
 http://185.148.3.231/announce
+http://185.171.202.111:6969/announce
 http://185.185.40.51:6969/announce
 http://185.185.40.95:6969/announce
 http://185.197.195.20:1919/announce
@@ -167,6 +168,7 @@ http://189.0.78.245:6969/announce
 http://189.110.233.96:6969/announce
 http://189.18.126.32:6969/announce
 http://189.18.126.49:6969/announce
+http://189.18.127.21:6969/announce
 http://189.18.163.167:6969/announce
 http://189.18.164.36:6969/announce
 http://189.18.96.199:6969/announce
@@ -1174,6 +1176,7 @@ udp://135.125.236.64:6969/announce
 udp://138.124.183.78:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
+udp://147.45.74.251:6969/announce
 udp://147.45.77.75:6969/announce
 udp://148.135.112.164:6969/announce
 udp://148.251.53.72:6969/announce
@@ -1240,6 +1243,7 @@ udp://185.121.168.96:1337/announce
 udp://185.121.168.96:6969/announce
 udp://185.121.24.141:6969/announce
 udp://185.146.233.150:6969/announce
+udp://185.171.202.111:6969/announce
 udp://185.181.60.155/announce
 udp://185.181.60.67/announce
 udp://185.189.13.108:6969/announce
@@ -1267,6 +1271,7 @@ udp://188.165.253.109:1337/announce
 udp://189.0.78.245:6969/announce
 udp://189.18.126.32:6969/announce
 udp://189.18.126.49:6969/announce
+udp://189.18.127.21:6969/announce
 udp://189.18.163.167:6969/announce
 udp://189.18.96.9:6969/announce
 udp://189.18.97.201:6969/announce
@@ -1381,6 +1386,7 @@ udp://45.7.231.102/announce
 udp://45.9.60.30:6969/announce
 udp://46.138.242.240:6969/announce
 udp://46.4.109.148:6969/announce
+udp://46.59.69.118:6969/announce
 udp://47.ip-51-68-199.eu:6969/announce
 udp://5.102.159.190:6969/announce
 udp://5.196.67.51:6969/announce
@@ -1856,9 +1862,11 @@ udp://trl-zhuqiy.dgj055.icu:6969/announce
 udp://ts.populargamers.co.za:6969/announce
 udp://tsundere.pw:6969/announce
 udp://ttk2.nbaonlineservice.com:6969/announce
+udp://u.peer-exchange.download:6969/announce
 udp://u4.trakx.crim.ist:1337/announce
 udp://u6.trakx.crim.ist:1337/announce
 udp://uabits.today:6990/announce
+udp://udp.trackarr.org:6969/announce
 udp://udp.tracker.projectk.org:23333/announce
 udp://udp1.torrust-tracker-demo.com:6969/announce
 udp://uploads.gamecoast.net:6969/announce
