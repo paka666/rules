@@ -143,6 +143,7 @@ link-host.com.
 liptel.net.ua.
 livecomm.
 livela.
+lordvps.net.
 mabasafenet.com.
 madgenius.com.
 management-alliance-group.
@@ -242,6 +243,7 @@ srjnhospitality.com.
 sshvps.net.
 ssnet.eu.
 stark-industries.solutions.
+stat-cons.
 stealthvm.net.
 stimllc.ru.
 sufia.tv.
