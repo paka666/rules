@@ -1,3 +1,2 @@
 http://nyaaplus.i2p:80/announce
 http://tracker.nyaa2p.i2p:80/announce
-wss://tracker.btorrent.xyz:443
