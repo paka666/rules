@@ -23,6 +23,7 @@ http://113.13.7.124:6969/announce
 http://113.13.7.90:6969/announce
 http://113.16.152.171:6969/announce
 http://113.16.152.94:6969/announce
+http://113.16.153.116:6969/announce
 http://113.16.153.192:6969/announce
 http://113.16.153.249:6969/announce
 http://113.16.153.98:6969/announce
@@ -42,6 +43,8 @@ http://113.17.152.30:6969/announce
 http://113.17.153.206:6969/announce
 http://113.17.153.227:6969/announce
 http://113.17.153.71:6969/announce
+http://113.17.66.164:6969/announce
+http://113.17.66.235:6969/announce
 http://113.17.66.72:6969/announce
 http://113.17.67.93:6969/announce
 http://114.55.113.60:6969/announce
@@ -441,6 +444,7 @@ http://alpha.torrenttracker.nl/announce
 http://anidex.moe:6969/announce
 http://anisource.spb.ru/announce
 http://announce.partis.si/announce
+http://announce.sktorrent.eu:6969/announce
 http://announce.torrentsmd.com:6969/announce
 http://asiatorrent.ddns.net:51413/announce
 http://asiatorrent.giize.com:51413/announce
@@ -512,6 +516,7 @@ http://concen.org:6969/announce
 http://cpleft.com:2710/announce
 http://data-bg.net/announce.php
 http://datascene.net/announce.php
+http://de7c0e7a567e.sn.mynetname.net:59002/announce
 http://debuz.com:6969/announce
 http://denis.stalker.h3q.com/announce.php
 http://dht.dhtclub.com:666/announce
@@ -638,6 +643,7 @@ http://retracker.krs-ix.ru/announce
 http://retracker.ohys.net/announce
 http://retracker.seven-sky.net/announce
 http://retracker.spark-rostov.ru/announce
+http://retracker01-msk-virt.corbina.net/announce
 http://rfc5746.mywaifu.best:6969/announce
 http://rotracker.ohys.net/announce
 http://rstracker.ohys.net/announce
@@ -822,6 +828,7 @@ http://tracker.openzim.org/announce
 http://tracker.pcfreetime.com:6969/announce
 http://tracker.peckservers.com:9000/announce
 http://tracker.pimp4003.net/announce
+http://tracker.plx.im:6969/announce
 http://tracker.pow7.com/announce
 http://tracker.privateseedbox.xyz:2710/announce
 http://tracker.publictorrent.net/announce
@@ -1055,6 +1062,7 @@ https://tracker.anibt.net/announce
 https://tracker.baka.ink/announce
 https://tracker.bangumi.zip/announce
 https://tracker.belmult.online/announce
+https://tracker.bigbewbs.online/announce
 https://tracker.bjut.jp/announce
 https://tracker.bt-hash.com/announce
 https://tracker.bt4g.com/announce
@@ -1771,6 +1779,7 @@ udp://tracker.ddunlimited.net:6969/announce
 udp://tracker.deadorbit.nl:6969/announce
 udp://tracker.dler.com:6969/announce
 udp://tracker.dler.org:6969/announce
+udp://tracker.dorcus.digital:1337/announce
 udp://tracker.draatman.uk:6969/announce
 udp://tracker.ds.is:6969/announce
 udp://tracker.ducks.party:1984/announce
