@@ -20,6 +20,8 @@ http://109.121.134.121:1337/announce
 http://113.13.6.197:6969/announce
 http://113.13.6.40:6969/announce
 http://113.13.7.124:6969/announce
+http://113.13.7.149:6969/announce
+http://113.13.7.186:6969/announce
 http://113.13.7.90:6969/announce
 http://113.16.152.171:6969/announce
 http://113.16.152.94:6969/announce
@@ -46,6 +48,7 @@ http://113.17.153.71:6969/announce
 http://113.17.66.164:6969/announce
 http://113.17.66.235:6969/announce
 http://113.17.66.72:6969/announce
+http://113.17.67.141:6969/announce
 http://113.17.67.93:6969/announce
 http://114.55.113.60:6969/announce
 http://116.252.176.125:6969/announce
@@ -129,6 +132,7 @@ http://177.172.61.33:6969/announce
 http://177.172.62.154:6969/announce
 http://177.172.62.240:6969/announce
 http://177.172.65.168:6969/announce
+http://177.172.66.223:6969/announce
 http://177.172.66.2:6969/announce
 http://177.172.67.13:6969/announce
 http://177.173.31.33:6969/announce
@@ -1252,6 +1256,7 @@ udp://177.172.61.33:6969/announce
 udp://177.172.62.154:6969/announce
 udp://177.172.62.240:6969/announce
 udp://177.172.65.168:6969/announce
+udp://177.172.66.223:6969/announce
 udp://177.172.66.2:6969/announce
 udp://177.172.67.13:6969/announce
 udp://177.173.31.33:6969/announce
