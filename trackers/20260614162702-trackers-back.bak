@@ -22,12 +22,14 @@ http://113.13.6.40:6969/announce
 http://113.13.7.124:6969/announce
 http://113.13.7.149:6969/announce
 http://113.13.7.186:6969/announce
+http://113.13.7.215:6969/announce
 http://113.13.7.90:6969/announce
 http://113.16.152.171:6969/announce
 http://113.16.152.94:6969/announce
 http://113.16.153.116:6969/announce
 http://113.16.153.192:6969/announce
 http://113.16.153.249:6969/announce
+http://113.16.153.28:6969/announce
 http://113.16.153.98:6969/announce
 http://113.16.154.16:6969/announce
 http://113.16.154.70:6969/announce
@@ -155,6 +157,7 @@ http://179.98.51.66:6969/announce
 http://180.112.57.159:6969/announce
 http://180.113.232.20:6969/announce
 http://180.114.103.80:6969/announce
+http://180.139.151.58:6969/announce
 http://180.97.219.76:8070/announce
 http://182.176.139.129:6969/announce
 http://185.121.24.141:6969/announce
@@ -228,6 +231,7 @@ http://200.148.11.61:6969/announce
 http://200.161.254.131:6969/announce
 http://200.161.254.20:6969/announce
 http://200.168.116.107:6969/announce
+http://200.168.116.191:6969/announce
 http://200.168.116.200:6969/announce
 http://200.168.116.61:6969/announce
 http://200.168.117.124:6969/announce
@@ -1207,6 +1211,7 @@ udp://119.28.71.45:8080/announce
 udp://120.78.150.131:6969/announce
 udp://128.199.70.66:5944/announce
 udp://132.226.6.145:6969/announce
+udp://132.243.161.144:6969/announce
 udp://132.243.174.78:6969/announce
 udp://135.125.106.92:6969/announce
 udp://135.125.202.143:6969/announce
@@ -1228,6 +1233,7 @@ udp://152.249.214.23:6969/announce
 udp://152.53.152.105:15480/announce
 udp://152.53.152.105:1984/announce
 udp://152.53.152.105:54123/announce
+udp://152.53.194.103:54123/announce
 udp://152.89.29.128:6969/announce
 udp://154.40.43.165:6969/announce
 udp://156.234.201.18/announce
@@ -1333,6 +1339,7 @@ udp://191.254.171.209:6969/announce
 udp://191.255.193.158:6969/announce
 udp://192.3.130.53:1337/announce
 udp://192.95.46.115:6969/announce
+udp://193.148.251.143:6969/announce
 udp://193.148.251.93:6969/announce
 udp://193.187.90.12:6969/announce
 udp://193.233.161.213:6969/announce
@@ -1353,6 +1360,7 @@ udp://200.148.11.61:6969/announce
 udp://200.161.254.131:6969/announce
 udp://200.161.254.20:6969/announce
 udp://200.168.116.107:6969/announce
+udp://200.168.116.191:6969/announce
 udp://200.168.116.200:6969/announce
 udp://200.168.116.61:6969/announce
 udp://200.168.117.124:6969/announce
@@ -1431,6 +1439,7 @@ udp://46.4.109.148:6969/announce
 udp://46.59.69.118:6969/announce
 udp://47.ip-51-68-199.eu:6969/announce
 udp://5.102.159.190:6969/announce
+udp://5.135.104.146:6969/announce
 udp://5.196.67.51:6969/announce
 udp://5.196.89.204:6969/announce
 udp://5.255.124.190:6969/announce
@@ -1482,6 +1491,7 @@ udp://88.80.22.67:2710/announce
 udp://88.80.28.7:6969/announce
 udp://88.99.2.212:6969/announce
 udp://89.110.76.229:6969/announce
+udp://89.117.57.95:1337/announce
 udp://89.234.156.205/announce
 udp://89.234.156.205:451/announce
 udp://89.36.216.8:6969/announce
@@ -1833,6 +1843,7 @@ udp://tracker.openbtba.com:6969/announce
 udp://tracker.opentorrent.top:6969/announce
 udp://tracker.opentrackr.org:1337/announce
 udp://tracker.orsvarn.com:6969/announce
+udp://tracker.peerfect.org:6969/announce
 udp://tracker.picotorrent.one:6969/announce
 udp://tracker.piratepublic.com:1337/announce
 udp://tracker.playground.ru:6969/announce

@@ -46,6 +46,7 @@ http://113.17.152.249:6969/announce
 http://113.17.152.30:6969/announce
 http://113.17.153.206:6969/announce
 http://113.17.153.227:6969/announce
+http://113.17.153.232:6969/announce
 http://113.17.153.71:6969/announce
 http://113.17.66.164:6969/announce
 http://113.17.66.235:6969/announce
@@ -91,6 +92,7 @@ http://151.115.49.115:1337/announce
 http://152.231.114.51:1337/announce
 http://152.249.214.198:6969/announce
 http://152.249.214.23:6969/announce
+http://152.53.194.103:2710/announce
 http://155.248.200.105/announce
 http://156.234.201.18/announce
 http://157.7.202.64:8080/announce
@@ -1712,6 +1714,7 @@ udp://seedpeer.net:6969/announce
 udp://serpb.vpsburti.com:6969/announce
 udp://shadowshq.eddie4.nl:6969/announce
 udp://shadowshq.yi.org:6969/announce
+udp://shahidrazi.online:1984/announce
 udp://shizzle.hammetjus.nl:6969/announce
 udp://slicie.icon256.com:8000/announce
 udp://smtp-relay.odysseylabel.com.au:6969/announce
@@ -1738,6 +1741,7 @@ udp://tk4.leechshield.link:6969/announce
 udp://torrent.bowed.net:8081/announce
 udp://torrent.gresille.org/announce
 udp://torrent.i.ng:6969/announce
+udp://torrentclub.online:1984/announce
 udp://torrentclub.online:54123/announce
 udp://torrentclub.space:6969/announce
 udp://torrents.artixlinux.org:6969/announce
