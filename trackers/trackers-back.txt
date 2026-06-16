@@ -282,6 +282,7 @@ http://220.130.15.27:6969/announce
 http://220.130.15.30:6969/announce
 http://220.200.35.40:2710/announce
 http://220.250.51.200:2710/announce
+http://222.84.23.3:6969/announce
 http://31.38.161.123:6969/announce
 http://34.66.57.33/announce
 http://34.66.57.33/announce.php
