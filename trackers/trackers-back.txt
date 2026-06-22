@@ -1005,6 +1005,7 @@ https://evening-badlands-6215.herokuapp.com/announce
 https://grifon.info/announce
 https://gwp2-v19.rinet.ru/announce
 https://hcbt.pp.ua/announce
+https://ht.therarbg.to/announce
 https://http1.torrust-tracker-demo.com/announce
 https://inferno.demonoid.is/announce
 https://k.avc.cx/announce
