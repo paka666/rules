@@ -756,6 +756,7 @@ http://tracker.btsync.gq:233/announce
 http://tracker.btzero.net:8080/announce
 http://tracker.bz/announce
 http://tracker.calculate.ru:6969/announce
+http://tracker.cbase.cc:6969/announce
 http://tracker.ccc.de/announce
 http://tracker.chaoz.li:2710/announce
 http://tracker.computel.fr/announce
@@ -1005,6 +1006,7 @@ https://evening-badlands-6215.herokuapp.com/announce
 https://grifon.info/announce
 https://gwp2-v19.rinet.ru/announce
 https://hcbt.pp.ua/announce
+https://ht.therarbg.to/announce
 https://http1.torrust-tracker-demo.com/announce
 https://inferno.demonoid.is/announce
 https://k.avc.cx/announce
@@ -1830,6 +1832,7 @@ udp://tracker.hismz.cn:6969/announce
 udp://tracker.home.kmzs123.cn:17272/announce
 udp://tracker.huadongblower.xyz:8080/announce
 udp://tracker.ilibr.org/announce
+udp://tracker.ilibr.org:6969/announce
 udp://tracker.internetwarriors.net:1337/announce
 udp://tracker.iperson.xyz:6969/announce
 udp://tracker.istole.it/announce
@@ -1852,6 +1855,7 @@ udp://tracker.open-data.network:8888/announce
 udp://tracker.openbittorrent.com/announce
 udp://tracker.openbtba.com:6969/announce
 udp://tracker.opentorrent.top:6969/announce
+udp://tracker.opentrackr.com:6969/announce
 udp://tracker.opentrackr.org:1337/announce
 udp://tracker.orsvarn.com:6969/announce
 udp://tracker.peerfect.org:6969/announce
