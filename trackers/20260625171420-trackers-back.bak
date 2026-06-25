@@ -213,6 +213,7 @@ http://189.69.171.248:6969/announce
 http://189.69.172.166:6969/announce
 http://189.79.12.91:6969/announce
 http://189.79.13.107:6969/announce
+http://189.79.13.198:6969/announce
 http://191.23.62.111:6969/announce
 http://191.23.71.131:6969/announce
 http://191.23.71.193:6969/announce
@@ -756,6 +757,7 @@ http://tracker.btsync.gq:233/announce
 http://tracker.btzero.net:8080/announce
 http://tracker.bz/announce
 http://tracker.calculate.ru:6969/announce
+http://tracker.cbase.cc:6969/announce
 http://tracker.ccc.de/announce
 http://tracker.chaoz.li:2710/announce
 http://tracker.computel.fr/announce
@@ -1005,6 +1007,7 @@ https://evening-badlands-6215.herokuapp.com/announce
 https://grifon.info/announce
 https://gwp2-v19.rinet.ru/announce
 https://hcbt.pp.ua/announce
+https://ht.therarbg.to/announce
 https://http1.torrust-tracker-demo.com/announce
 https://inferno.demonoid.is/announce
 https://k.avc.cx/announce
@@ -1337,6 +1340,7 @@ udp://189.69.169.89:6969/announce
 udp://189.69.170.69:6969/announce
 udp://189.69.172.166:6969/announce
 udp://189.79.12.91:6969/announce
+udp://189.79.13.198:6969/announce
 udp://191.101.229.236:1337/announce
 udp://191.23.62.111:6969/announce
 udp://191.23.71.131:6969/announce
@@ -1463,6 +1467,7 @@ udp://51.222.82.36:6969/announce
 udp://51.254.244.161:6969/announce
 udp://51.68.174.87:6969/announce
 udp://51.81.222.188:6969/announce
+udp://51.83.160.93:6969/announce
 udp://52.211.139.85:27022/announce
 udp://52.58.128.163:6969/announce
 udp://54.36.179.216:6969/announce
@@ -1830,6 +1835,7 @@ udp://tracker.hismz.cn:6969/announce
 udp://tracker.home.kmzs123.cn:17272/announce
 udp://tracker.huadongblower.xyz:8080/announce
 udp://tracker.ilibr.org/announce
+udp://tracker.ilibr.org:6969/announce
 udp://tracker.internetwarriors.net:1337/announce
 udp://tracker.iperson.xyz:6969/announce
 udp://tracker.istole.it/announce
@@ -1852,6 +1858,7 @@ udp://tracker.open-data.network:8888/announce
 udp://tracker.openbittorrent.com/announce
 udp://tracker.openbtba.com:6969/announce
 udp://tracker.opentorrent.top:6969/announce
+udp://tracker.opentrackr.com:6969/announce
 udp://tracker.opentrackr.org:1337/announce
 udp://tracker.orsvarn.com:6969/announce
 udp://tracker.peerfect.org:6969/announce
