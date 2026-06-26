@@ -1234,6 +1234,7 @@ udp://147.45.77.75:6969/announce
 udp://148.135.112.164:6969/announce
 udp://148.251.53.72:6969/announce
 udp://149.106.106.25/announce
+udp://151.242.104.187/announce
 udp://151.243.109.110:6969/announce
 udp://151.243.109.163:6969/announce
 udp://151.80.120.114:2710/announce
