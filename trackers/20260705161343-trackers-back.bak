@@ -153,6 +153,7 @@ http://179.100.24.134:6969/announce
 http://179.118.129.138:6969/announce
 http://179.118.129.194:6969/announce
 http://179.146.54.147:6969/announce
+http://179.146.54.238:6969/announce
 http://179.175.247.70:6969/announce
 http://179.98.254.109:6969/announce
 http://179.98.254.138:6969/announce
@@ -1292,6 +1293,7 @@ udp://178.33.73.26:2710/announce
 udp://179.118.129.138:6969/announce
 udp://179.118.129.194:6969/announce
 udp://179.146.54.147:6969/announce
+udp://179.146.54.238:6969/announce
 udp://179.175.247.70:6969/announce
 udp://179.98.254.109:6969/announce
 udp://179.98.254.138:6969/announce
@@ -1980,6 +1982,9 @@ udp://yahor.of.by:6969/announce
 udp://yann5.hexanyn.fr:6969/announce
 udp://yuki.bt.bontal.net:6969/announce
 udp://yuptracker-eu.gaijinent.com:27022/announce
+udp://yuptracker-sa.gaijinent.com:27022/announce
+udp://yuptracker-us.gaijinent.com:27022/announce
+udp://yuptracker.gaijinent.com:27022/announce
 udp://z.mercax.com:53/announce
 udp://zecircle.xyz:6969/announce
 udp://zer0day.ch:1337/announce
