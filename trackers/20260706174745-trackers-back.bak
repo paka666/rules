@@ -153,6 +153,7 @@ http://179.100.24.134:6969/announce
 http://179.118.129.138:6969/announce
 http://179.118.129.194:6969/announce
 http://179.146.54.147:6969/announce
+http://179.146.54.238:6969/announce
 http://179.175.247.70:6969/announce
 http://179.98.254.109:6969/announce
 http://179.98.254.138:6969/announce
@@ -1024,6 +1025,7 @@ https://opentracker.cc/announce
 https://opentracker.i2p.rocks/announce
 https://opentracker.xyz/announce
 https://orgtgju.org/announce
+https://php-bobcat.wasmer.app/announce
 https://pybittrack.retiolus.net/announce
 https://seeders-paradise.org/announce
 https://shahidrazi.online/announce
@@ -1292,6 +1294,7 @@ udp://178.33.73.26:2710/announce
 udp://179.118.129.138:6969/announce
 udp://179.118.129.194:6969/announce
 udp://179.146.54.147:6969/announce
+udp://179.146.54.238:6969/announce
 udp://179.175.247.70:6969/announce
 udp://179.98.254.109:6969/announce
 udp://179.98.254.138:6969/announce
