@@ -77,6 +77,7 @@ http://125.227.35.196:6969/announce
 http://128.199.70.66:5944/announce
 http://129.146.193.240:6699/announce
 http://13.115.115.32:6969/announce
+http://132.243.161.144:6969/announce
 http://1337.abcvg.info/announce
 http://138.124.183.78:6969/announce
 http://140.235.237.23:6969/announce
@@ -232,6 +233,7 @@ http://195.123.209.37:1337/announce
 http://198.251.84.144/announce
 http://200.111.152.53:1337/announce
 http://200.111.152.54:1337/announce
+http://200.111.84.93:1337/announce
 http://200.148.11.156:6969/announce
 http://200.148.11.61:6969/announce
 http://200.161.254.131:6969/announce
@@ -452,6 +454,7 @@ http://97.117.78.100:9000/announce
 http://97.117.85.73:9000/announce
 http://99.192.12.191:6969/announce
 http://[2001:470:1:18::116]:6969/announce
+http://[2605:6400:30:fad6::dead:c0d3]:1337/announce
 http://[2a04:ac00:1:3dd8::1:2710]:2710/announce
 http://aaa.army:8866/announce
 http://aboutbeautifulgallopinghorsesinthegreenpasture.online/announce
@@ -593,6 +596,7 @@ http://litter.fluffykitten.moe:1337/announce
 http://lucke.fenesisu.moe:6969/announce
 http://mail.lakameraobscura.com:6969/announce
 http://masters-tb.com/announce.php
+http://maxsrv.xyz:9000/announce
 http://mc.itscraftsoftware.my.id:8804/announce
 http://mediaclub.tv/announce
 http://mediaclub.tv/announce.php
@@ -841,6 +845,7 @@ http://tracker.nucozer-tracker.ml:2710/announce
 http://tracker.nyacat.pw:7000/announce.php
 http://tracker.openbittorrent.com/announce
 http://tracker.openbittorrrent.com/announce
+http://tracker.opentorrent.top:6969/announce
 http://tracker.opentrackr.org:1337/announce
 http://tracker.openzim.org/announce
 http://tracker.pcfreetime.com:6969/announce
@@ -872,6 +877,7 @@ http://tracker.tambovnet.org/announce.php
 http://tracker.tfile.co/announce
 http://tracker.tfile.me/announce
 http://tracker.tfile.me/announce.php
+http://tracker.therarbg.to:6969/announce
 http://tracker.tiny-vps.com:6969/announce
 http://tracker.torrentbay.to:6969/announce
 http://tracker.torrentbytes.net/announce.php
@@ -1374,6 +1380,7 @@ udp://198.100.149.66:6969/announce
 udp://1c.premierzal.ru:6969/announce
 udp://2.57.214.218:6969/announce
 udp://200.111.152.53:1337/announce
+udp://200.111.84.93:1337/announce
 udp://200.148.11.156:6969/announce
 udp://200.148.11.61:6969/announce
 udp://200.161.254.131:6969/announce
@@ -1487,6 +1494,7 @@ udp://60.249.37.20:6969/announce
 udp://62.138.0.158:6969/announce
 udp://62.212.85.66:2710/announce
 udp://62.60.157.92:6969/announce
+udp://65.109.28.17:6969/announce
 udp://67.222.238.222:2010/announce
 udp://69.30.233.234:6969/announce
 udp://6ahddutb1ucc3cp.ru:6969/announce
@@ -1860,6 +1868,7 @@ udp://tracker.mg64.net:6969/announce
 udp://tracker.mirrorbay.org:6969/announce
 udp://tracker.moeking.me:6969/announce
 udp://tracker.monitorit4.me:6969/announce
+udp://tracker.nexusstream.eu:6969/announce
 udp://tracker.nyaa.vc:6969/announce
 udp://tracker.ololosh.space:6969/announce
 udp://tracker.open-data.network:8888/announce
