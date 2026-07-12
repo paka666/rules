@@ -690,6 +690,7 @@ http://siwserver.duckdns.org:9900/announce
 http://smurfsoft.com:6969/announce
 http://speedtest.iperson.xyz:6969/announce
 http://sukebei.tracker.wf:8888/announce
+http://supertracker.cc.cd/announce
 http://t-backup.213891.xyz/announce
 http://t.acg.rip:6699/announce
 http://t.al.uy/announce
@@ -1616,6 +1617,7 @@ udp://devops.gay:6969/announce
 udp://dht.bt251.com:6969/announce
 udp://discord.heihachi.pw:6969/announce
 udp://download.nerocloud.me:6969/announce
+udp://ds32244.seedhost.eu:6969/announce
 udp://dyndns.xionxiii.ovh:6969/announce
 udp://ec2-18-191-163-220.us-east-2.compute.amazonaws.com:6969/announce
 udp://eddie4.nl:6969/announce
