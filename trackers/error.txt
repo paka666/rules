@@ -1,4 +1,7 @@
 http://btrackrqkjp6kgelov5a3uxisis77ofxqt5nvy5hvvtoybjpmq4q.b32.i2p/announce
 http://nyaaplus.i2p:80/announce
 http://tracker.nyaa2p.i2p:80/announce
+wss://open.ftorrent.com:443
 wss://tracker.btorrent.xyz:443
+wss://tracker.openwebtorrent.com:443
+wss://tracker.webtorrent.dev:443
