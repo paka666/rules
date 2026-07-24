@@ -135,6 +135,7 @@ http://177.139.47.105:6969/announce
 http://177.139.47.18:6969/announce
 http://177.139.47.92:6969/announce
 http://177.16.198.58:6969/announce
+http://177.172.61.26:6969/announce
 http://177.172.61.33:6969/announce
 http://177.172.62.154:6969/announce
 http://177.172.62.240:6969/announce
@@ -333,6 +334,7 @@ http://37.120.182.83:2710/announce
 http://37.19.5.139:6969/announce
 http://37.19.5.155:6881/announce
 http://37.235.174.46:2710/announce
+http://37.60.249.217:6969/announce
 http://38.145.197.79:6961/announce
 http://43.139.20.56:6969/announce
 http://43.250.54.126:6969/announce
@@ -439,6 +441,7 @@ http://92.112.126.44:6969/announce
 http://93.158.213.92:1337/announce
 http://93.88.129.16/announce
 http://93.92.64.5/announce
+http://94.23.207.177:6969/announce
 http://94.72.140.51:6969/announce
 http://95.107.48.115/announce
 http://95.217.161.135/announce
@@ -840,6 +843,7 @@ http://tracker.moxing.party:6969/announce
 http://tracker.mywaifu.best:6969/announce
 http://tracker.nartlof.com.br:6969/announce
 http://tracker.netmap.top:6969/announce
+http://tracker.nexusstream.eu:6969/announce
 http://tracker.noobsubs.net/announce
 http://tracker.novalayer.org:6969/announce
 http://tracker.novaopcj.eu.org:6969/announce
@@ -981,6 +985,7 @@ http://www.xwt-classics.net/announce.php
 http://www.yqzuji.com/announce
 http://www.zone-torrent.net/announce.php
 http://xtremewrestlingtorrents.net/announce.php
+http://ydlkccp.dscloud.me:6969/announce
 https://004430.xyz/announce
 https://021912.xyz/announce
 https://1.tracker.eu.org/announce
@@ -1013,6 +1018,7 @@ https://cny.fan/announce
 https://colibri.parrot.run/announce
 https://dev.tracker.cf-identity-wallet.metadata.dev.cf-deployments.org/announce
 https://docker-tracker-production.up.railway.app/announce
+https://edgev.duckdns.org/announce
 https://evening-badlands-6215.herokuapp.com/announce
 https://grifon.info/announce
 https://gwp2-v19.rinet.ru/announce
@@ -1247,6 +1253,7 @@ udp://147.45.77.75:6969/announce
 udp://148.135.112.164:6969/announce
 udp://148.251.53.72:6969/announce
 udp://149.106.106.25/announce
+udp://15.235.207.99:8081/announce
 udp://151.242.104.187/announce
 udp://151.243.109.110:6969/announce
 udp://151.243.109.163:6969/announce
@@ -1258,11 +1265,13 @@ udp://152.249.97.82:6969/announce
 udp://152.53.152.105:15480/announce
 udp://152.53.152.105:1984/announce
 udp://152.53.152.105:54123/announce
+udp://152.53.194.103:1984/announce
 udp://152.53.194.103:54123/announce
 udp://152.89.29.128:6969/announce
 udp://154.40.43.165:6969/announce
 udp://156.234.201.18/announce
 udp://158.101.161.60:3131/announce
+udp://159.146.99.45:6969/announce
 udp://159.195.43.181/announce
 udp://159.195.43.181:6969/announce
 udp://161.97.67.210:6969/announce
@@ -1431,6 +1440,7 @@ udp://217.30.10.77:6969/announce
 udp://220.200.35.40:2710/announce
 udp://220.200.35.40:6969/announce
 udp://220.250.51.200:6969/announce
+udp://221.153.216.56:8081/announce
 udp://23.134.124.81:8081/announce
 udp://23.134.88.9:1337/announce
 udp://23.134.88.9:6969/announce
@@ -1455,6 +1465,7 @@ udp://37.187.95.112:6969/announce
 udp://37.19.5.155:2710/announce
 udp://37.235.176.37:2710/announce
 udp://37.59.48.81:6969/announce
+udp://37.60.249.217:6969/announce
 udp://38.175.99.50:6969/announce
 udp://43.154.112.29:17272/announce
 udp://43.250.54.126:6969/announce
@@ -1493,6 +1504,8 @@ udp://52.211.139.85:27022/announce
 udp://52.58.128.163:6969/announce
 udp://54.36.179.216:6969/announce
 udp://54.39.48.3:6969/announce
+udp://57.129.129.129:6969/announce
+udp://57.129.129.187:6969/announce
 udp://6.pocketnet.app:6969/announce
 udp://60.172.236.18:6969/announce
 udp://60.249.37.20/announce
@@ -1501,6 +1514,7 @@ udp://62.138.0.158:6969/announce
 udp://62.212.85.66:2710/announce
 udp://62.60.157.92:6969/announce
 udp://65.109.28.17:6969/announce
+udp://65.109.28.33:6969/announce
 udp://67.222.238.222:2010/announce
 udp://69.30.233.234:6969/announce
 udp://6ahddutb1ucc3cp.ru:6969/announce
@@ -1523,6 +1537,7 @@ udp://85.121.5.80:6969/announce
 udp://85.17.19.180/announce
 udp://87.106.210.134:6969/announce
 udp://88.80.22.67:2710/announce
+udp://88.80.22.75:2710/announce
 udp://88.80.28.7:6969/announce
 udp://88.99.2.212:6969/announce
 udp://89.110.76.229:6969/announce
@@ -1535,6 +1550,7 @@ udp://9.rarbg.com:2710/announce
 udp://9.rarbg.me:2710/announce
 udp://9.rarbg.me:2780/announce
 udp://9.rarbg.to:2730/announce
+udp://91.177.126.188:6969/announce
 udp://91.186.213.204:6969/announce
 udp://91.211.5.21:6969/announce
 udp://91.216.110.53:451/announce
@@ -1556,6 +1572,8 @@ udp://94.243.222.100:6969/announce
 udp://94.250.253.220:6969/announce
 udp://94.72.140.51:6969/announce
 udp://95.216.74.39:6969/announce
+udp://95.217.80.20:6969/announce
+udp://95.217.80.22:6969/announce
 udp://95.31.11.224:6969/announce
 udp://960303.xyz:6969/announce
 udp://[2a03:7220:8083:cd00::1]:451/announce
@@ -1626,6 +1644,7 @@ udp://ds32244.seedhost.eu:6969/announce
 udp://dyndns.xionxiii.ovh:6969/announce
 udp://ec2-18-191-163-220.us-east-2.compute.amazonaws.com:6969/announce
 udp://eddie4.nl:6969/announce
+udp://edgev.duckdns.org:6969/announce
 udp://edu.uifr.ru:6969/announce
 udp://elementsbrowser.com:6969/announce
 udp://engplus.ru:6969/announce
