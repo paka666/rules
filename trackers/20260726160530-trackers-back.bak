@@ -1514,6 +1514,7 @@ udp://62.138.0.158:6969/announce
 udp://62.212.85.66:2710/announce
 udp://62.60.157.92:6969/announce
 udp://65.109.28.17:6969/announce
+udp://65.109.28.33:6969/announce
 udp://67.222.238.222:2010/announce
 udp://69.30.233.234:6969/announce
 udp://6ahddutb1ucc3cp.ru:6969/announce
@@ -1571,6 +1572,8 @@ udp://94.243.222.100:6969/announce
 udp://94.250.253.220:6969/announce
 udp://94.72.140.51:6969/announce
 udp://95.216.74.39:6969/announce
+udp://95.217.80.20:6969/announce
+udp://95.217.80.22:6969/announce
 udp://95.31.11.224:6969/announce
 udp://960303.xyz:6969/announce
 udp://[2a03:7220:8083:cd00::1]:451/announce
