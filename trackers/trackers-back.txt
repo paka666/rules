@@ -1795,6 +1795,7 @@ udp://tk4.leechshield.link:6969/announce
 udp://torrent.bowed.net:8081/announce
 udp://torrent.gresille.org/announce
 udp://torrent.i.ng:6969/announce
+udp://torrent.tracker.durukanbal.com:6969/announce
 udp://torrentclub.online:1984/announce
 udp://torrentclub.online:54123/announce
 udp://torrentclub.space:6969/announce
