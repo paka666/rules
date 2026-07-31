@@ -66,6 +66,7 @@ http://123.245.62.100:6969/announce
 http://123.245.62.104:6969/announce
 http://123.245.62.21:6969/announce
 http://123.245.62.39:6969/announce
+http://123.245.62.74:6969/announce
 http://123.245.62.79:6969/announce
 http://123.245.62.80:6969/announce
 http://123.245.62.83:6969/announce
@@ -1896,6 +1897,7 @@ udp://tracker.mirrorbay.org:6969/announce
 udp://tracker.moeking.me:6969/announce
 udp://tracker.monitorit4.me:6969/announce
 udp://tracker.nexusstream.eu:6969/announce
+udp://tracker.nyaa.net:6969/announce
 udp://tracker.nyaa.vc:6969/announce
 udp://tracker.ololosh.space:6969/announce
 udp://tracker.open-data.network:8888/announce
