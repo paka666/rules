@@ -66,6 +66,7 @@ http://123.245.62.100:6969/announce
 http://123.245.62.104:6969/announce
 http://123.245.62.21:6969/announce
 http://123.245.62.39:6969/announce
+http://123.245.62.74:6969/announce
 http://123.245.62.79:6969/announce
 http://123.245.62.80:6969/announce
 http://123.245.62.83:6969/announce
@@ -168,6 +169,7 @@ http://180.139.151.58:6969/announce
 http://180.97.219.76:8070/announce
 http://182.176.139.129:6969/announce
 http://185.121.24.141:6969/announce
+http://185.126.65.92:6969/announce
 http://185.130.47.2:6969/announce
 http://185.148.3.231/announce
 http://185.171.202.111:6969/announce
@@ -1843,6 +1845,7 @@ udp://tracker.ccc.de/announce
 udp://tracker.ccp.ovh:6969/announce
 udp://tracker.cloaka.xyz:1337/announce
 udp://tracker.cloudbase.store:1333/announce
+udp://tracker.cn.nyaa.net:6969/announce
 udp://tracker.coppersurfer.tk:6969/announce
 udp://tracker.corpscorp.online/announce
 udp://tracker.cubonegro.org/announce
