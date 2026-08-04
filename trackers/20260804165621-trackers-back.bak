@@ -169,6 +169,7 @@ http://180.139.151.58:6969/announce
 http://180.97.219.76:8070/announce
 http://182.176.139.129:6969/announce
 http://185.121.24.141:6969/announce
+http://185.126.65.92:6969/announce
 http://185.130.47.2:6969/announce
 http://185.148.3.231/announce
 http://185.171.202.111:6969/announce
@@ -1380,6 +1381,7 @@ udp://191.254.171.209:6969/announce
 udp://191.255.193.158:6969/announce
 udp://192.3.130.53:1337/announce
 udp://192.95.46.115:6969/announce
+udp://192.99.100.68:6969/announce
 udp://193.148.251.143:6969/announce
 udp://193.148.251.93:6969/announce
 udp://193.187.90.12:6969/announce
@@ -1844,6 +1846,7 @@ udp://tracker.ccc.de/announce
 udp://tracker.ccp.ovh:6969/announce
 udp://tracker.cloaka.xyz:1337/announce
 udp://tracker.cloudbase.store:1333/announce
+udp://tracker.cn.nyaa.net:6969/announce
 udp://tracker.coppersurfer.tk:6969/announce
 udp://tracker.corpscorp.online/announce
 udp://tracker.cubonegro.org/announce
