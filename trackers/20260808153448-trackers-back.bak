@@ -128,6 +128,7 @@ http://171.104.226.31:6969/announce
 http://171.104.226.87:6969/announce
 http://172.245.168.134/announce
 http://173.254.204.71:1096/announce
+http://177.112.215.160:6969/announce
 http://177.112.215.99:6969/announce
 http://177.139.44.203:6969/announce
 http://177.139.44.78:6969/announce
@@ -186,6 +187,7 @@ http://186.10.170.56:1337/announce
 http://186.10.170.58:1337/announce
 http://186.10.172.248:1337/announce
 http://187.11.72.168:6969/announce
+http://187.11.73.135:6969/announce
 http://187.11.75.160:6969/announce
 http://187.11.75.60:6969/announce
 http://187.34.25.113:6969/announce
@@ -1248,6 +1250,7 @@ udp://135.125.106.92:6969/announce
 udp://135.125.202.143:6969/announce
 udp://135.125.236.64:6969/announce
 udp://138.124.183.78:6969/announce
+udp://143.246.43.3:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
 udp://147.45.74.251:6969/announce
@@ -1288,6 +1291,7 @@ udp://173.201.36.219:6969/announce
 udp://173.249.201.201:6969/announce
 udp://176.31.250.174:6969/announce
 udp://176.99.7.59:6969/announce
+udp://177.112.215.160:6969/announce
 udp://177.112.215.99:6969/announce
 udp://177.139.44.203:6969/announce
 udp://177.139.46.160:6969/announce
@@ -1333,6 +1337,7 @@ udp://185.171.202.111:6969/announce
 udp://185.181.60.155/announce
 udp://185.181.60.67/announce
 udp://185.189.13.108:6969/announce
+udp://185.189.13.39:6969/announce
 udp://185.216.179.62:25/announce
 udp://185.230.4.150:1337/announce
 udp://185.243.218.213/announce
@@ -1344,6 +1349,7 @@ udp://185.87.45.163:6969/announce
 udp://186.10.170.56:1337/announce
 udp://186.10.172.248:1337/announce
 udp://187.11.72.168:6969/announce
+udp://187.11.73.135:6969/announce
 udp://187.11.75.60:6969/announce
 udp://187.34.25.113:6969/announce
 udp://187.56.163.229:6969/announce
@@ -1675,6 +1681,7 @@ udp://ipv4.rer.lol:2710/announce
 udp://ipv4.tracker.harry.lu/announce
 udp://ipv4announce.sktorrent.eu:6969/announce
 udp://ipv6.fuuuuuck.com:6969/announce
+udp://ipv6.govt.hu:6969/announce
 udp://ipv6.tracker.harry.lu/announce
 udp://isk.richardsw.club:6969/announce
 udp://ismaarino.com:1234/announce
@@ -1888,12 +1895,14 @@ udp://tracker.iperson.xyz:6969/announce
 udp://tracker.istole.it/announce
 udp://tracker.ixuexi.click:6969/announce
 udp://tracker.jamesthebard.net:6969/announce
+udp://tracker.k.vu:6969/announce
 udp://tracker.kicks-ass.net/announce
 udp://tracker.kmzs123.cn:17272/announce
 udp://tracker.kuroy.me:5944/announce
 udp://tracker.leechers-paradise.org:6969/announce
 udp://tracker.leena.network:6969/announce
 udp://tracker.lelux.fi:6969/announce
+udp://tracker.linvk.com:6969/announce
 udp://tracker.mg64.net:2710/announce
 udp://tracker.mg64.net:6969/announce
 udp://tracker.mirrorbay.org:6969/announce
