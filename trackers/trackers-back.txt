@@ -206,6 +206,7 @@ http://189.110.233.96:6969/announce
 http://189.18.126.32:6969/announce
 http://189.18.126.49:6969/announce
 http://189.18.127.21:6969/announce
+http://189.18.162.102:6969/announce
 http://189.18.162.12:6969/announce
 http://189.18.163.167:6969/announce
 http://189.18.164.36:6969/announce
@@ -1365,6 +1366,7 @@ udp://189.0.78.245:6969/announce
 udp://189.18.126.32:6969/announce
 udp://189.18.126.49:6969/announce
 udp://189.18.127.21:6969/announce
+udp://189.18.162.102:6969/announce
 udp://189.18.162.12:6969/announce
 udp://189.18.163.167:6969/announce
 udp://189.18.96.9:6969/announce
@@ -1861,6 +1863,7 @@ udp://tracker.corpscorp.online/announce
 udp://tracker.cubonegro.org/announce
 udp://tracker.cubonegro.xyz:6969/announce
 udp://tracker.cyberia.is:6969/announce
+udp://tracker.cynma.tv:6969/announce
 udp://tracker.darkness.services:6969/announce
 udp://tracker.ddunlimited.net:6969/announce
 udp://tracker.deadorbit.nl:6969/announce
