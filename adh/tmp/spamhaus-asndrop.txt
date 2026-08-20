@@ -75,6 +75,7 @@ dmzhost.co.
 dobrosvitkredo.
 dolphinhost.net.
 donserver.cl.
+eggywall.org.
 eikontech.net.
 ekoiniciative.pp.ua.
 eksenbilisim.com.tr.
@@ -303,6 +304,7 @@ wirelesscuracao.com.
 xdeer.com.
 xeniahosting.com.
 xor.sc.
+xproxies.com.
 zaifcomp.in.
 zen4softsolution.
 zexotek.de.
