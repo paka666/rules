@@ -197,6 +197,7 @@ http://187.34.25.113:6969/announce
 http://187.56.163.229:6969/announce
 http://187.56.163.25:6969/announce
 http://187.57.130.109:6969/announce
+http://187.57.131.55:6969/announce
 http://187.57.131.78:6969/announce
 http://187.57.132.20:6969/announce
 http://187.57.132.246:6969/announce
@@ -1364,6 +1365,7 @@ udp://187.34.25.113:6969/announce
 udp://187.56.163.229:6969/announce
 udp://187.56.163.25:6969/announce
 udp://187.57.130.109:6969/announce
+udp://187.57.131.55:6969/announce
 udp://187.57.131.78:6969/announce
 udp://187.57.132.20:6969/announce
 udp://187.57.132.246:6969/announce
@@ -1895,6 +1897,7 @@ udp://tracker.flatuslifir.is:6969/announce
 udp://tracker.fnix.net:6969/announce
 udp://tracker.gigantino.net:6969/announce
 udp://tracker.gmi.gd:6969/announce
+udp://tracker.govt.hu:6969/announce
 udp://tracker.grepler.com:6969/announce
 udp://tracker.healthcareindia.store:1337/announce
 udp://tracker.hifimarket.in:2710/announce
