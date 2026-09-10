@@ -221,6 +221,7 @@ http://189.18.96.199:6969/announce
 http://189.18.96.9:6969/announce
 http://189.18.97.201:6969/announce
 http://189.18.97.57:6969/announce
+http://189.18.97.61:6969/announce
 http://189.69.167.105:6969/announce
 http://189.69.168.147:6969/announce
 http://189.69.168.99:6969/announce
@@ -1009,6 +1010,7 @@ https://2.tracker.eu.org/announce
 https://3.tracker.eu.org/announce
 https://337hhh.xyz/announce
 https://4.tracker.eu.org/announce
+https://5.tracker.eu.org/announce
 https://9001-digitaladeel-bkwl-launch-oovrfk6mpz.app.codeanywhere.com/announce
 https://aaa.army:8866/announce
 https://abir0dev.github.io/announce
@@ -1388,6 +1390,7 @@ udp://189.18.163.167:6969/announce
 udp://189.18.96.9:6969/announce
 udp://189.18.97.201:6969/announce
 udp://189.18.97.57:6969/announce
+udp://189.18.97.61:6969/announce
 udp://189.69.167.105:6969/announce
 udp://189.69.168.147:6969/announce
 udp://189.69.168.99:6969/announce
