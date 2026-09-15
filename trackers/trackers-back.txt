@@ -260,6 +260,7 @@ http://200.168.116.191:6969/announce
 http://200.168.116.200:6969/announce
 http://200.168.116.61:6969/announce
 http://200.168.117.124:6969/announce
+http://200.168.117.238:6969/announce
 http://200.170.109.125:6969/announce
 http://200.170.109.148:6969/announce
 http://200.170.109.194:6969/announce
@@ -1337,6 +1338,7 @@ udp://177.215.67.242:6969/announce
 udp://177.32.238.49:6969/announce
 udp://178.128.94.74:6969/announce
 udp://178.170.48.154:1337/announce
+udp://178.239.19.29/announce
 udp://178.33.73.26:2710/announce
 udp://179.118.129.138:6969/announce
 udp://179.118.129.194:6969/announce
@@ -1440,6 +1442,7 @@ udp://200.168.116.191:6969/announce
 udp://200.168.116.200:6969/announce
 udp://200.168.116.61:6969/announce
 udp://200.168.117.124:6969/announce
+udp://200.168.117.238:6969/announce
 udp://200.170.109.125:6969/announce
 udp://200.170.109.148:6969/announce
 udp://200.170.109.194:6969/announce
@@ -1990,6 +1993,7 @@ udp://tracker.tiny-vps.com:6969/announce
 udp://tracker.tnl.one:8000/announce
 udp://tracker.torrent.eu.org:451/announce
 udp://tracker.torrentclaw.com:1337/announce
+udp://tracker.torrents.observer/announce
 udp://tracker.torrust-demo.com:6969/announce
 udp://tracker.trackarr.org:6969/announce
 udp://tracker.trackerfix.com/announce
