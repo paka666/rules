@@ -151,6 +151,7 @@ http://177.172.67.13:6969/announce
 http://177.172.67.233:6969/announce
 http://177.173.31.33:6969/announce
 http://177.188.141.28:6969/announce
+http://177.188.141.75:6969/announce
 http://177.215.65.114:6969/announce
 http://177.215.65.176:6969/announce
 http://177.215.65.40:6969/announce
@@ -1331,6 +1332,7 @@ udp://177.172.67.13:6969/announce
 udp://177.172.67.233:6969/announce
 udp://177.173.31.33:6969/announce
 udp://177.188.141.28:6969/announce
+udp://177.188.141.75:6969/announce
 udp://177.215.65.114:6969/announce
 udp://177.215.65.176:6969/announce
 udp://177.215.65.40:6969/announce
@@ -1728,6 +1730,7 @@ udp://johnrosen1.com:6969/announce
 udp://jutone.com:6969/announce
 udp://keke.re:6969/announce
 udp://kokodayo.site:6969/announce
+udp://kolankoalastree.newtrackon.co.nz:1337/announce
 udp://kolanopentracker.airdns.org:3392/announce
 udp://laestrygonian.ooguy.com:9001/announce
 udp://laze.cc:6969/announce

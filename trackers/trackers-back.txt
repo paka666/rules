@@ -1174,6 +1174,7 @@ https://tracker.m-team.cc/announce.php
 https://tracker.manager.itislove.cz/announce
 https://tracker.manager.v6.navy/announce
 https://tracker.maya.no.eu.org/announce
+https://tracker.midnightprogrammer.net/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
 https://tracker.moeking.me/announce
