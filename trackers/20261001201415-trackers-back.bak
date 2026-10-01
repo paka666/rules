@@ -83,6 +83,7 @@ http://1337.abcvg.info/announce
 http://135.125.198.235/announce
 http://135.125.198.235:2710/announce
 http://138.124.183.78:6969/announce
+http://138.186.10.167:1337/announce
 http://140.235.237.23:6969/announce
 http://140.82.21.192:8080/announce
 http://141.144.224.250:2710/announce
@@ -1272,6 +1273,8 @@ udp://135.125.198.235:1984/announce
 udp://135.125.202.143:6969/announce
 udp://135.125.236.64:6969/announce
 udp://138.124.183.78:6969/announce
+udp://143.20.154.228:42069/announce
+udp://143.20.154.229:42069/announce
 udp://143.246.43.3:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
