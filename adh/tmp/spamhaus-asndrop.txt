@@ -44,6 +44,7 @@ bunea.eu.
 bunnycommunications.com.
 caiwireless.net.
 cantech.international.
+capsulaltd.uk.
 changway.hk.
 cheapy.host.
 chempir.
@@ -256,12 +257,14 @@ sfns.
 shereverov.marat.
 shockhosting.net.
 simplecarrier.net.
+sinoworldwidetrading.com.
 sircrosar.net.
 skntelecom.com.
 slayergroup.ltd.
 smartmieten.in.
 smtpmailers.com.
 snowcore.io.
+solidserver.io.
 sovy.cloud.
 spectrenetworks.net.
 spnhost.com.bd.
@@ -283,6 +286,7 @@ t-w.dev.
 tavriatrans.com.ua.
 telepatiya.kz.
 telerakesh.in.
+the-first-east-star.
 thepinnaclegroup.in.
 thestack.net.
 thoimmo.com.
