@@ -259,6 +259,7 @@ http://200.148.11.156:6969/announce
 http://200.148.11.61:6969/announce
 http://200.161.254.131:6969/announce
 http://200.161.254.20:6969/announce
+http://200.161.254.249:6969/announce
 http://200.168.116.107:6969/announce
 http://200.168.116.191:6969/announce
 http://200.168.116.200:6969/announce
@@ -1449,6 +1450,7 @@ udp://200.148.11.156:6969/announce
 udp://200.148.11.61:6969/announce
 udp://200.161.254.131:6969/announce
 udp://200.161.254.20:6969/announce
+udp://200.161.254.249:6969/announce
 udp://200.168.116.107:6969/announce
 udp://200.168.116.191:6969/announce
 udp://200.168.116.200:6969/announce
@@ -1657,6 +1659,7 @@ udp://archive.torrentonline.cc:42069/announce
 udp://astrr.ru:6969/announce
 udp://bananas.space:6969/announce
 udp://bandito.byterunner.io:6969/announce
+udp://banzaitracker.com:2710/announce
 udp://bedro.cloud:6969/announce
 udp://ben.kerbertools.xyz:6969/announce
 udp://betelgeuse.freeddns.org:6969/announce
