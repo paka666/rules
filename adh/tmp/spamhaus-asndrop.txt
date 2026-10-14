@@ -26,6 +26,7 @@ auproxies.com.
 avtotrans.
 bakrietelecom.com.
 barebox.com.bd.
+bendcompass.com.
 berch.co.uk.
 berdiev-ruslan-mukhabatovich.
 bhagwatsoft.in.
@@ -220,6 +221,7 @@ pixoof.com.
 plainproxies.com.
 planningresearchcorp.com.
 play2go.cloud.
+powerrdp.pro.
 private-hosting.eu.
 privateinternethosting.
 privatenetwork.ltd.
