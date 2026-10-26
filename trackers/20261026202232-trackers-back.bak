@@ -1278,6 +1278,7 @@ udp://135.125.198.235:1984/announce
 udp://135.125.202.143:6969/announce
 udp://135.125.236.64:6969/announce
 udp://138.124.183.78:6969/announce
+udp://138.186.10.167:1337/announce
 udp://143.20.154.228:42069/announce
 udp://143.20.154.229:42069/announce
 udp://143.246.43.3:6969/announce
@@ -1998,6 +1999,7 @@ udp://tracker.publictracker.xyz:6969/announce
 udp://tracker.qu.ax:6969/announce
 udp://tracker.rescuecrew7.com:1337/announce
 udp://tracker.riverarmy.xyz:6969/announce
+udp://tracker.sela.st:6969/announce
 udp://tracker.sharebro.in:6969/announce
 udp://tracker.shkinev.me:6969/announce
 udp://tracker.sigterm.xyz:6969/announce
