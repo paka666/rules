@@ -1251,6 +1251,7 @@ udp://101.99.91.160:6969/announce
 udp://101.99.94.187:6969/announce
 udp://103.122.21.50:6969/announce
 udp://103.251.166.126:6969/announce
+udp://103.27.158.117:1914/announce
 udp://104.131.98.232:6969/announce
 udp://104.143.10.186:8000/announce
 udp://104.248.85.59:6969/announce
@@ -1811,6 +1812,7 @@ udp://opentracker.lain.moscow:6969/announce
 udp://opentracker.simp.i2p:6969/a
 udp://opentracker.skank.i2p:6969/a
 udp://opentracker.xyz/announce
+udp://opentracker2.lain.moscow:6969/announce
 udp://opentrackr.org:1337/announce
 udp://p2p.publictracker.xyz:6969/announce
 udp://p4p.arenabg.ch:1337/announce
@@ -1939,6 +1941,7 @@ udp://tracker.dump.cl:6969/announce
 udp://tracker.e-utp.net:6969/announce
 udp://tracker.eddie4.nl:6969/announce
 udp://tracker.edkj.club:6969/announce
+udp://tracker.evergarden.uk:1914/announce
 udp://tracker.ex.ua/announce
 udp://tracker.farted.net:6969/announce
 udp://tracker.filemail.com:6969/announce

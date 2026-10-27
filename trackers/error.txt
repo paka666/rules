@@ -3,7 +3,6 @@ http://freetracker.i2p:7331/announce
 http://nyaaplus.i2p:80/announce
 http://tracker.nyaa2p.i2p:80/announce
 http://yet-another-public-tracker.i2p/announce
-udp://freetracker.i2p:1337/announce
 wss://open.ftorrent.com:443
 wss://tracker.openwebtorrent.com:443
 wss://tracker.webtorrent.dev:443
