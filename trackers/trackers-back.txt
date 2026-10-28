@@ -1049,6 +1049,7 @@ https://dev.tracker.cf-identity-wallet.metadata.dev.cf-deployments.org/announce
 https://docker-tracker-production.up.railway.app/announce
 https://edgev.duckdns.org/announce
 https://evening-badlands-6215.herokuapp.com/announce
+https://gargoyleperch.de/announce
 https://grifon.info/announce
 https://gwp2-v19.rinet.ru/announce
 https://hcbt.pp.ua/announce
