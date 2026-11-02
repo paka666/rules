@@ -29,6 +29,7 @@ barebox.com.bd.
 bendcompass.com.
 berch.co.uk.
 berdiev-ruslan-mukhabatovich.
+bgp.net.
 bhagwatsoft.in.
 bignet.ua.
 biil.ru.
@@ -295,6 +296,7 @@ tavriatrans.com.ua.
 tcdatacenter.com.
 telepatiya.kz.
 telerakesh.in.
+teraflow.co.
 the-first-east-star.
 thepinnaclegroup.in.
 thestack.net.
