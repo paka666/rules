@@ -80,6 +80,7 @@ dmzhost.co.
 dobrosvitkredo.
 dolphinhost.net.
 donserver.cl.
+dpkgsoft.ru.
 eggywall.org.
 eikontech.net.
 ekoiniciative.pp.ua.
@@ -290,6 +291,7 @@ stormindustries.llc.
 sufia.tv.
 sulavi.co.uk.
 sulharai.com.
+sunservers.net.
 sunucun.com.tr.
 swissnetwork.io.
 t-w.dev.
