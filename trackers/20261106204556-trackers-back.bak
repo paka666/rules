@@ -145,6 +145,7 @@ http://177.139.47.18:6969/announce
 http://177.139.47.92:6969/announce
 http://177.16.198.108:6969/announce
 http://177.16.198.58:6969/announce
+http://177.16.198.72:6969/announce
 http://177.172.61.26:6969/announce
 http://177.172.61.33:6969/announce
 http://177.172.62.154:6969/announce
@@ -314,6 +315,7 @@ http://220.130.15.27:6969/announce
 http://220.130.15.30:6969/announce
 http://220.200.35.40:2710/announce
 http://220.250.51.200:2710/announce
+http://222.216.138.251:6969/announce
 http://222.216.139.71:6969/announce
 http://222.84.23.36:6969/announce
 http://222.84.23.3:6969/announce
@@ -1340,6 +1342,7 @@ udp://177.139.47.18:6969/announce
 udp://177.139.47.92:6969/announce
 udp://177.16.198.108:6969/announce
 udp://177.16.198.58:6969/announce
+udp://177.16.198.72:6969/announce
 udp://177.172.61.26:6969/announce
 udp://177.172.61.33:6969/announce
 udp://177.172.62.154:6969/announce
