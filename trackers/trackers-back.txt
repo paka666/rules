@@ -1128,6 +1128,7 @@ https://tracker.adgk.net/announce
 https://tracker.alaskantf.com/announce
 https://tracker.amelia.fun/announce
 https://tracker.anibt.net/announce
+https://tracker.augrains.com/announce
 https://tracker.baka.ink/announce
 https://tracker.bangumi.zip/announce
 https://tracker.belmult.online/announce
