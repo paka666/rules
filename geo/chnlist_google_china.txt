@@ -1,7 +1,7 @@
 
 
 
-# Google Corp aka ÜberProxy domains
+# Google Corp aka ĂberProxy domains
 # Other corp related domain
 server=/265.com/114.114.114.114
 server=/2mdn-cn.net/114.114.114.114
