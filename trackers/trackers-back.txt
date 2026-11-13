@@ -1614,6 +1614,7 @@ udp://82.67.44.197:9999/announce
 udp://83.102.180.21/announce
 udp://83.31.31.143:6969/announce
 udp://84.54.51.78:6969/announce
+udp://85.121.148.217:2710/announce
 udp://85.121.5.80:6969/announce
 udp://85.17.19.180/announce
 udp://85.17.55.112:6969/announce
