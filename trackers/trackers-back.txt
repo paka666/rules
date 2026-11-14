@@ -67,6 +67,7 @@ http://123.245.62.100:6969/announce
 http://123.245.62.104:6969/announce
 http://123.245.62.21:6969/announce
 http://123.245.62.39:6969/announce
+http://123.245.62.58:6969/announce
 http://123.245.62.62:6969/announce
 http://123.245.62.74:6969/announce
 http://123.245.62.79:6969/announce
@@ -1868,6 +1869,7 @@ udp://smtp-relay.odysseylabel.com.au:6969/announce
 udp://speedtest.iperson.xyz:6969/announce
 udp://srv5.digiboy.ir:6969/announce
 udp://ssb14.nohost.me:6969/announce
+udp://stairs.lat:6969/announce
 udp://stargrave.org:6969/announce
 udp://static.54.161.216.95.clients.your-server.de:6969/announce
 udp://storage.groupees.com:6969/announce
