@@ -154,6 +154,7 @@ http://177.172.62.154:6969/announce
 http://177.172.62.240:6969/announce
 http://177.172.65.168:6969/announce
 http://177.172.66.223:6969/announce
+http://177.172.66.244:6969/announce
 http://177.172.66.2:6969/announce
 http://177.172.67.13:6969/announce
 http://177.172.67.177:6969/announce
@@ -243,6 +244,8 @@ http://189.69.172.166:6969/announce
 http://189.79.12.91:6969/announce
 http://189.79.13.107:6969/announce
 http://189.79.13.198:6969/announce
+http://190.22.49.98:1337/announce
+http://190.22.55.78:1337/announce
 http://191.23.62.111:6969/announce
 http://191.23.62.139:6969/announce
 http://191.23.71.131:6969/announce
@@ -388,6 +391,7 @@ http://45.63.111.135:8080/announce
 http://45.67.35.111:6969/announce
 http://45.7.231.102/announce
 http://46.17.46.112:8080/announce
+http://46.188.15.49:6969/announce
 http://46.231.241.43:6969/announce
 http://46.4.109.148:6969/announce
 http://47.243.23.189:6969/announce
@@ -623,6 +627,7 @@ http://kamikazee.duckdns.org:7777/announce
 http://kinorun.com/announce.php
 http://kiryuu-test.mywaifu.best:6969/announce
 http://kolanopentracker.airdns.org:3392/announce
+http://kyu.i2p/a
 http://laxclax.ddns.net/announce
 http://li1406-230.members.linode.com:6969/announce
 http://li2021-95.members.linode.com:6969/announce
@@ -670,6 +675,7 @@ http://opentracker.eeptorrent.i2p/a
 http://opentracker.fattydove.i2p/a
 http://opentracker.i2p.rocks:6969/announce
 http://opentracker.io/announce
+http://opentracker.lain.moscow:6969/announce
 http://opentracker.r4sas.i2p/a
 http://opentracker.simp.i2p/a
 http://opentracker.skank.i2p/a
@@ -882,6 +888,7 @@ http://tracker.novalayer.org:6969/announce
 http://tracker.novaopcj.eu.org:6969/announce
 http://tracker.nucozer-tracker.ml:2710/announce
 http://tracker.nyacat.pw:7000/announce.php
+http://tracker.okade.pro:1337/announce
 http://tracker.openbittorrent.com/announce
 http://tracker.openbittorrrent.com/announce
 http://tracker.opentorrent.top:6969/announce
@@ -1281,6 +1288,7 @@ udp://116.202.177.184:6969/announce
 udp://118.196.100.63:6969/announce
 udp://119.28.71.45:8080/announce
 udp://120.78.150.131:6969/announce
+udp://123.245.62.62:6969/announce
 udp://128.199.70.66:5944/announce
 udp://132.226.6.145:6969/announce
 udp://132.243.161.144:6969/announce
@@ -1354,6 +1362,7 @@ udp://177.172.62.154:6969/announce
 udp://177.172.62.240:6969/announce
 udp://177.172.65.168:6969/announce
 udp://177.172.66.223:6969/announce
+udp://177.172.66.244:6969/announce
 udp://177.172.66.2:6969/announce
 udp://177.172.67.13:6969/announce
 udp://177.172.67.177:6969/announce
@@ -1383,6 +1392,7 @@ udp://179.98.51.66:6969/announce
 udp://180.131.145.175:6969/announce
 udp://182.176.139.129:6969/announce
 udp://184.105.226.26:6969/announce
+udp://184.174.97.26:6969/announce
 udp://185.102.219.163:6969/announce
 udp://185.121.168.96:1337/announce
 udp://185.121.168.96:6969/announce
@@ -1437,6 +1447,8 @@ udp://189.69.170.69:6969/announce
 udp://189.69.172.166:6969/announce
 udp://189.79.12.91:6969/announce
 udp://189.79.13.198:6969/announce
+udp://190.22.49.98:1337/announce
+udp://190.22.55.78:1337/announce
 udp://191.101.229.236:1337/announce
 udp://191.23.62.111:6969/announce
 udp://191.23.62.139:6969/announce
@@ -1456,6 +1468,7 @@ udp://193.233.161.213:6969/announce
 udp://193.37.214.12:6969/announce
 udp://193.42.111.57:9337/announce
 udp://194.106.216.222/announce
+udp://194.169.160.46:1212/announce
 udp://194.38.21.77:6969/announce
 udp://194.62.248.73:15480/announce
 udp://195.123.209.37:1337/announce
@@ -1558,6 +1571,7 @@ udp://45.38.170.167:6969/announce
 udp://45.7.231.102/announce
 udp://45.9.60.30:6969/announce
 udp://46.138.242.240:6969/announce
+udp://46.188.15.49:6969/announce
 udp://46.4.109.148:6969/announce
 udp://46.59.69.118:6969/announce
 udp://47.76.201.250:6969/announce
@@ -1617,6 +1631,7 @@ udp://83.31.31.143:6969/announce
 udp://84.54.51.78:6969/announce
 udp://85.121.148.217:2710/announce
 udp://85.121.5.80:6969/announce
+udp://85.159.231.214:1212/announce
 udp://85.17.19.180/announce
 udp://85.17.55.112:6969/announce
 udp://87.106.210.134:6969/announce
@@ -1822,6 +1837,7 @@ udp://open.tracker.ink:6969/announce
 udp://open.u-p.pw:6969/announce
 udp://open.xxtor.com:3074/announce
 udp://opentor.org:2710/announce
+udp://opentracker.dg2.i2p:6969/a
 udp://opentracker.i2p.rocks:6969/announce
 udp://opentracker.io:6969/announce
 udp://opentracker.lain.moscow:6969/announce
@@ -1876,6 +1892,8 @@ udp://storage.groupees.com:6969/announce
 udp://su-data.com:6969/announce
 udp://t.overflow.biz:6969/announce
 udp://t.zerg.pw:6969/announce
+udp://t1.itrus.su:1212/announce
+udp://t2.itrus.su:1212/announce
 udp://t2.leech.ie:1337/announce
 udp://tamas3.ynh.fr:6969/announce
 udp://tcq.zhuqiy.eu.org:25091/announce
@@ -1914,6 +1932,7 @@ udp://tracker.0x7c0.com:6969/announce
 udp://tracker.1048576.cn:17272/announce
 udp://tracker.1337x.org/announce
 udp://tracker.1h.is:1337/announce
+udp://tracker.23794.top:6969/announce
 udp://tracker.4.babico.name.tr:3131/announce
 udp://tracker.6.babico.name.tr:6969/announce
 udp://tracker.alaskantf.com:6969/announce
@@ -1979,6 +1998,7 @@ udp://tracker.home.kmzs123.cn:17272/announce
 udp://tracker.huadongblower.xyz:8080/announce
 udp://tracker.ilibr.org/announce
 udp://tracker.ilibr.org:6969/announce
+udp://tracker.insulaocculta.i2p:6969/a
 udp://tracker.internetwarriors.net:1337/announce
 udp://tracker.iperson.xyz:6969/announce
 udp://tracker.istole.it/announce
