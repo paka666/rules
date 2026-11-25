@@ -170,6 +170,7 @@ http://177.215.66.183:6969/announce
 http://177.215.67.115:6969/announce
 http://177.215.67.185:6969/announce
 http://177.215.67.242:6969/announce
+http://178.162.242.56:6969/announce
 http://178.175.143.27/announce
 http://178.33.73.26:2710/announce
 http://179.100.24.134:6969/announce
@@ -245,6 +246,7 @@ http://189.69.172.166:6969/announce
 http://189.79.12.91:6969/announce
 http://189.79.13.107:6969/announce
 http://189.79.13.198:6969/announce
+http://190.22.34.84:1337/announce
 http://190.22.49.98:1337/announce
 http://190.22.55.78:1337/announce
 http://191.23.62.111:6969/announce
@@ -1074,6 +1076,7 @@ https://inferno.demonoid.is/announce
 https://k.avc.cx/announce
 https://k.avc.cx/announce.php
 https://k3tracker.cc/announce/0b0b5b2bb71770aa0df56f80a4863f07
+https://lattice.peerrelay.workers.dev/announce
 https://mathkangaroo.jp/announce
 https://nyaa.tracker.wf:7777/announce
 https://o-unkusrx.cloud.okteto.net/announce
@@ -1382,6 +1385,7 @@ udp://177.215.67.115:6969/announce
 udp://177.215.67.242:6969/announce
 udp://177.32.238.49:6969/announce
 udp://178.128.94.74:6969/announce
+udp://178.162.242.56:6969/announce
 udp://178.170.48.154:1337/announce
 udp://178.239.19.29/announce
 udp://178.33.73.26:2710/announce
@@ -1451,6 +1455,7 @@ udp://189.69.170.69:6969/announce
 udp://189.69.172.166:6969/announce
 udp://189.79.12.91:6969/announce
 udp://189.79.13.198:6969/announce
+udp://190.22.34.84:1337/announce
 udp://190.22.49.98:1337/announce
 udp://190.22.55.78:1337/announce
 udp://191.101.229.236:1337/announce
@@ -1527,6 +1532,7 @@ udp://213.163.67.56:1337/announce
 udp://216.110.169.204/announce
 udp://217.156.123.49:1337/announce
 udp://217.30.10.77:6969/announce
+udp://217.60.21.180:6969/announce
 udp://220.200.35.40:2710/announce
 udp://220.200.35.40:6969/announce
 udp://220.250.51.200:6969/announce
@@ -1961,6 +1967,7 @@ udp://tracker.bontal.net:6969/announce
 udp://tracker.breizh.pm:6969/announce
 udp://tracker.btsync.gq:233/announce
 udp://tracker.btzoo.eu/announce
+udp://tracker.bunk.im:6969/announce
 udp://tracker.ccc.de/announce
 udp://tracker.ccp.ovh:6969/announce
 udp://tracker.cloaka.xyz:1337/announce
