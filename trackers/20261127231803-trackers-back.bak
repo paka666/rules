@@ -170,6 +170,7 @@ http://177.215.66.183:6969/announce
 http://177.215.67.115:6969/announce
 http://177.215.67.185:6969/announce
 http://177.215.67.242:6969/announce
+http://178.162.242.56:6969/announce
 http://178.175.143.27/announce
 http://178.33.73.26:2710/announce
 http://179.100.24.134:6969/announce
@@ -245,6 +246,7 @@ http://189.69.172.166:6969/announce
 http://189.79.12.91:6969/announce
 http://189.79.13.107:6969/announce
 http://189.79.13.198:6969/announce
+http://190.22.34.84:1337/announce
 http://190.22.49.98:1337/announce
 http://190.22.55.78:1337/announce
 http://191.23.62.111:6969/announce
@@ -440,6 +442,7 @@ http://79.137.198.96:6969/announce
 http://80.246.243.18:6969/announce
 http://81.169.145.151/announce
 http://81.200.2.231/announce
+http://82.192.67.238:6969/announce
 http://82.67.44.197:9999/announce
 http://83.31.190.19:6969/announce
 http://83.31.191.97:6969/announce
@@ -1073,6 +1076,7 @@ https://inferno.demonoid.is/announce
 https://k.avc.cx/announce
 https://k.avc.cx/announce.php
 https://k3tracker.cc/announce/0b0b5b2bb71770aa0df56f80a4863f07
+https://lattice.peerrelay.workers.dev/announce
 https://mathkangaroo.jp/announce
 https://nyaa.tracker.wf:7777/announce
 https://o-unkusrx.cloud.okteto.net/announce
@@ -1290,6 +1294,7 @@ udp://116.202.177.184:6969/announce
 udp://118.196.100.63:6969/announce
 udp://119.28.71.45:8080/announce
 udp://120.78.150.131:6969/announce
+udp://123.245.62.58:6969/announce
 udp://123.245.62.62:6969/announce
 udp://128.199.70.66:5944/announce
 udp://132.226.6.145:6969/announce
@@ -1380,6 +1385,7 @@ udp://177.215.67.115:6969/announce
 udp://177.215.67.242:6969/announce
 udp://177.32.238.49:6969/announce
 udp://178.128.94.74:6969/announce
+udp://178.162.242.56:6969/announce
 udp://178.170.48.154:1337/announce
 udp://178.239.19.29/announce
 udp://178.33.73.26:2710/announce
@@ -1449,6 +1455,7 @@ udp://189.69.170.69:6969/announce
 udp://189.69.172.166:6969/announce
 udp://189.79.12.91:6969/announce
 udp://189.79.13.198:6969/announce
+udp://190.22.34.84:1337/announce
 udp://190.22.49.98:1337/announce
 udp://190.22.55.78:1337/announce
 udp://191.101.229.236:1337/announce
@@ -1525,6 +1532,7 @@ udp://213.163.67.56:1337/announce
 udp://216.110.169.204/announce
 udp://217.156.123.49:1337/announce
 udp://217.30.10.77:6969/announce
+udp://217.60.21.180:6969/announce
 udp://220.200.35.40:2710/announce
 udp://220.200.35.40:6969/announce
 udp://220.250.51.200:6969/announce
@@ -1628,6 +1636,7 @@ udp://7p41a8967.wicp.vip:22222/announce
 udp://80.71.224.126:1337/announce
 udp://80.71.224.126:6969/announce
 udp://81.230.84.201:6969/announce
+udp://82.192.67.238:6969/announce
 udp://82.65.115.10:6969/announce
 udp://82.67.44.197:9999/announce
 udp://83.102.180.21/announce
@@ -1772,6 +1781,7 @@ udp://freedomalternative.com:6969/announce
 udp://ftp.pet:2710/announce
 udp://glotorrents.pw:6969/announce
 udp://hbsy.zhuqiy.eu.org:6666/announce
+udp://hidden.torrentonline.cc:42069/announce
 udp://hificode.in:6969/announce
 udp://htz3.noho.st:6969/announce
 udp://ibksturm.synology.me:6969/announce
@@ -1958,6 +1968,7 @@ udp://tracker.bontal.net:6969/announce
 udp://tracker.breizh.pm:6969/announce
 udp://tracker.btsync.gq:233/announce
 udp://tracker.btzoo.eu/announce
+udp://tracker.bunk.im:6969/announce
 udp://tracker.ccc.de/announce
 udp://tracker.ccp.ovh:6969/announce
 udp://tracker.cloaka.xyz:1337/announce
